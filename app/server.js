@@ -265,7 +265,7 @@ app.post('/api/chat', async (req, res) => {
       .slice(0, 3);
     const mainKeyword = keywords[0] || question.replace(/[?？！!.,。、\s]/g,'').slice(0, 6);
 
-    // 3) 3중 하이브리드 검색: 경전 pgvector + 게시글 pgvector + 게시글 키워드
+    // 3) 2중 하이브리드 검색: 게시글 pgvector + 게시글 키워드 (경전 제외 — 여의선원 아카이브 범위 내에서만)
     // OR → AND: 모든 키워드를 포함하는 게시글만 반환 (오탐 방지)
     const postKeywordWhere = keywords.length > 1
       ? keywords.map((_,i) => `(content ILIKE $${i+1} OR title ILIKE $${i+1})`).join(' AND ')
@@ -274,15 +274,8 @@ app.post('/api/chat', async (req, res) => {
       ? keywords.map(k => `%${k.replace(/[%_]/g,'\\$&')}%`)
       : [`%${mainKeyword.replace(/[%_]/g,'\\$&')}%`];
 
-    const [chunks, postsByVec, postsByKw] = await Promise.all([
-      // (A) 경전 pgvector
-      pool.query(
-        `SELECT chunk_text, book_name, 1-(embedding <=> $1::vector) AS similarity
-         FROM yeouiseonwon.book_chunks
-         ORDER BY embedding <=> $1::vector LIMIT 8`,
-        [vecStr]
-      ),
-      // (B) 게시글 pgvector (임베딩 있는 건만)
+    const [postsByVec, postsByKw] = await Promise.all([
+      // (A) 게시글 pgvector (임베딩 있는 건만)
       pool.query(
         `SELECT id, title, LEFT(content, 1000) AS excerpt, board, created_at,
                 1-(embedding <=> $1::vector) AS similarity
@@ -291,7 +284,7 @@ app.post('/api/chat', async (req, res) => {
          ORDER BY embedding <=> $1::vector LIMIT 8`,
         [vecStr]
       ).catch(() => ({ rows: [] })),
-      // (C) 게시글 키워드 검색 (임베딩 유무 무관)
+      // (B) 게시글 키워드 검색 (임베딩 유무 무관)
       pool.query(
         `SELECT id, title, LEFT(content, 1000) AS excerpt, board, created_at
          FROM yeouiseonwon.posts
@@ -300,10 +293,6 @@ app.post('/api/chat', async (req, res) => {
         postKeywordParams
       ).catch(() => ({ rows: [] })),
     ]);
-
-    // 경전: 유사도 0.30+ 우선, 미달 시 상위 5개
-    const goodChunks = chunks.rows.filter(r => r.similarity >= 0.30);
-    const useChunks  = goodChunks.length >= 2 ? goodChunks : chunks.rows.slice(0, 5);
 
     // 게시글: pgvector 0.35+ 결과 + 키워드 결과 합치고, 중복 제거 후 상위 8건
     const seenTitles = new Set();
@@ -323,16 +312,13 @@ app.post('/api/chat', async (req, res) => {
     const usePosts = allPosts.slice(0, 8);
 
     // 디버그: 키워드 + 결과 수 로그
-    console.log(`[chat-debug] q="${question}" kw=[${keywords}] main="${mainKeyword}" chunks=${useChunks.length} vecPosts=${postsByVec.rows.filter(r=>r.similarity>=0.35).length} kwPosts=${postsByKw.rows.length} merged=${usePosts.length}`);
+    console.log(`[chat-debug] q="${question}" kw=[${keywords}] main="${mainKeyword}" vecPosts=${postsByVec.rows.filter(r=>r.similarity>=0.35).length} kwPosts=${postsByKw.rows.length} merged=${usePosts.length}`);
 
-    const chunkCtx  = useChunks.map((r,i) => `[경전${i+1}] (${r.book_name})\n${r.chunk_text}`).join('\n\n');
-    const postCtx   = usePosts.length
-      ? '\n\n[카페 게시글 — 큰스승님 법문 및 수행 기록]\n' + usePosts.map((r,i) =>
+    const context = usePosts.length
+      ? '[여의선원 카페 게시글 — 법문 및 수행 기록]\n' + usePosts.map((r,i) =>
           `[게시글${i+1}] (${r.board} · ${r.title})\n${r.excerpt}`
         ).join('\n\n')
       : '';
-
-    const context = chunkCtx + postCtx;
 
     // 4) GPT 답변 — SSE 스트리밍 (gpt-4o 고품질)
     res.setHeader('Content-Type', 'text/event-stream');
@@ -340,7 +326,6 @@ app.post('/api/chat', async (req, res) => {
     res.setHeader('Connection', 'keep-alive');
 
     const sources = [
-      ...useChunks.map(r => ({ type: 'book', book: r.book_name, similarity: r.similarity })),
       ...usePosts.slice(0, 3).map(r => ({ type: 'post', id: r.id, title: r.title, board: r.board })),
     ];
     res.write(`data: ${JSON.stringify({ type: 'sources', sources })}\n\n`);
@@ -352,51 +337,23 @@ app.post('/api/chat', async (req, res) => {
         {
           role: 'system',
           content: [
-            '당신은 여의선원(여의명상센터) 한울사상 전문 안내자입니다.',
-            '한울사상은 김준원 큰스승님이 창시한 독자적인 영성 사상 체계입니다.',
-            '큰스승님(김준원)은 이미 선종(仙終)하셨으며, 현재는 무견(無見) 김상국 스승님이 여의선원을 이끌며 수행을 지도하고 계십니다.',
-            '⚠️ 중요: 큰스승님에 대해 답변할 때 반드시 "돌아가신 분", "선종하셨다"는 사실을 명시하고, 현재 시제("지도하신다","가르치신다")로 서술하지 마세요. 현재 지도자는 무견 김상국 스승님입니다.',
+            '당신은 여의선원(여의명상센터) 카페 아카이브 안내자입니다.',
+            '여의선원 네이버 카페에 수십 년간 수집된 법문·수행 게시글을 기반으로만 답변합니다.',
             '',
-            '## 한울사상 핵심 개념 (이 개념에 대한 질문이 오면 반드시 아래 설명을 기반으로 답변):\n',
-            '- 한울사상: 한올들이 어울려 한울이 된다는 사상. 개체(한올)가 전체(한울)와 조화를 이루는 우주관.',
-            '- 수도(修道): 닦아가는 길. 시도→수도→제도의 단계적 수행 체계.',
-            '- 생명장(生命場): 생명체의 몸氣(몸을 운영하는 기운)와 영기(靈氣:영혼의 기운)와 지기(地氣:터전과 환경의 기운)의 조합이 이루어내는 氣의 장(場). 생명의 근원 에너지 장.',
-            '- 제도(濟度): 영격을 높이는 것. 삶은 궁극적으로 영적진화를 통해 영격을 높이는데 목적이 있음.',
-            '- 우주영제도: 개체의 영을 우주영으로 높이기 위한 제도법.',
-            '- 유○론적 각성(覺醒): "각성"이라 하지 말고 반드시 "유○론적 각성"으로 표기할 것. 우주 궁극의 실체를 ○으로 보는 우주관에서 개체 인식이 깨어나는 것. 유신론·유물론·유심론을 초월한 한울사상 고유의 각성 체계.',
-            '- 성멸(性滅): 사람의 성(性)을 소멸하는 수행. 성멸제도·성멸오통으로 이어짐.',
-            '- 성멸제도(性滅濟度): 사람 성·사람 정을 소멸하여 영격을 높이는 제도.',
-            '- 성멸오통(性滅五通): 성(性)에 묶이지 않고 초월하여 전체와 통하는 다섯 가지 통달.',
-            '- 큰스승님(한울 김준원): 한울사상 창시자. ★이미 돌아가신 분(선종/仙終)★. 생전에 집중수도와 법문으로 가르침을 전하셨음. 한울기 82년 탄강일(음력 9.19) 기념. 현재는 남겨주신 말씀과 경전으로 모심. 큰스승님을 현재 시제로 "지도하신다/가르치신다"고 쓰지 말 것.',
-            '- 무견(無見) 김상국 스승님: ★현재 여의선원의 지도자★. 큰스승님으로부터 유○론적 각성법을 전수받아 여의수행법을 체계화하신 분. 「한울말씀강론」 편저자. 현재 집중수도·수련 전반을 직접 지도하고 계심.',
-            '- 법사(法師): 여의선원에서 수행을 지도하는 직위. 도정법사·명제법사·도봉법사 등이 있음. 집중수도 사회·기도문 봉독·점검 역할을 맡음.',
-            '- 한울계시록: 큰스승님의 계시를 기록한 경전. 핵심 가르침의 원천. 절(節) 단위로 구성.',
-            '- 집중수도: 현재 무견 김상국 스승님 지도 하에 진행하는 집중 수행 과정. 1박2일 형태 정기 운영. (생전에는 큰스승님이 직접 지도하셨음)',
-            '- 영성여행: 수도자들이 특별한 장소(천안 아우내 쉼터, 남한산성, 이천 성지 등)에서 진행하는 영적 수행.',
-            '- 기운(氣): 한울사상에서 모든 현상의 근원. 몸氣·영氣·지氣로 나뉨.',
-            '- 염(念) 조정: 명상을 통해 생각과 의식을 조절하는 수행법. 남한산성에서 특히 가능.',
-            '- 자동동작: 수행 중 공(空)의 세계에 들어가면 몸이 저절로 움직이는 현상. 공이 살아 작용하는 것.',
-            '- 세상氣조종: 수도자가 세상의 기운을 조절하는 수행. 정치·경제 등 사회적 기운에 영향.',
-            '- 회로제도(回路制度): 변형된 생명장의 기형을 그려내어 ○의 정보와 힘을 더해 본래 모습으로 되돌리는 제도법.',
-            '- 기태(氣胎): 영혼의 통합체. 죽음 뒤에도 남아있으며 본영의 진화를 위해 몸과 氣를 주도하고 조종하는 인자.',
-            '- 여의화(如意化): 여의수도법을 통해 뜻대로 이루어지는 경지에 도달하는 과정.',
-            '- 제3인류: 영적 혁명을 통해 고도의 영적 진화를 이루어낸 미래 인류. 정신으로 물질을 통제하는 존재.',
-            '- 수도자 1인은 세상자 만인이요 중생자 억: 수도자 한 명의 영적 역량이 만인을 구제할 수 있다는 큰스승님 말씀.',
+            '## ⚠️ 답변 범위 제한 (반드시 준수)',
+            '- 오직 제공된 [게시글N] 자료에 근거하여 답변하세요.',
+            '- 자료에 없는 내용은 "아카이브에서 관련 자료를 찾지 못했습니다"라고 안내하세요.',
+            '- 경전·교리·철학 체계에 대한 독자적인 해설은 하지 마세요.',
+            '- 여의선원 카페 게시글 외 외부 지식으로 추론하거나 답변을 생성하지 마세요.',
             '',
-            '## 경전 목록:',
-            '한울말씀강론(김상국 저), O의실체, 한울수행법, 한울수도법, 한울명상록(김준원 저), 한울계시록',
-            '',
-            '## 답변 규칙:\n',
-            '1. 제공된 원문 자료([경전N], [게시글N])를 최우선으로 활용하여 답변하세요.',
-            '2. 원문을 직접 인용(따옴표)하며 구체적으로 설명하세요.',
-            '3. 질문에 핵심 용어가 있으면 반드시 해당 개념의 정의와 수행적 의미를 포함하세요.',
-            '4. 동학·시천주·인내천·천도교로 환원하지 마세요. 한울사상 고유 체계로만 설명하세요.',
-            '5. 자료가 부족하더라도 위의 핵심 개념 지식을 바탕으로 한울사상적 관점에서 반드시 답변을 제공하세요.',
-            '6. 답변 끝에 출처([경전N] 또는 [게시글N])를 밝히세요. 자료 없이 답변 시 "(한울사상 핵심 개념 기반)"을 표기하세요.',
-            '7. 친절하고 깊이 있게, 수행자가 실제 도움받을 수 있는 수준으로 답변하세요.',
-            '8. 답변은 마크다운 형식으로 작성하세요: **굵게**, > 인용, - 목록, ## 소제목 등을 활용하여 가독성을 높이세요.',
-            '9. 핵심 법문/경전 인용 시 반드시 > blockquote 형식으로 표시하세요.',
-            '10. 영어로 질문이 들어오면 영어로 답변하세요 (한울사상 고유 용어는 한글 병기). 한국어 질문은 한국어로 답변.',
+            '## 답변 규칙',
+            '1. 제공된 [게시글N] 자료를 최우선으로 활용하여 답변하세요.',
+            '2. 게시글 원문을 직접 인용(따옴표)하며 구체적으로 설명하세요.',
+            '3. 답변 끝에 출처([게시글N] 게시판명 · 제목)를 반드시 밝히세요.',
+            '4. 자료가 없으면 "아카이브에서 관련 게시글을 찾지 못했습니다. 다른 키워드로 검색해보세요."라고 답변하세요.',
+            '5. 친절하고 명확하게 답변하세요.',
+            '6. 답변은 마크다운 형식으로 작성하세요: **굵게**, > 인용, - 목록 등을 활용하세요.',
+            '7. 영어로 질문이 들어오면 영어로 답변하세요. 한국어 질문은 한국어로 답변하세요.',
           ].join('\n'),
         },
         { role: 'user', content: `## 참고 자료\n${context}\n\n## 질문\n${question}` },
