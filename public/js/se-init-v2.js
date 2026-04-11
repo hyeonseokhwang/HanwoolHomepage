@@ -534,7 +534,7 @@
             for (let i=0;i<imageItems.length;i++) { const it=imageItems[i]; const f = it.getAsFile(); if (f) tasks.push({ kind: 'file', file: f, name: f.name || 'pasted.png', origIndex: i, mime: f.type||'' }); }
             const total = tasks.length;
             tasks = prioritizeJpgTasks(tasks);
-            const urls = await uploadQueue(tasks, 3, (done, tot, suc, fail) => update(done, tot, suc, fail));
+            const urls = await uploadQueue(tasks, 1, (done, tot, suc, fail) => update(done, tot, suc, fail));
             // Restore original order for rendering
             const byOrig = new Array(total).fill(null);
             tasks.forEach((t, idx) => { if (typeof t.origIndex === 'number') byOrig[t.origIndex] = urls[idx]; });
@@ -557,7 +557,7 @@
             });
             const total = tasks.length;
             tasks = prioritizeJpgTasks(tasks);
-            const urls = await uploadQueue(tasks, 3, (done, tot, suc, fail) => update(done, tot, suc, fail));
+            const urls = await uploadQueue(tasks, 1, (done, tot, suc, fail) => update(done, tot, suc, fail));
             const map = new Map();
             tasks.forEach((t, idx) => { if (urls[idx]) map.set(t.key, urls[idx]); });
             const transformed = replaceDataUrlsInHTMLWithMap(clipHTML, map);
@@ -582,7 +582,7 @@
               tasks.push(...hwpDus.map((du, i) => { const m = du.match(/^data:([^;]+);/i); const mime = (m && m[1]) ? m[1].toLowerCase() : ''; return { kind: 'dataUrl', dataUrl: du, group: 'hwp', hwpIndex: i, mime }; }));
               const total = tasks.length;
               tasks = prioritizeJpgTasks(tasks);
-              const urls = await uploadQueue(tasks, 3, (done, tot, suc, fail) => update(done, tot, suc, fail));
+              const urls = await uploadQueue(tasks, 1, (done, tot, suc, fail) => update(done, tot, suc, fail));
               // Build outputs
               const map = new Map();
               const hwpCollected = [];
@@ -605,7 +605,7 @@
               let tasks = rtfDus.map((du, i) => { const m = du.match(/^data:([^;]+);/i); const mime = (m && m[1]) ? m[1].toLowerCase() : ''; return { kind: 'dataUrl', dataUrl: du, mime, origIndex: i }; });
               const total = tasks.length;
               tasks = prioritizeJpgTasks(tasks);
-              const urls = await uploadQueue(tasks, 3, (done, tot, suc, fail) => update(done, tot, suc, fail));
+              const urls = await uploadQueue(tasks, 1, (done, tot, suc, fail) => update(done, tot, suc, fail));
               // Restore original order for rendering
               const byOrig = new Array(total).fill(null);
               tasks.forEach((t, idx) => { if (typeof t.origIndex === 'number') byOrig[t.origIndex] = urls[idx]; });
@@ -714,7 +714,7 @@
           for (const file of files) { if (file.type && file.type.startsWith('image/')) tasks.push({ kind: 'file', file, name: file.name || 'dropped.png' }); }
           if (tasks.length) {
             await withOverlay(doc, tasks.length, async (update) => {
-              const urls = await uploadQueue(tasks, 3, (done, tot, suc, fail) => update(done, tot, suc, fail));
+              const urls = await uploadQueue(tasks, 1, (done, tot, suc, fail) => update(done, tot, suc, fail));
               const validDropUrls = urls.filter(Boolean);
               const dropDims = await Promise.all(validDropUrls.map(u => getDimensions(u)));
               const html = validDropUrls.map((u, i) => makeImgTag(u, dropDims[i], 'dropped-image')).join('');

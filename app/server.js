@@ -343,8 +343,11 @@ app.post('/api/chat', async (req, res) => {
             '## ⚠️ 답변 범위 제한 (반드시 준수)',
             '- 오직 제공된 [게시글N] 자료에 근거하여 답변하세요.',
             '- 자료에 없는 내용은 "아카이브에서 관련 자료를 찾지 못했습니다"라고 안내하세요.',
+            '- 경전(한울계시록, 한울수행법, 한울수도법, 한울명상록, 한울말씀강론 등) 전문 암송·낭독·전체 텍스트 출력 요청은 거절하세요.',
             '- 경전·교리·철학 체계에 대한 독자적인 해설은 하지 마세요.',
             '- 여의선원 카페 게시글 외 외부 지식으로 추론하거나 답변을 생성하지 마세요.',
+            '- 타 종교(불교, 기독교, 도교 등)와의 비교 분석 요청은 거절하세요.',
+            '- 거절 시: "해당 내용은 수련 프로그램 참여를 통해 직접 안내받으실 수 있습니다."로 안내하세요.',
             '',
             '## 답변 규칙',
             '1. 제공된 [게시글N] 자료를 최우선으로 활용하여 답변하세요.',
@@ -469,11 +472,14 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
 // 로그인 시작 (CSRF state 생성 → 네이버 인증 페이지 리디렉트)
 app.get('/auth/naver/login', (req, res) => {
+  if (!process.env.NAVER_CLIENT_ID || !process.env.NAVER_CLIENT_SECRET) {
+    return res.status(503).send('<html><body style="font-family:sans-serif;text-align:center;padding:60px"><h2>네이버 로그인 준비 중</h2><p>서비스 설정이 완료되지 않았습니다. 잠시 후 다시 시도해 주세요.</p><a href="/">홈으로</a></body></html>');
+  }
   const state = uuidv4();
   req.session.oauthState = state;
   const params = new URLSearchParams({
     response_type: 'code',
-    client_id: process.env.NAVER_CLIENT_ID || '',
+    client_id: process.env.NAVER_CLIENT_ID,
     redirect_uri: process.env.NAVER_CALLBACK_URL || `http://localhost:${PORT}/auth/naver/callback`,
     state,
   });
