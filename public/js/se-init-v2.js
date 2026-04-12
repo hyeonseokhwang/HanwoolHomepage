@@ -241,9 +241,9 @@
   }
 
   // URL + 크기 → img 태그 문자열
-  // XSS 방지: http/https 프로토콜 외 URL은 빈 문자열 반환
+  // XSS 방지: https?:// 또는 data:image/ 외 URL(javascript: 등)은 빈 src로 무력화
   function makeImgTag(u, dim, alt) {
-    if (!u || !/^https?:\/\//i.test(u)) return '';
+    if (!/^https?:\/\//.test(u) && !/^data:image\//.test(u)) u = '';
     const wh = (dim && dim.w > 0 && dim.h > 0) ? ` width="${dim.w}" height="${dim.h}"` : '';
     return `<img src="${u}"${wh} style="max-width:100%;height:auto;" alt="${alt || 'pasted-image'}" />`;
   }
