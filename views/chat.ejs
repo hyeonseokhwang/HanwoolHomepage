@@ -20,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Noto Sans KR',sans-serif;background:#F8F6F0;color:#2A1E10;height:100vh;display:flex;flex-direction:column}
+    body{font-family:'Noto Sans KR',sans-serif;background:#F8F6F0;color:#2A1E10;height:100dvh;display:flex;flex-direction:column}
 
     /* NAV */
     .site-nav{position:fixed;top:0;left:0;right:0;height:44px;background:rgba(42,30,16,0.96);display:flex;align-items:center;gap:0;z-index:9999;padding:0 24px}
@@ -43,7 +43,7 @@
     .status-txt{color:#5A9A5A}
 
     /* MESSAGES */
-    .messages{flex:1;overflow-y:auto;background:#fff;border:1px solid #DDD8C8;border-top:none;border-bottom:none;padding:20px;display:flex;flex-direction:column;gap:16px;min-height:200px;max-height:calc(100vh - 320px)}
+    .messages{flex:1;overflow-y:auto;background:#fff;border:1px solid #DDD8C8;border-top:none;border-bottom:none;padding:20px;display:flex;flex-direction:column;gap:16px;min-height:200px;max-height:calc(100dvh - 320px)}
     .messages::-webkit-scrollbar{width:4px}
     .messages::-webkit-scrollbar-thumb{background:#DDD8C8;border-radius:2px}
     .msg{display:flex;gap:12px;align-items:flex-start}
@@ -109,7 +109,7 @@
     @media(max-width:640px){
       .chat-wrap{padding:12px 0 0;max-width:100%}
       .chat-header{border-radius:0;border-left:0;border-right:0}
-      .messages{max-height:calc(100vh - 290px)}
+      .messages{max-height:calc(100dvh - 290px)}
       .bubble{max-width:92%;font-size:13px}
       .sugg-area{padding:8px 12px}
       .quick-grid{grid-template-columns:1fr}
@@ -128,7 +128,7 @@
       .op-avatar{width:36px;height:36px;font-size:15px}
       .op-name{font-size:13px}
       .op-sub{font-size:10px}
-      .messages{max-height:calc(100vh - 280px);padding:12px}
+      .messages{max-height:calc(100dvh - 280px);padding:12px}
       .bubble{padding:10px 12px;font-size:13px}
       .quick-btn{font-size:11px;padding:7px 10px}
       .sugg-area{padding:6px 10px}
