@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>결제 완료 — 한울영성개발원</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: #f8f6f0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,.08); padding: 48px 40px; text-align: center; max-width: 440px; width: 90%; }
+    .icon { font-size: 64px; margin-bottom: 20px; }
+    h1 { font-size: 24px; color: #2d5a27; margin-bottom: 12px; }
+    p { color: #666; line-height: 1.7; margin-bottom: 8px; }
+    .uid { background: #f0f4ee; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 13px; color: #444; margin: 16px 0; word-break: break-all; }
+    .btn { display: inline-block; margin-top: 24px; padding: 14px 32px; background: #2d5a27; color: #fff; border-radius: 8px; text-decoration: none; font-size: 15px; transition: background .2s; }
+    .btn:hover { background: #1e3e1b; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">✅</div>
+    <h1>결제가 완료되었습니다</h1>
+    <p>한울영성개발원 수련 프로그램에 신청해 주셔서 감사합니다.</p>
+    <p>담당자가 확인 후 빠른 시일 내에 연락드리겠습니다.</p>
+    <% if (merchantUid) { %>
+    <div class="uid">주문번호: <%= merchantUid %></div>
+    <% } %>
+    <a href="/" class="btn">홈으로 돌아가기</a>
+  </div>
+</body>
+</html>

@@ -12,6 +12,7 @@ import http from 'http';
 import pg from 'pg';
 import OpenAI from 'openai';
 import session from 'express-session';
+import { createPaymentRouter } from './payment.js';
 
 dotenv.config({ path: path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '.env') });
 // Load from Lucas-Initiative root .env for OPENAI_API_KEY
@@ -571,6 +572,25 @@ app.post('/api/apply', async (req, res) => {
   }
 });
 
+// ════════════════════════════════════════════════════════════════
+//  네이버페이 결제 API (PortOne 연동)
+// ════════════════════════════════════════════════════════════════
+app.use('/api/payment', createPaymentRouter(pool));
+
+// 결제 완료 페이지
+app.get('/payment/success', (req, res) => {
+  res.render('payment-success', {
+    merchantUid: req.query.uid || '',
+  });
+});
+
+// 결제 실패 페이지
+app.get('/payment/fail', (req, res) => {
+  res.render('payment-fail', {
+    errorMsg: req.query.msg || '결제에 실패했습니다.',
+  });
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`한울사상 통합 서버 http://0.0.0.0:${PORT}`);
   console.log('  /        — A팀 홈페이지 (siann-22)');
@@ -579,4 +599,5 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log('  /chat    — AI 챗봇');
   console.log(`[EmbCache] 초기화 완료 — TTL=${EMB_CACHE_TTL/60000}분 / 최대 ${EMB_CACHE_MAX}건`);
   console.log('  /editor  — SmartEditor2 standalone (포트 8082는 server-editor.js)');
+  console.log('  /api/payment — 네이버페이 결제 API (PortOne)');
 });

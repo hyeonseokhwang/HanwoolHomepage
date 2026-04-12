@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>결제 실패 — 한울영성개발원</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: #f8f6f0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,.08); padding: 48px 40px; text-align: center; max-width: 440px; width: 90%; }
+    .icon { font-size: 64px; margin-bottom: 20px; }
+    h1 { font-size: 24px; color: #8b0000; margin-bottom: 12px; }
+    p { color: #666; line-height: 1.7; margin-bottom: 8px; }
+    .btn { display: inline-block; margin-top: 24px; padding: 14px 32px; background: #2d5a27; color: #fff; border-radius: 8px; text-decoration: none; font-size: 15px; transition: background .2s; }
+    .btn:hover { background: #1e3e1b; }
+    .btn-back { background: #666; margin-left: 8px; }
+    .btn-back:hover { background: #444; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">❌</div>
+    <h1>결제에 실패했습니다</h1>
+    <p>결제 처리 중 문제가 발생했습니다.</p>
+    <% if (errorMsg) { %>
+    <p style="color:#c00;font-size:14px;margin-top:8px;"><%= errorMsg %></p>
+    <% } %>
+    <p style="margin-top:16px;">문의: <strong>한울영성개발원</strong></p>
+    <a href="javascript:history.back()" class="btn">다시 시도</a>
+    <a href="/" class="btn btn-back">홈으로</a>
+  </div>
+</body>
+</html>
