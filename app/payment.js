@@ -11,6 +11,26 @@
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
+// HTML entity escape (XSS 방지 — 입력값 저장 전 적용)
+function escHtml(str) {
+  if (typeof str !== 'string') return str;
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+// VARCHAR 길이 검증 (초과 시 400 반환용)
+const FIELD_LIMITS = {
+  programId:   64,
+  programName: 256,
+  buyerName:   64,
+  buyerTel:    20,
+  buyerEmail:  128,
+};
+
 export function createPaymentRouter(pool) {
   const router = express.Router();
 
@@ -71,13 +91,29 @@ export function createPaymentRouter(pool) {
         return res.status(400).json({ ok: false, error: '유효하지 않은 금액' });
       }
 
+      // VARCHAR 길이 검증 (P2 수정 — DB 500 방지)
+      const inputs = { programId, programName, buyerName, buyerTel: buyerTel || '', buyerEmail: buyerEmail || '' };
+      for (const [field, limit] of Object.entries(FIELD_LIMITS)) {
+        const val = inputs[field];
+        if (val && val.length > limit) {
+          return res.status(400).json({ ok: false, error: `${field} 최대 ${limit}자 초과` });
+        }
+      }
+
+      // XSS sanitize — HTML entity escape (P2 수정)
+      const safeProgId   = escHtml(programId);
+      const safeProgName = escHtml(programName);
+      const safeName     = escHtml(buyerName);
+      const safeTel      = escHtml(buyerTel || '');
+      const safeEmail    = escHtml(buyerEmail || '');
+
       const merchantUid = `hanul_${Date.now()}_${uuidv4().slice(0, 8)}`;
 
       await pool.query(
         `INSERT INTO payments
            (merchant_uid, program_id, program_name, amount, buyer_name, buyer_tel, buyer_email)
          VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [merchantUid, programId, programName, amount, buyerName, buyerTel || '', buyerEmail || '']
+        [merchantUid, safeProgId, safeProgName, amount, safeName, safeTel, safeEmail]
       );
 
       console.log(`[payment] prepare OK — uid=${merchantUid} program=${programName} amount=${amount}`);
