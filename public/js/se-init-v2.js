@@ -241,7 +241,9 @@
   }
 
   // URL + 크기 → img 태그 문자열
+  // XSS 방지: http/https 프로토콜 외 URL은 빈 문자열 반환
   function makeImgTag(u, dim, alt) {
+    if (!u || !/^https?:\/\//i.test(u)) return '';
     const wh = (dim && dim.w > 0 && dim.h > 0) ? ` width="${dim.w}" height="${dim.h}"` : '';
     return `<img src="${u}"${wh} style="max-width:100%;height:auto;" alt="${alt || 'pasted-image'}" />`;
   }
@@ -335,7 +337,10 @@
     try {
       if (!html || !urls || !urls.length) return html;
       const container = document.createElement('div');
-      container.innerHTML = html;
+      // XSS 방지: DOMPurify로 sanitize 후 삽입 (미로드 시 원본 사용)
+      container.innerHTML = typeof DOMPurify !== 'undefined'
+        ? DOMPurify.sanitize(html, { USE_PROFILES: { html: true } })
+        : html;
       let idx = 0;
       const nodesWithSrc = Array.from(container.querySelectorAll('[src^="file:"]'));
       for (const el of nodesWithSrc) {

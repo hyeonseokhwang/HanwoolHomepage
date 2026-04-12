@@ -269,7 +269,10 @@
     try {
       if (!html || !urls || !urls.length) return html;
       const container = document.createElement('div');
-      container.innerHTML = html;
+      // XSS 방지: DOMPurify로 sanitize 후 삽입 (미로드 시 원본 사용)
+      container.innerHTML = typeof DOMPurify !== 'undefined'
+        ? DOMPurify.sanitize(html, { USE_PROFILES: { html: true } })
+        : html;
       let idx = 0;
       const nodesWithSrc = Array.from(container.querySelectorAll('[src^="file:"]'));
       for (const el of nodesWithSrc) {
