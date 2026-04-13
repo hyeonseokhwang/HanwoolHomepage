@@ -619,14 +619,20 @@
               tasks.forEach((t, idx) => { if (typeof t.origIndex === 'number') byOrig[t.origIndex] = urls[idx]; });
               const htmlImgs = byOrig.filter(Boolean).map(u => `<img src="${u}" style="max-width:100%;" alt="rtf-pasted-image" />`).join('');
               let sanitized = clipHTML
-                ? clipHTML.replace(/<img\b[^>]*\bsrc\s*=\s*['"]?file:[^'">]*['"]?[^>]*>/gi, '').replace(/url\((['"])?.*?file:[^)]*\)/gi, 'none')
+                ? (() => {
+                    const noFile = clipHTML.replace(/<img\b[^>]*\bsrc\s*=\s*['"]?file:[^'">]*['"]?[^>]*>/gi, '').replace(/url\((['"])?.*?file:[^)]*\)/gi, 'none');
+                    return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(noFile, { USE_PROFILES: { html: true } }) : noFile;
+                  })()
                 : (clipText || '');
               editor.exec('PASTE_HTML', [sanitized + htmlImgs]);
               setTimeout(reportFinalContent, 50);
               return;
             }
             const sanitized = clipHTML
-              ? clipHTML.replace(/<img\b[^>]*\bsrc\s*=\s*['"]?file:[^'">]*['"]?[^>]*>/gi, '').replace(/url\((['"])?.*?file:[^)]*\)/gi, 'none')
+              ? (() => {
+                  const noFile = clipHTML.replace(/<img\b[^>]*\bsrc\s*=\s*['"]?file:[^'">]*['"]?[^>]*>/gi, '').replace(/url\((['"])?.*?file:[^)]*\)/gi, 'none');
+                  return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(noFile, { USE_PROFILES: { html: true } }) : noFile;
+                })()
               : (clipText || '');
             editor.exec('PASTE_HTML', [sanitized]);
             setTimeout(reportFinalContent, 50);
