@@ -241,9 +241,12 @@
   }
 
   // URL + 크기 → img 태그 문자열
-  // XSS 방지: https?:// 또는 data:image/ 외 URL(javascript: 등)은 빈 src로 무력화
+  // XSS 방지: http(s):// 외 프로토콜(javascript:, data: 등) 차단 (QA SEC 권고 수정)
+  function isHttpUrl(u) {
+    return typeof u === 'string' && /^https?:\/\//i.test(u);
+  }
   function makeImgTag(u, dim, alt) {
-    if (!/^https?:\/\//.test(u) && !/^data:image\//.test(u)) u = '';
+    if (!isHttpUrl(u)) u = '';
     const wh = (dim && dim.w > 0 && dim.h > 0) ? ` width="${dim.w}" height="${dim.h}"` : '';
     return `<img src="${u}"${wh} style="max-width:100%;height:auto;" alt="${alt || 'pasted-image'}" />`;
   }
@@ -337,10 +340,10 @@
     try {
       if (!html || !urls || !urls.length) return html;
       const container = document.createElement('div');
-      // XSS 방지: DOMPurify로 sanitize 후 삽입 (미로드 시 원본 사용)
+      // XSS 방지: DOMPurify 필수 적용 — 미로드 시 빈 문자열 (unsafe html fallback 제거, QA SEC 권고 수정)
       container.innerHTML = typeof DOMPurify !== 'undefined'
         ? DOMPurify.sanitize(html, { USE_PROFILES: { html: true } })
-        : html;
+        : '';
       let idx = 0;
       const nodesWithSrc = Array.from(container.querySelectorAll('[src^="file:"]'));
       for (const el of nodesWithSrc) {
