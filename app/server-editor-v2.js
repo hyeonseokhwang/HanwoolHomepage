@@ -351,7 +351,29 @@ app.post('/api/log/final', (req, res) => {
   res.json({ verdict: 'pass' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`[hanul-editor] 에디터 서버 포트 :${PORT}`);
   console.log(`  / → editor.ejs`);
 });
+
+// HTTP on port 80 (http://hanwool-board.duckdns.org/)
+import https from 'https';
+app.listen(80, '0.0.0.0', () => {
+  console.log(`[hanul-editor] HTTP :80 (hanwool-board.duckdns.org)`);
+}).on('error', (e) => {
+  console.log('[hanul-editor] 포트 80 에러:', e.message);
+});
+
+// HTTPS on port 443 (https://hanwool-board.duckdns.org/)
+try {
+  const sslCertsDir = 'G:/Lucas-Initiative/WorkSpace/hanul-board/certs';
+  const sslKey = fs.readFileSync(path.join(sslCertsDir, 'key.pem'));
+  const sslCert = fs.readFileSync(path.join(sslCertsDir, 'cert.pem'));
+  https.createServer({ key: sslKey, cert: sslCert }, app).listen(443, '0.0.0.0', () => {
+    console.log(`[hanul-editor] HTTPS :443 (hanwool-board.duckdns.org)`);
+  }).on('error', (e) => {
+    console.log('[hanul-editor] 포트 443 에러:', e.message);
+  });
+} catch (e) {
+  console.log('[hanul-editor] SSL 인증서 로드 실패:', e.message);
+}

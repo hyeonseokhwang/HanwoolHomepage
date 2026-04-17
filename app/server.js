@@ -34,6 +34,16 @@ app.use(session({
 }));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
+// SEO: sitemap.xml / robots.txt — 루트 경로로 직접 서빙
+app.get('/sitemap.xml', (_req, res) => {
+  res.type('application/xml');
+  res.sendFile(path.join(__dirname, '..', 'public', 'sitemap.xml'));
+});
+app.get('/robots.txt', (_req, res) => {
+  res.type('text/plain');
+  res.sendFile(path.join(__dirname, '..', 'public', 'robots.txt'));
+});
+
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'ejs');
 app.set('view cache', false);
@@ -266,7 +276,7 @@ app.post('/api/chat', async (req, res) => {
       .slice(0, 3);
     const mainKeyword = keywords[0] || question.replace(/[?？！!.,。、\s]/g,'').slice(0, 6);
 
-    // 3) 2중 하이브리드 검색: 게시글 pgvector + 게시글 키워드 (경전 제외 — 여의선원 아카이브 범위 내에서만)
+    // 3) 3중 하이브리드 검색: 게시글 pgvector + 게시글 키워드 + 경전(book_chunks) pgvector
     // OR → AND: 모든 키워드를 포함하는 게시글만 반환 (오탐 방지)
     const postKeywordWhere = keywords.length > 1
       ? keywords.map((_,i) => `(content ILIKE $${i+1} OR title ILIKE $${i+1})`).join(' AND ')
@@ -275,7 +285,12 @@ app.post('/api/chat', async (req, res) => {
       ? keywords.map(k => `%${k.replace(/[%_]/g,'\\$&')}%`)
       : [`%${mainKeyword.replace(/[%_]/g,'\\$&')}%`];
 
-    const [postsByVec, postsByKw] = await Promise.all([
+    // 경전은 OR 조건 (하나라도 포함되면 검색)
+    const bookKeywordWhere = keywords.length > 1
+      ? keywords.map((_,i) => `chunk_text ILIKE $${i+1}`).join(' OR ')
+      : `chunk_text ILIKE $1`;
+
+    const [postsByVec, postsByKw, booksByVec, booksByKw] = await Promise.all([
       // (A) 게시글 pgvector (임베딩 있는 건만)
       pool.query(
         `SELECT id, title, LEFT(content, 1000) AS excerpt, board, created_at,
@@ -291,6 +306,23 @@ app.post('/api/chat', async (req, res) => {
          FROM yeouiseonwon.posts
          WHERE (${postKeywordWhere}) AND content IS NOT NULL AND content != ''
          ORDER BY created_at DESC LIMIT 8`,
+        postKeywordParams
+      ).catch(() => ({ rows: [] })),
+      // (C) 경전 pgvector (book_chunks)
+      pool.query(
+        `SELECT id, book_name, chunk_index, LEFT(chunk_text, 800) AS excerpt,
+                1-(embedding <=> $1::vector) AS similarity
+         FROM yeouiseonwon.book_chunks
+         WHERE embedding IS NOT NULL
+         ORDER BY embedding <=> $1::vector LIMIT 5`,
+        [vecStr]
+      ).catch(() => ({ rows: [] })),
+      // (D) 경전 키워드 검색
+      pool.query(
+        `SELECT id, book_name, chunk_index, LEFT(chunk_text, 800) AS excerpt
+         FROM yeouiseonwon.book_chunks
+         WHERE (${bookKeywordWhere}) AND chunk_text IS NOT NULL
+         ORDER BY chunk_index ASC LIMIT 5`,
         postKeywordParams
       ).catch(() => ({ rows: [] })),
     ]);
@@ -310,16 +342,41 @@ app.post('/api/chat', async (req, res) => {
         allPosts.push({ ...r, source: 'kw' });
       }
     }
-    const usePosts = allPosts.slice(0, 8);
+    const usePosts = allPosts.slice(0, 6);
+
+    // 경전: pgvector 0.35+ + 키워드 결과, 중복 제거 후 상위 4건
+    const seenBooks = new Set();
+    const allBooks = [];
+    for (const r of booksByVec.rows) {
+      const key = `${r.book_name}-${r.chunk_index}`;
+      if (r.similarity >= 0.30 && !seenBooks.has(key)) {
+        seenBooks.add(key);
+        allBooks.push({ ...r, source: 'vec' });
+      }
+    }
+    for (const r of booksByKw.rows) {
+      const key = `${r.book_name}-${r.chunk_index}`;
+      if (!seenBooks.has(key)) {
+        seenBooks.add(key);
+        allBooks.push({ ...r, source: 'kw' });
+      }
+    }
+    const useBooks = allBooks.slice(0, 4);
 
     // 디버그: 키워드 + 결과 수 로그
-    console.log(`[chat-debug] q="${question}" kw=[${keywords}] main="${mainKeyword}" vecPosts=${postsByVec.rows.filter(r=>r.similarity>=0.35).length} kwPosts=${postsByKw.rows.length} merged=${usePosts.length}`);
+    console.log(`[chat-debug] q="${question}" kw=[${keywords}] main="${mainKeyword}" vecPosts=${postsByVec.rows.filter(r=>r.similarity>=0.35).length} kwPosts=${postsByKw.rows.length} merged=${usePosts.length} books=${useBooks.length}`);
 
-    const context = usePosts.length
+    const postContext = usePosts.length
       ? '[여의선원 카페 게시글 — 법문 및 수행 기록]\n' + usePosts.map((r,i) =>
           `[게시글${i+1}] (${r.board} · ${r.title})\n${r.excerpt}`
         ).join('\n\n')
       : '';
+    const bookContext = useBooks.length
+      ? '[한울영성 경전 자료]\n' + useBooks.map((r,i) =>
+          `[경전${i+1}] (${r.book_name} · ${r.chunk_index}번째 단락)\n${r.excerpt}`
+        ).join('\n\n')
+      : '';
+    const context = [postContext, bookContext].filter(Boolean).join('\n\n');
 
     // 4) GPT 답변 — SSE 스트리밍 (gpt-4o 고품질)
     res.setHeader('Content-Type', 'text/event-stream');
@@ -328,6 +385,7 @@ app.post('/api/chat', async (req, res) => {
 
     const sources = [
       ...usePosts.slice(0, 3).map(r => ({ type: 'post', id: r.id, title: r.title, board: r.board })),
+      ...useBooks.slice(0, 2).map(r => ({ type: 'book', id: r.id, title: r.book_name, board: '경전' })),
     ];
     res.write(`data: ${JSON.stringify({ type: 'sources', sources })}\n\n`);
 
@@ -338,29 +396,27 @@ app.post('/api/chat', async (req, res) => {
         {
           role: 'system',
           content: [
-            '당신은 여의선원(여의명상센터) 카페 아카이브 안내자입니다.',
-            '여의선원 네이버 카페에 수십 년간 수집된 법문·수행 게시글을 기반으로만 답변합니다.',
+            '당신은 여의선원(여의명상센터) 카페 아카이브 및 한울영성 경전 안내자입니다.',
+            '여의선원 네이버 카페에 수십 년간 수집된 법문·수행 게시글과 한울영성 경전(한울말씀강론, 한울수행법, 한울수도법, 한울명상록, O의실체 등)을 기반으로 답변합니다.',
             '',
             '## ⚠️ 답변 범위 제한 (반드시 준수)',
-            '- 오직 제공된 [게시글N] 자료에 근거하여 답변하세요.',
+            '- 오직 제공된 [게시글N] 및 [경전N] 자료에 근거하여 답변하세요.',
             '- 자료에 없는 내용은 "아카이브에서 관련 자료를 찾지 못했습니다"라고 안내하세요.',
-            '- 경전(한울계시록, 한울수행법, 한울수도법, 한울명상록, 한울말씀강론 등) 전문 암송·낭독·전체 텍스트 출력 요청은 거절하세요.',
-            '- 경전·교리·철학 체계에 대한 독자적인 해설은 하지 마세요.',
-            '- 여의선원 카페 게시글 외 외부 지식으로 추론하거나 답변을 생성하지 마세요.',
+            '- 여의선원 카페 게시글·경전 외 외부 지식으로 추론하거나 답변을 생성하지 마세요.',
             '- 타 종교(불교, 기독교, 도교 등)와의 비교 분석 요청은 거절하세요.',
             '- 거절 시: "해당 내용은 수련 프로그램 참여를 통해 직접 안내받으실 수 있습니다."로 안내하세요.',
             '',
             '## 답변 규칙',
-            '1. 제공된 [게시글N] 자료를 최우선으로 활용하여 답변하세요.',
-            '2. 게시글 원문을 직접 인용(따옴표)하며 구체적으로 설명하세요.',
-            '3. 답변 끝에 출처([게시글N] 게시판명 · 제목)를 반드시 밝히세요.',
-            '4. 자료가 없으면 "아카이브에서 관련 게시글을 찾지 못했습니다. 다른 키워드로 검색해보세요."라고 답변하세요.',
+            '1. 제공된 [게시글N] 및 [경전N] 자료를 최우선으로 활용하여 답변하세요.',
+            '2. 원문을 직접 인용(따옴표)하며 구체적으로 설명하세요.',
+            '3. 답변 끝에 출처([게시글N] 게시판명 · 제목 또는 [경전N] 경전명)를 반드시 밝히세요.',
+            '4. 자료가 없으면 "아카이브에서 관련 자료를 찾지 못했습니다. 다른 키워드로 검색해보세요."라고 답변하세요.',
             '5. 친절하고 명확하게 답변하세요.',
             '6. 답변은 마크다운 형식으로 작성하세요: **굵게**, > 인용, - 목록 등을 활용하세요.',
             '7. 영어로 질문이 들어오면 영어로 답변하세요. 한국어 질문은 한국어로 답변하세요.',
           ].join('\n'),
         },
-        { role: 'user', content: `## 참고 자료\n${context}\n\n## 질문\n${question}` },
+        { role: 'user', content: `## 참고 자료\n${context || '(관련 자료 없음)'}\n\n## 질문\n${question}` },
       ],
       max_tokens: 1800,
     });
