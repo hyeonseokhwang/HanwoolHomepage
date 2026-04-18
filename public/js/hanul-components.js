@@ -7,7 +7,7 @@
  * 2026-04-17 | 이든(Eden) — UX 고도화
  */
 (function() {
-  const API = 'http://211.104.37.65:8081';
+  const API = 'http://211.104.37.65:4200';
 
   /* ── CSS 주입 ─────────────────────────────────────────────── */
   const style = document.createElement('style');
