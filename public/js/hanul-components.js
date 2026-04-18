@@ -516,77 +516,8 @@
     alert('네이버 OAuth 연동은 서비스 런칭 시 활성화됩니다.');
   });
 
-  /* ── 챗봇 이벤트 ─────────────────────────────────────────── */
-  document.getElementById('hcChatBtn').addEventListener('click', () => {
-    document.getElementById('hcChatOverlay').classList.add('open');
-    document.getElementById('hcChatInput').focus();
-  });
-  document.getElementById('hcChatClose').addEventListener('click', () => {
-    document.getElementById('hcChatOverlay').classList.remove('open', 'fullscreen');
-  });
-  document.getElementById('hcChatOverlay').addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) e.currentTarget.classList.remove('open', 'fullscreen');
-  });
-  document.getElementById('hcChatFullscreen').addEventListener('click', () => {
-    const overlay = document.getElementById('hcChatOverlay');
-    const isFs = overlay.classList.toggle('fullscreen');
-    document.getElementById('hcChatFullscreen').title = isFs ? '일반화면' : '전체화면';
-    document.getElementById('hcChatFullscreen').textContent = isFs ? '⊡' : '⛶';
-  });
-
-  // 입력창 자동 높이
-  document.getElementById('hcChatInput').addEventListener('input', function() {
-    this.style.height = 'auto';
-    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-  });
-  document.getElementById('hcChatInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatA(); }
-  });
-  document.getElementById('hcChatSend').addEventListener('click', sendChatA);
-
-  /* ── 챗봇B 이벤트 ────────────────────────────────────────── */
-  document.getElementById('hcChatBBtn').addEventListener('click', () => {
-    document.getElementById('hcChatBOverlay').classList.add('open');
-    document.getElementById('hcChatBInput').focus();
-  });
-  document.getElementById('hcChatBClose').addEventListener('click', () => {
-    document.getElementById('hcChatBOverlay').classList.remove('open', 'fullscreen');
-  });
-  document.getElementById('hcChatBOverlay').addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) e.currentTarget.classList.remove('open', 'fullscreen');
-  });
-  document.getElementById('hcChatBFullscreen').addEventListener('click', () => {
-    const overlay = document.getElementById('hcChatBOverlay');
-    const isFs = overlay.classList.toggle('fullscreen');
-    document.getElementById('hcChatBFullscreen').title = isFs ? '일반화면' : '전체화면';
-    document.getElementById('hcChatBFullscreen').textContent = isFs ? '⊡' : '⛶';
-  });
-  document.getElementById('hcChatBInput').addEventListener('input', function() {
-    this.style.height = 'auto';
-    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-  });
-  document.getElementById('hcChatBInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatB(); }
-  });
-  document.getElementById('hcChatBSend').addEventListener('click', sendChatB);
-
-  /* ── ESC 전역 핸들러 (전체화면 종료) ─────────────────────── */
-  document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape') return;
-    ['hcChatOverlay','hcChatBOverlay','hcArchiveOverlay','hcPostDetailOverlay','hcLoginOverlay','hcSignupOverlay'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        if (el.classList.contains('fullscreen')) {
-          el.classList.remove('fullscreen');
-        } else if (el.classList.contains('open')) {
-          el.classList.remove('open');
-        }
-      }
-    });
-  });
-
-  /* ── 챗봇 공통 SSE 함수 팩토리 ───────────────────────────── */
-  function makeSendChat({ endpointPath, streamingFlag, inputId, sendBtnId, messagesId, welcomeSelector, getStreaming, setStreaming }) {
+  /* ── 챗봇 공통 SSE 함수 팩토리 (이벤트 바인딩 전에 선언 필수) ──── */
+  function makeSendChat({ endpointPath, inputId, sendBtnId, messagesId, welcomeSelector, getStreaming, setStreaming }) {
     return async function() {
       if (getStreaming()) return;
       const input = document.getElementById(inputId);
@@ -657,6 +588,24 @@
     };
   }
 
+  function appendChatMsg(role, text, containerId) {
+    const container = document.getElementById(containerId || 'hcChatMessages');
+    const wrap = document.createElement('div');
+    wrap.className = 'hc-chat-msg ' + role;
+    const bubble = document.createElement('div');
+    bubble.className = 'hc-chat-bubble';
+    bubble.textContent = text;
+    wrap.appendChild(bubble);
+    container.appendChild(wrap);
+    scrollChatBottom(containerId);
+    return bubble;
+  }
+
+  function scrollChatBottom(containerId) {
+    const el = document.getElementById(containerId || 'hcChatMessages');
+    if (el) el.scrollTop = el.scrollHeight;
+  }
+
   const sendChatA = makeSendChat({
     endpointPath: '/api/chat/dharma',
     inputId: 'hcChatInput',
@@ -677,23 +626,74 @@
     setStreaming: (v) => { chatStreamingB = v; },
   });
 
-  function appendChatMsg(role, text, containerId) {
-    const container = document.getElementById(containerId || 'hcChatMessages');
-    const wrap = document.createElement('div');
-    wrap.className = 'hc-chat-msg ' + role;
-    const bubble = document.createElement('div');
-    bubble.className = 'hc-chat-bubble';
-    bubble.textContent = text;
-    wrap.appendChild(bubble);
-    container.appendChild(wrap);
-    scrollChatBottom(containerId);
-    return bubble;
-  }
+  /* ── 챗봇 이벤트 ─────────────────────────────────────────── */
+  document.getElementById('hcChatBtn').addEventListener('click', () => {
+    document.getElementById('hcChatOverlay').classList.add('open');
+    document.getElementById('hcChatInput').focus();
+  });
+  document.getElementById('hcChatClose').addEventListener('click', () => {
+    document.getElementById('hcChatOverlay').classList.remove('open', 'fullscreen');
+  });
+  document.getElementById('hcChatOverlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) e.currentTarget.classList.remove('open', 'fullscreen');
+  });
+  document.getElementById('hcChatFullscreen').addEventListener('click', () => {
+    const overlay = document.getElementById('hcChatOverlay');
+    const isFs = overlay.classList.toggle('fullscreen');
+    document.getElementById('hcChatFullscreen').title = isFs ? '일반화면' : '전체화면';
+    document.getElementById('hcChatFullscreen').textContent = isFs ? '⊡' : '⛶';
+  });
 
-  function scrollChatBottom(containerId) {
-    const el = document.getElementById(containerId || 'hcChatMessages');
-    if (el) el.scrollTop = el.scrollHeight;
-  }
+  // 입력창 자동 높이
+  document.getElementById('hcChatInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+  });
+  document.getElementById('hcChatInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatA(); }
+  });
+  document.getElementById('hcChatSend').addEventListener('click', sendChatA);
+
+  /* ── 챗봇B 이벤트 ────────────────────────────────────────── */
+  document.getElementById('hcChatBBtn').addEventListener('click', () => {
+    document.getElementById('hcChatBOverlay').classList.add('open');
+    document.getElementById('hcChatBInput').focus();
+  });
+  document.getElementById('hcChatBClose').addEventListener('click', () => {
+    document.getElementById('hcChatBOverlay').classList.remove('open', 'fullscreen');
+  });
+  document.getElementById('hcChatBOverlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) e.currentTarget.classList.remove('open', 'fullscreen');
+  });
+  document.getElementById('hcChatBFullscreen').addEventListener('click', () => {
+    const overlay = document.getElementById('hcChatBOverlay');
+    const isFs = overlay.classList.toggle('fullscreen');
+    document.getElementById('hcChatBFullscreen').title = isFs ? '일반화면' : '전체화면';
+    document.getElementById('hcChatBFullscreen').textContent = isFs ? '⊡' : '⛶';
+  });
+  document.getElementById('hcChatBInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+  });
+  document.getElementById('hcChatBInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatB(); }
+  });
+  document.getElementById('hcChatBSend').addEventListener('click', sendChatB);
+
+  /* ── ESC 전역 핸들러 (전체화면 종료) ─────────────────────── */
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    ['hcChatOverlay','hcChatBOverlay','hcArchiveOverlay','hcPostDetailOverlay','hcLoginOverlay','hcSignupOverlay'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        if (el.classList.contains('fullscreen')) {
+          el.classList.remove('fullscreen');
+        } else if (el.classList.contains('open')) {
+          el.classList.remove('open');
+        }
+      }
+    });
+  });
 
   /* ── 아카이브 이벤트 ─────────────────────────────────────── */
   document.getElementById('hcArchiveBtn').addEventListener('click', () => {
