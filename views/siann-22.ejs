@@ -1,2091 +1,410 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>한울사상 여의명상센터 — 한울 · 여의수행 · 유○론적 각성</title>
-  <meta name="description" content="한울사상 여의명상센터. 한울 김준원 큰스승님이 창시하고 무견 김상국 스승님이 지도하는 여의수행, 유○론적 각성, 집중수도 안내."/>
-  <meta name="keywords" content="한울사상,여의명상,여의수행,유○론적 각성,집중수도,무견,김상국,한울,여의선원"/>
-  <meta property="og:title" content="한울사상 여의명상센터"/>
-  <meta property="og:description" content="한울 · 여의수행 · 유○론적 각성 — 한올과 한울의 조화, 영적 각성의 길"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:locale" content="ko_KR"/>
-  <meta property="og:site_name" content="한울사상 여의명상센터"/>
-  <meta property="og:url" content="https://hanulspirit.kr/"/>
-  <meta property="og:image" content="https://hanulspirit.kr/public/img/og-image.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="한울사상 여의명상센터"/>
-  <meta name="twitter:description" content="한울 · 여의수행 · 유○론적 각성 — 한올과 한울의 조화, 영적 각성의 길"/>
-  <meta name="twitter:image" content="https://hanulspirit.kr/public/img/og-image.jpg"/>
-  <link rel="canonical" href="https://hanulspirit.kr/"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500&family=Noto+Sans+KR:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    <%
-    /* ── 이미지 완전 제거 — CSS 배경+타이포그래피 전용 시안 ── */
-    const themes={
-      1: {n:'Ivory Warm',  bg:'#FAFAF7',bg2:'#F4F0E8',bg3:'#E8E0CE',
-          ac:'#7A5230',acR:'122,82,48',tx:'#1A1410',t2:'#4A3828',gr:'#8A7868',
-          nav:'rgba(250,250,247,0.97)',foot:'#12100E',bd:'rgba(122,82,48,0.15)',
-          dark:'#1C1008',dark2:'#2A1A0C'},
-      2: {n:'Forest Calm', bg:'#0A1409',bg2:'#111C0E',bg3:'#162210',
-          ac:'#7CB860',acR:'124,184,96',tx:'#E0EED8',t2:'#B8D4A8',gr:'#608060',
-          nav:'rgba(10,20,9,0.97)',foot:'#050A04',bd:'rgba(124,184,96,0.18)',
-          dark:'#051008',dark2:'#0A180C'},
-      3: {n:'Pure White',  bg:'#FFFFFF',bg2:'#F8F8F6',bg3:'#EEEEEC',
-          ac:'#303030',acR:'48,48,48',tx:'#111',t2:'#444',gr:'#888',
-          nav:'rgba(255,255,255,0.97)',foot:'#111',bd:'rgba(0,0,0,0.10)',
-          dark:'#0A0A0A',dark2:'#181818'},
-      4: {n:'Amber Night', bg:'#1A1208',bg2:'#221808',bg3:'#2C1E0A',
-          ac:'#D08830',acR:'208,136,48',tx:'#F5EAD4',t2:'#D9C9A8',gr:'#8A7658',
-          nav:'rgba(26,18,8,0.97)',foot:'#0A0804',bd:'rgba(208,136,48,0.18)',
-          dark:'#0C0804',dark2:'#1A1208'},
-      5: {n:'Pearl Sky',   bg:'#F4F6F8',bg2:'#E8EEF6',bg3:'#DAE4F0',
-          ac:'#4A6A9E',acR:'74,106,158',tx:'#1A2840',t2:'#3A4C68',gr:'#7A90B0',
-          nav:'rgba(244,246,248,0.97)',foot:'#1A2840',bd:'rgba(74,106,158,0.15)',
-          dark:'#0C1828',dark2:'#162038'},
-      6: {n:'Night Rose',  bg:'#0D0818',bg2:'#140C28',bg3:'#1C1034',
-          ac:'#C490D4',acR:'196,144,212',tx:'#F0E8FF',t2:'#D0C0F0',gr:'#8870A8',
-          nav:'rgba(13,8,24,0.97)',foot:'#06040E',bd:'rgba(196,144,212,0.18)',
-          dark:'#060410',dark2:'#0E081E'},
-      7: {n:'Bamboo',      bg:'#F8F5EC',bg2:'#F0EBD8',bg3:'#E4DCC4',
-          ac:'#5C7A3E',acR:'92,122,62',tx:'#2A3018',t2:'#4A5830',gr:'#7A8A68',
-          nav:'rgba(248,245,236,0.97)',foot:'#1A2010',bd:'rgba(92,122,62,0.15)',
-          dark:'#141A0C',dark2:'#1E2814'},
-      8: {n:'Stone',       bg:'#131313',bg2:'#1C1C1C',bg3:'#222',
-          ac:'#A8B4C0',acR:'168,180,192',tx:'#E8EAEC',t2:'#B8BCC4',gr:'#686E78',
-          nav:'rgba(19,19,19,0.97)',foot:'#070707',bd:'rgba(168,180,192,0.15)',
-          dark:'#060606',dark2:'#0E0E0E'},
-      9: {n:'Teal',        bg:'#051618',bg2:'#081E22',bg3:'#0C2428',
-          ac:'#38B8C4',acR:'56,184,196',tx:'#E0F4F6',t2:'#B0E0E8',gr:'#508888',
-          nav:'rgba(5,22,24,0.97)',foot:'#020A0C',bd:'rgba(56,184,196,0.18)',
-          dark:'#020E10',dark2:'#061418'},
-      10:{n:'Warm Cream',  bg:'#FDFAF3',bg2:'#F5EDD8',bg3:'#EBE0C0',
-          ac:'#B8820A',acR:'184,130,10',tx:'#1A1400',t2:'#3A2E10',gr:'#8A7A40',
-          nav:'rgba(253,250,243,0.97)',foot:'#0D0A00',bd:'rgba(184,130,10,0.15)',
-          dark:'#0D0A00',dark2:'#1A1408'},
-      11:{n:'Deep Blue',   bg:'#02101C',bg2:'#041828',bg3:'#062030',
-          ac:'#4A9ECC',acR:'74,158,204',tx:'#E0EEFF',t2:'#B0CCE8',gr:'#4A6A88',
-          nav:'rgba(2,16,28,0.97)',foot:'#01080E',bd:'rgba(74,158,204,0.18)',
-          dark:'#010810',dark2:'#021018'},
-      12:{n:'Linen',       bg:'#F7F0E4',bg2:'#EDE4D4',bg3:'#E0D4BE',
-          ac:'#8B6840',acR:'139,104,64',tx:'#2C2018',t2:'#4A3828',gr:'#8A7860',
-          nav:'rgba(247,240,228,0.97)',foot:'#1C1408',bd:'rgba(139,104,64,0.15)',
-          dark:'#140E08',dark2:'#1E1610'},
-      13:{n:'Moss',        bg:'#0A1208',bg2:'#101A0C',bg3:'#162010',
-          ac:'#88BA48',acR:'136,186,72',tx:'#E4F0D8',t2:'#C0D8A8',gr:'#688850',
-          nav:'rgba(10,18,8,0.97)',foot:'#050804',bd:'rgba(136,186,72,0.18)',
-          dark:'#060E04',dark2:'#0A1408'},
-      14:{n:'Indigo',      bg:'#07091E',bg2:'#0C1030',bg3:'#10163C',
-          ac:'#7888D4',acR:'120,136,212',tx:'#E8EAFF',t2:'#C0C8F0',gr:'#5868A0',
-          nav:'rgba(7,9,30,0.97)',foot:'#03040F',bd:'rgba(120,136,212,0.18)',
-          dark:'#040614',dark2:'#080A20'},
-      15:{n:'Parchment',   bg:'#F4EDD8',bg2:'#EDE4C8',bg3:'#E0D4B0',
-          ac:'#6B4C22',acR:'107,76,34',tx:'#2A1C08',t2:'#4A3420',gr:'#7A6040',
-          nav:'rgba(244,237,216,0.97)',foot:'#1A1005',bd:'rgba(107,76,34,0.15)',
-          dark:'#110C04',dark2:'#1C1408'},
-      16:{n:'Rose',        bg:'#FDF6F8',bg2:'#F5E8EC',bg3:'#ECD8DE',
-          ac:'#C06878',acR:'192,104,120',tx:'#281420',t2:'#482034',gr:'#907888',
-          nav:'rgba(253,246,248,0.97)',foot:'#140A10',bd:'rgba(192,104,120,0.15)',
-          dark:'#140810',dark2:'#1E1018'},
-      17:{n:'Obsidian',    bg:'#050505',bg2:'#0A0A0A',bg3:'#111',
-          ac:'#D4A840',acR:'212,168,64',tx:'#F0EEE0',t2:'#C8C4B8',gr:'#686858',
-          nav:'rgba(5,5,5,0.97)',foot:'#020202',bd:'rgba(212,168,64,0.18)',
-          dark:'#020202',dark2:'#080806'},
-      18:{n:'Celadon',     bg:'#0A1618',bg2:'#0E1E22',bg3:'#122428',
-          ac:'#70B4AA',acR:'112,180,170',tx:'#E0F2F0',t2:'#B8D8D4',gr:'#508880',
-          nav:'rgba(10,22,24,0.97)',foot:'#04080A',bd:'rgba(112,180,170,0.18)',
-          dark:'#050E10',dark2:'#081418'},
-      19:{n:'Sky',         bg:'#F4F6FA',bg2:'#E8EEF8',bg3:'#DCE4F0',
-          ac:'#3A5898',acR:'58,88,152',tx:'#181E38',t2:'#303C64',gr:'#7080A8',
-          nav:'rgba(244,246,250,0.97)',foot:'#181E38',bd:'rgba(58,88,152,0.14)',
-          dark:'#0E1428',dark2:'#182038'},
-      20:{n:'Copper',      bg:'#100A08',bg2:'#1C1008',bg3:'#241408',
-          ac:'#C07840',acR:'192,120,64',tx:'#F4E8D4',t2:'#D4C0A8',gr:'#806048',
-          nav:'rgba(16,10,8,0.97)',foot:'#080404',bd:'rgba(192,120,64,0.18)',
-          dark:'#080504',dark2:'#100A06'}
-    };
-    const t=themes[themeId]||themes[1];
-    %>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한울영성개발원 — E안: 하이브리드 최적안 (CEO 추천)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --charcoal:#1C1C1C;--charcoal-mid:#2D2D2D;
+  --cream:#FAF8F4;--cream-dark:#F0EDE7;
+  --gold:#C9A96E;--gold-deep:#A8883F;--gold-light:rgba(201,169,110,0.12);
+  --forest:#4A7C59;--white:#fff;--text:#2D2D2D;--muted:#6B6B6B;
+  --radius:10px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden;}
 
-    /* ── RESET ── */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:'Noto Sans KR',sans-serif;font-weight:300;background:<%= t.bg %>;color:<%= t.tx %>;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+/* Plan badge */
+.plan-badge{position:fixed;top:16px;right:16px;z-index:999;background:var(--gold);color:var(--charcoal);padding:8px 16px;border-radius:4px;font-size:0.76rem;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
 
-    /* ── NAV ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:800;padding:0 clamp(16px,4vw,80px);height:68px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,box-shadow .4s}
-    nav.solid{background:<%= t.nav %>;backdrop-filter:blur(24px);box-shadow:0 1px 0 <%= t.bd %>}
-    .logo{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:400;color:#fff;letter-spacing:.06em;text-decoration:none}
-    nav.solid .logo{color:<%= t.tx %>}
-    .nl{display:flex;gap:40px;list-style:none}
-    .nl a{font-size:12px;letter-spacing:.06em;color:rgba(255,255,255,.7);text-decoration:none;transition:color .2s}
-    nav.solid .nl a{color:<%= t.t2 %>}
-    .nl a:hover{color:<%= t.ac %>}
-    .nl-sep{color:rgba(255,255,255,.2);font-size:10px;user-select:none}
-    nav.solid .nl-sep{color:<%= t.bd %>}
-    .nl-page{border-bottom:1px solid transparent;transition:color .2s,border-color .2s!important}
-    .nl-page:hover{border-bottom-color:<%= t.ac %>!important}
-    .ncta{padding:10px 28px;border:1px solid rgba(255,255,255,.45);color:#fff;font-size:11px;letter-spacing:.1em;transition:.25s;text-decoration:none}
-    nav.solid .ncta{border-color:<%= t.bd %>;color:<%= t.ac %>}
-    .ncta:hover{background:<%= t.ac %>;border-color:<%= t.ac %>;color:#fff}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(28,28,28,0.97);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(201,169,110,0.12);}
+.nav-inner{max-width:1240px;margin:0 auto;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-c{width:38px;height:38px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:14px;color:var(--gold);}
+.logo-t{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:700;color:var(--white);}
+.logo-s{font-size:0.6rem;color:rgba(201,169,110,0.65);display:block;margin-top:1px;}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
+.nav-links a{text-decoration:none;color:rgba(255,255,255,0.65);font-size:0.82rem;transition:color 0.2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{border:1px solid var(--gold)!important;color:var(--gold)!important;padding:8px 20px;border-radius:3px;font-weight:600!important;}
 
-    /* ── HERO — 100vh CSS 전용 ── */
-    .hero{
-      position:relative;width:100%;max-width:100vw;height:100vh;overflow:hidden;margin:0;padding:0;
-      background:radial-gradient(ellipse 90% 80% at 35% 55%, <%= t.dark2 %> 0%, <%= t.dark %> 65%);
-    }
-    /* 우상단 광원 효과 */
-    .hero::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse 50% 50% at 78% 18%, rgba(<%= t.acR %>,.09) 0%, transparent 60%);
-      pointer-events:none
-    }
-    /* 하단 글라스 효과 */
-    .hero::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:45%;
-      background:linear-gradient(to top, rgba(0,0,0,.6) 0%, transparent 100%);
-      pointer-events:none
-    }
-    /* 좌측 수직 그리드선 */
-    .hero-vline{
-      position:absolute;left:80px;top:0;bottom:0;width:1px;
-      background:linear-gradient(to bottom, transparent 5%, rgba(<%= t.acR %>,.4) 25%, rgba(<%= t.acR %>,.4) 75%, transparent 95%);
-      z-index:1
-    }
-    /* 배경 대형 한자 "天" */
-    .hero-kanji{
-      position:absolute;right:8vw;top:50%;transform:translateY(-52%);
-      font-family:'Noto Serif KR',serif;font-size:clamp(18rem,32vw,32rem);font-weight:200;
-      color:rgba(255,255,255,.10);line-height:1;pointer-events:none;user-select:none;z-index:1
-    }
-    .hero-body{
-      position:absolute;top:50%;left:0;right:0;
-      transform:translateY(-40%);
-      padding:0 clamp(24px,8vw,112px) 0;z-index:2
-    }
-    .hero-eyebrow{
-      display:block;font-size:10px;letter-spacing:.42em;
-      color:rgba(<%= t.acR %>,.65);text-transform:uppercase;margin-bottom:22px
-    }
-    .hero-h1{
-      font-family:'Noto Serif KR',serif;
-      font-size:clamp(1.8rem,7.2vw,6.4rem);
-      font-weight:200;color:#fff;line-height:1.1;margin-bottom:48px;max-width:820px;
-      letter-spacing:.02em
-    }
-    .hero-h1 em{font-style:normal;font-weight:300;color:<%= t.ac %>}
-    .hero-btn{
-      display:inline-block;padding:17px 58px;
-      background:<%= t.ac %>;border:1px solid <%= t.ac %>;color:#fff;
-      font-size:11px;font-weight:400;letter-spacing:.2em;
-      text-decoration:none;transition:.3s
-    }
-    .hero-btn:hover{background:transparent;border-color:#fff;color:#fff}
-    .hero-btn2{
-      display:inline-block;padding:17px 42px;margin-left:16px;
-      border:1px solid rgba(255,255,255,.45);color:rgba(255,255,255,.85);
-      font-size:11px;font-weight:300;letter-spacing:.2em;
-      text-decoration:none;transition:.3s
-    }
-    .hero-btn2:hover{background:rgba(255,255,255,.08);border-color:#fff}
-    .scroll-ind{
-      position:absolute;bottom:34px;right:80px;z-index:2;
-      display:flex;flex-direction:column;align-items:center;gap:7px;
-      color:rgba(255,255,255,.32);font-size:9px;letter-spacing:.2em
-    }
-    .scroll-line{
-      width:1px;height:48px;
-      background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);
-      animation:sl 2.2s infinite
-    }
-    @keyframes sl{
-      0%{transform:scaleY(0);transform-origin:top}
-      50%{transform:scaleY(1);transform-origin:top}
-      51%{transform:scaleY(1);transform-origin:bottom}
-      100%{transform:scaleY(0);transform-origin:bottom}
-    }
+/* Section commons */
+.section{padding:110px 5%;}
+.section-inner{max-width:1240px;margin:0 auto;}
+.s-eye{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.s-eye-line{width:22px;height:1px;background:var(--gold);}
+.s-eye-text{color:var(--gold);font-size:0.68rem;letter-spacing:2.5px;text-transform:uppercase;}
+.s-title{font-family:'Noto Serif KR',serif;font-size:2.3rem;font-weight:700;color:var(--charcoal);margin-bottom:14px;line-height:1.35;}
+.s-title em{color:var(--gold);font-style:normal;}
+.s-desc{color:var(--muted);font-size:0.95rem;line-height:2;max-width:560px;}
+.btn-gold{background:var(--gold);color:var(--charcoal);padding:15px 36px;border-radius:3px;font-weight:700;font-size:0.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:background 0.2s;}
+.btn-gold:hover{background:var(--gold-deep);}
+.btn-outline{border:1px solid rgba(201,169,110,0.5);color:var(--gold);padding:15px 36px;border-radius:3px;font-size:0.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:border-color 0.2s;}
+.btn-outline:hover{border-color:var(--gold);}
+.btns{display:flex;gap:12px;flex-wrap:wrap;}
 
-    /* ── PHILOSOPHY STRIP ── */
-    .phil-strip{
-      display:grid;grid-template-columns:repeat(5,1fr);
-      height:80px;overflow:hidden
-    }
-    .ps{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-      font-size:10px;letter-spacing:.18em;color:rgba(255,255,255,.75);padding:0 8px;text-align:center
-    }
-    .ps-ko{font-size:13px;font-family:'Noto Serif KR',serif;font-weight:400;letter-spacing:.08em}
-    .ps:nth-child(1){background:<%= t.ac %>}
-    .ps:nth-child(2){background:rgba(<%= t.acR %>,.82)}
-    .ps:nth-child(3){background:rgba(<%= t.acR %>,.65)}
-    .ps:nth-child(4){background:rgba(<%= t.acR %>,.48)}
-    .ps:nth-child(5){background:rgba(<%= t.acR %>,.32)}
+/* ─── S1: HERO ─────────────────────── */
+.hero{min-height:100vh;background:var(--charcoal);display:flex;align-items:center;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:url('great-master.png') center 20%/cover;opacity:0.26;filter:grayscale(18%);}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(110deg,rgba(28,28,28,0.93) 50%,rgba(28,28,28,0.55));}
+.hero-inner{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:140px 5% 100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.hero-tag{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.hero-tag-line{width:28px;height:1px;background:var(--gold);}
+.hero-tag-text{color:var(--gold);font-size:0.7rem;letter-spacing:2.5px;text-transform:uppercase;}
+.hero h1{font-family:'Noto Serif KR',serif;font-size:3.1rem;color:var(--white);line-height:1.42;margin-bottom:24px;}
+.hero h1 em{color:var(--gold);font-style:normal;}
+.hero-div{width:44px;height:2px;background:var(--gold);margin:24px 0;}
+.hero-quote{font-family:'Noto Serif KR',serif;color:rgba(255,255,255,0.62);font-size:0.97rem;line-height:2.1;margin-bottom:40px;font-style:italic;}
+.hero-lineage{display:flex;align-items:center;gap:10px;margin-top:28px;opacity:0.55;}
+.hero-lineage span{font-size:0.7rem;color:rgba(201,169,110,0.8);letter-spacing:0.5px;}
+.hero-lineage .arr{color:rgba(201,169,110,0.4);}
+/* hero right: portrait */
+.hero-right{position:relative;}
+.hero-frame{width:100%;max-width:360px;margin:0 auto;aspect-ratio:3/4;position:relative;}
+.hero-frame-img{width:100%;height:100%;background:url('great-master.png') center/cover;border-radius:4px;filter:brightness(0.78);}
+.hero-frame-over{position:absolute;inset:0;border-radius:4px;background:linear-gradient(to top,rgba(28,28,28,0.65),transparent 50%);}
+.hero-frame-cap{position:absolute;bottom:20px;left:20px;right:20px;}
+.hero-frame-name{font-family:'Noto Serif KR',serif;font-size:1.2rem;font-weight:700;color:var(--white);}
+.hero-frame-role{color:var(--gold);font-size:0.7rem;letter-spacing:1.2px;margin-top:3px;}
+.hero-frame-badge{position:absolute;top:-14px;right:-14px;background:var(--gold);color:var(--charcoal);padding:12px 16px;border-radius:4px;text-align:center;}
+.hero-frame-badge strong{font-family:'Noto Serif KR',serif;font-size:1.2rem;font-weight:700;display:block;}
+.hero-frame-badge span{font-size:0.6rem;display:block;margin-top:1px;}
+/* successor */
+.hero-successor{display:flex;align-items:center;gap:12px;margin-top:16px;background:rgba(28,28,28,0.7);border:1px solid rgba(201,169,110,0.25);border-radius:6px;padding:10px 14px;}
+.hero-succ-img{width:44px;height:44px;border-radius:50%;background:url('mugyeon-master.png') center/cover;border:2px solid var(--gold);flex-shrink:0;}
+.hero-succ-label{font-size:0.6rem;color:rgba(201,169,110,0.7);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+.hero-succ-name{font-family:'Noto Serif KR',serif;font-size:0.84rem;font-weight:700;color:var(--white);}
+.hero-succ-arrow{margin-left:auto;color:rgba(201,169,110,0.5);font-size:0.7rem;white-space:nowrap;}
+/* scroll */
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);text-align:center;color:rgba(255,255,255,0.35);font-size:0.65rem;letter-spacing:2px;}
+.hero-scroll-bar{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);margin:8px auto 0;animation:sp 2s ease-in-out infinite;}
+@keyframes sp{0%,100%{opacity:0.4}50%{opacity:1}}
 
-    /* ── ABOUT — 72% / 28% ── */
-    .about{display:grid;grid-template-columns:72% 1fr;min-height:680px}
-    .about-vis{
-      position:relative;overflow:hidden;
-      background:linear-gradient(145deg, <%= t.bg3 %> 0%, <%= t.bg2 %> 100%);
-      display:flex;align-items:center;justify-content:center
-    }
-    /* 큰 한글 "한" */
-    .about-glyph{
-      font-family:'Noto Serif KR',serif;
-      font-size:clamp(16rem,24vw,26rem);font-weight:200;
-      color:rgba(<%= t.acR %>,.09);line-height:1;
-      user-select:none;pointer-events:none;
-      transition:color .6s
-    }
-    .about-vis:hover .about-glyph{color:rgba(<%= t.acR %>,.15)}
-    /* 대각 텍스처 */
-    .about-vis::before{
-      content:'';position:absolute;inset:0;
-      background:repeating-linear-gradient(
-        -42deg,transparent,transparent 72px,
-        rgba(<%= t.acR %>,.022) 72px,rgba(<%= t.acR %>,.022) 73px
-      );pointer-events:none
-    }
-    /* 상단 강조선 */
-    .about-vis::after{
-      content:'';position:absolute;top:0;left:0;right:0;height:3px;
-      background:linear-gradient(to right,transparent,<%= t.ac %> 40%,<%= t.ac %> 60%,transparent)
-    }
-    .about-txt{background:<%= t.bg2 %>;display:flex;flex-direction:column;justify-content:center;padding:80px 68px}
-    .sec-label{display:block;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:<%= t.ac %>;margin-bottom:20px}
-    .sec-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.7rem,2.6vw,2.4rem);font-weight:300;color:<%= t.tx %>;line-height:1.45;margin-bottom:20px}
-    .divider{width:32px;height:1.5px;background:<%= t.ac %>;margin-bottom:28px}
-    .blockq{padding-left:20px;border-left:2px solid rgba(<%= t.acR %>,.45);font-family:'Noto Serif KR',serif;font-size:.92rem;font-weight:300;color:<%= t.t2 %>;line-height:2.1;font-style:italic}
+/* ─── S2: 법통 스트립 ────────────────── */
+.strip-section{background:var(--white);padding:72px 5%;border-top:1px solid rgba(201,169,110,0.08);}
+.strip-inner{max-width:1240px;margin:0 auto;}
+.strip-eye{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:52px;}
+.strip-eye-line{width:28px;height:1px;background:rgba(201,169,110,0.4);}
+.strip-eye-text{color:var(--gold);font-size:0.68rem;letter-spacing:2.5px;text-transform:uppercase;}
+.strip-cards{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;}
+.strip-card{text-align:center;padding:0 24px;}
+.strip-portrait{width:130px;height:168px;border-radius:8px;background-size:cover;background-position:center;margin:0 auto 18px;filter:brightness(0.82);}
+.sp-gm{background-image:url('great-master.png');}
+.sp-mu{background-image:url('mugyeon-master.png');}
+.sp-center{width:90px;height:90px;border-radius:50%;background:var(--gold-light);border:2px solid rgba(201,169,110,0.28);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:1.8rem;color:var(--gold);}
+.strip-card-lbl{font-size:0.62rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:8px;}
+.strip-card-name{font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:700;color:var(--charcoal);margin-bottom:4px;}
+.strip-card-desc{font-size:0.78rem;color:var(--muted);line-height:1.7;}
+.strip-arrow{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;}
+.sa-line{width:56px;height:1px;background:linear-gradient(to right,rgba(201,169,110,0.15),var(--gold),rgba(201,169,110,0.15));}
+.sa-arr{color:var(--gold);font-size:1rem;}
+.sa-txt{font-size:0.6rem;color:rgba(201,169,110,0.6);white-space:nowrap;}
 
-    /* ── STATS STRIP ── */
-    .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);background:<%= t.bg3 %>}
-    .ss{padding:44px 20px;text-align:center;border-right:1px solid <%= t.bd %>}
-    .ss:last-child{border-right:none}
-    .ss-num{font-family:'Noto Serif KR',serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:200;color:<%= t.ac %>;line-height:1;margin-bottom:10px}
-    .ss-unit{font-size:1.1rem;font-family:'Noto Sans KR',sans-serif}
-    .ss-label{font-size:11px;letter-spacing:.18em;color:<%= t.gr %>}
+/* ─── S3: 왜 한울인가 ─────────────────── */
+.why-section{background:var(--cream);}
+.why-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px;}
+.why-card{background:var(--white);border-radius:var(--radius);padding:36px 28px;border:1px solid rgba(201,169,110,0.1);transition:transform 0.25s,box-shadow 0.25s;}
+.why-card:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(0,0,0,0.07);}
+.why-num{font-family:'Noto Serif KR',serif;font-size:2.8rem;color:rgba(201,169,110,0.2);font-weight:700;margin-bottom:12px;line-height:1;}
+.why-card h3{font-family:'Noto Serif KR',serif;font-size:1.1rem;font-weight:700;color:var(--charcoal);margin-bottom:10px;}
+.why-card p{color:var(--muted);font-size:0.86rem;line-height:1.9;}
+.why-card .why-cta{display:inline-block;color:var(--gold);font-size:0.8rem;margin-top:16px;text-decoration:none;font-weight:600;}
 
-    /* ── TEACHER PROFILE ── */
-    .teacher-wrap{background:<%= t.bg %>;padding:80px 80px;display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:center}
-    .teacher-portrait{
-      position:relative;display:flex;align-items:center;justify-content:center;
-      aspect-ratio:1/1;max-width:280px;overflow:hidden;
-      background:linear-gradient(145deg,<%= t.bg3 %> 0%,<%= t.bg2 %> 100%);
-    }
-    .teacher-portrait::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-42deg,transparent,transparent 64px,rgba(<%= t.acR %>,.025) 64px,rgba(<%= t.acR %>,.025) 65px)}
-    .teacher-portrait::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,<%= t.ac %> 40%,<%= t.ac %> 60%,transparent)}
-    .teacher-glyph{font-family:'Noto Serif KR',serif;font-size:clamp(8rem,14vw,14rem);font-weight:200;color:rgba(<%= t.acR %>,.12);line-height:1;user-select:none}
-    .teacher-txt .sec-label{margin-bottom:12px}
-    .teacher-name{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,2.8vw,2.4rem);font-weight:300;color:<%= t.tx %>;line-height:1.3;margin-bottom:6px}
-    .teacher-title{font-size:12px;letter-spacing:.14em;color:<%= t.ac %>;margin-bottom:20px}
-    .teacher-divider{width:32px;height:1.5px;background:<%= t.ac %>;margin-bottom:24px}
-    .teacher-body{font-size:13.5px;color:<%= t.t2 %>;line-height:2;max-width:520px}
+/* ─── S4: 수련 과정 타임라인 ─────────── */
+.timeline-section{background:var(--white);}
+.tl-wrap{margin-top:60px;}
+.tl-track{display:grid;grid-template-columns:repeat(8,1fr);gap:0;position:relative;}
+.tl-track::before{content:'';position:absolute;top:29px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.tl-step{text-align:center;padding:0 6px;cursor:pointer;}
+.tl-dot{width:18px;height:18px;border-radius:50%;border:2px solid rgba(201,169,110,0.3);background:var(--white);margin:20px auto 16px;position:relative;z-index:1;transition:all 0.3s;}
+.tl-step.active .tl-dot,.tl-step:hover .tl-dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 5px rgba(201,169,110,0.12);}
+.tl-num{font-size:0.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;opacity:0.7;}
+.tl-step.active .tl-num{opacity:1;}
+.tl-name{font-family:'Noto Serif KR',serif;font-size:0.76rem;font-weight:700;color:var(--charcoal-mid);line-height:1.5;}
+.tl-detail{background:var(--cream);border-radius:var(--radius);padding:40px 44px;margin-top:44px;border:1px solid rgba(201,169,110,0.12);display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:center;}
+.tl-detail-num{font-family:'Noto Serif KR',serif;font-size:4rem;font-weight:700;color:rgba(201,169,110,0.18);line-height:1;}
+.tl-tag{display:inline-block;background:var(--gold-light);color:var(--gold);padding:3px 12px;border-radius:2px;font-size:0.66rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;}
+.tl-title{font-family:'Noto Serif KR',serif;font-size:1.28rem;font-weight:700;color:var(--charcoal);margin-bottom:10px;}
+.tl-desc{color:var(--muted);font-size:0.88rem;line-height:1.95;}
+.tl-cta-wrap{text-align:center;margin-top:36px;}
 
-    /* ── TEACHING PANELS — 3 full sections ── */
-    .panels{display:flex;flex-direction:column}
-    .panel{
-      display:grid;grid-template-columns:50% 50%;min-height:580px;overflow:hidden
-    }
-    .panel-canvas{
-      position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden
-    }
-    .panel:nth-child(1) .panel-canvas{background:linear-gradient(145deg,<%= t.dark2 %> 0%,<%= t.dark %> 100%)}
-    .panel:nth-child(2) .panel-canvas{background:linear-gradient(145deg,<%= t.bg3 %> 0%,<%= t.bg2 %> 100%)}
-    .panel:nth-child(3) .panel-canvas{background:linear-gradient(145deg,<%= t.dark %> 0%,<%= t.dark2 %> 100%)}
-    /* 배경 숫자 */
-    .p-num-bg{
-      font-family:'Noto Serif KR',serif;font-size:clamp(14rem,20vw,22rem);font-weight:200;
-      line-height:1;user-select:none;pointer-events:none
-    }
-    .panel:nth-child(odd) .p-num-bg{color:rgba(255,255,255,.03)}
-    .panel:nth-child(2) .p-num-bg{color:rgba(<%= t.acR %>,.065)}
-    /* 우측 강조선 (홀수 패널) */
-    .panel:nth-child(odd) .panel-canvas::after{
-      content:'';position:absolute;right:0;top:0;bottom:0;width:3px;
-      background:linear-gradient(to bottom,transparent,<%= t.ac %> 30%,<%= t.ac %> 70%,transparent)
-    }
-    .panel:nth-child(2){direction:rtl}
-    .panel:nth-child(2) .panel-txt{direction:ltr;text-align:right}
-    .panel:nth-child(2) .divider{margin-left:auto}
-    .panel-txt{background:<%= t.bg2 %>;display:flex;flex-direction:column;justify-content:center;padding:80px 68px}
-    .panel:nth-child(2) .panel-txt{background:<%= t.bg %>}
-    .p-order{font-size:10px;letter-spacing:.3em;color:<%= t.ac %>;margin-bottom:16px}
-    .p-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.9rem,3.2vw,3rem);font-weight:200;color:<%= t.tx %>;line-height:1.22;margin-bottom:8px}
-    .p-subtitle{font-size:.82rem;letter-spacing:.06em;color:<%= t.gr %>;margin-bottom:20px}
-    .p-body{font-size:13.5px;color:<%= t.t2 %>;line-height:2;max-width:400px}
-    .panel:nth-child(2) .p-body{margin-left:auto}
+/* ─── S5: 한울예술 ───────────────────── */
+.arts-section{background:var(--cream);}
+.arts-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:56px;}
+.art-card{background:var(--white);border-radius:var(--radius);padding:30px 18px;text-align:center;border:1px solid rgba(201,169,110,0.1);transition:transform 0.25s,box-shadow 0.25s;}
+.art-card:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(0,0,0,0.07);border-color:rgba(201,169,110,0.35);}
+.art-icon{width:56px;height:56px;border-radius:50%;background:var(--gold-light);border:1px solid rgba(201,169,110,0.2);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.art-card .art-tag{font-size:0.62rem;color:var(--gold);letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
+.art-card h4{font-family:'Noto Serif KR',serif;font-size:0.95rem;font-weight:700;color:var(--charcoal);margin-bottom:8px;}
+.art-card p{color:var(--muted);font-size:0.78rem;line-height:1.85;}
 
-    /* ── FULLSCREEN QUOTE — 100vh ── */
-    .fq{
-      position:relative;height:100vh;overflow:hidden;
-      background:radial-gradient(ellipse 100% 80% at 50% 50%, <%= t.dark2 %> 0%, <%= t.dark %> 70%);
-      display:flex;align-items:center;justify-content:center
-    }
-    .fq::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(<%= t.acR %>,.10) 0%, transparent 65%);
-      pointer-events:none
-    }
-    /* 배경 따옴표 */
-    .fq-qdeco{
-      position:absolute;font-family:Georgia,serif;font-size:clamp(22rem,38vw,44rem);
-      font-weight:400;color:rgba(255,255,255,.018);line-height:1;
-      top:50%;left:50%;transform:translate(-48%,-58%);
-      pointer-events:none;user-select:none
-    }
-    .fq-inner{position:relative;z-index:2;text-align:center;padding:60px 100px;max-width:940px}
-    .fq-txt{font-family:'Noto Serif KR',serif;font-size:clamp(1.9rem,3.6vw,3.2rem);font-weight:200;color:#fff;line-height:1.75;margin-bottom:36px;letter-spacing:.03em}
-    .fq-txt em{font-style:normal;color:<%= t.ac %>}
-    .fq-rule{width:48px;height:1px;background:rgba(<%= t.acR %>,.55);margin:0 auto 28px}
-    .fq-cite{font-size:11px;letter-spacing:.3em;color:rgba(<%= t.acR %>,.75);text-transform:uppercase}
+/* ─── S6: 오늘의 법문 ────────────────── */
+.lawmun-section{background:var(--charcoal);padding:112px 5%;overflow:hidden;}
+.lawmun-inner{max-width:960px;margin:0 auto;text-align:center;}
+.law-eye{color:var(--gold);font-size:0.68rem;letter-spacing:3px;margin-bottom:36px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.law-eye::before,.law-eye::after{content:'';width:40px;height:1px;background:rgba(201,169,110,0.3);}
+/* 탭 UI */
+.law-tabs{display:flex;justify-content:center;gap:0;margin-bottom:44px;border:1px solid rgba(201,169,110,0.2);border-radius:6px;overflow:hidden;max-width:480px;margin-left:auto;margin-right:auto;}
+.law-tab{flex:1;padding:12px 20px;font-size:0.82rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:rgba(201,169,110,0.5);letter-spacing:0.5px;transition:all 0.25s;font-family:inherit;}
+.law-tab.active{background:rgba(201,169,110,0.12);color:var(--gold);border-bottom:2px solid var(--gold);}
+.law-tab-count{font-size:0.68rem;color:rgba(201,169,110,0.4);margin-left:6px;}
+.law-tab.active .law-tab-count{color:rgba(201,169,110,0.7);}
+.law-panel{display:none;}.law-panel.active{display:block;}
+.law-slides{position:relative;min-height:200px;}
+.law-slide{position:absolute;inset:0;opacity:0;transform:translateY(14px);transition:opacity 0.8s,transform 0.8s;display:flex;flex-direction:column;justify-content:center;}
+.law-slide.active{opacity:1;transform:translateY(0);}
+.law-mark{font-family:'Noto Serif KR',serif;font-size:4.5rem;color:rgba(201,169,110,0.18);line-height:0.8;margin-bottom:14px;display:block;}
+.law-text{font-family:'Noto Serif KR',serif;font-size:1.5rem;color:rgba(255,255,255,0.86);line-height:1.9;letter-spacing:-0.2px;}
+.law-src{margin-top:28px;color:rgba(201,169,110,0.6);font-size:0.76rem;}
+.law-dots{display:flex;justify-content:center;gap:8px;margin-top:52px;}
+.law-dot{width:5px;height:5px;border-radius:50%;background:rgba(201,169,110,0.22);cursor:pointer;border:none;transition:all 0.3s;}
+.law-dot.active{background:var(--gold);transform:scale(1.35);}
+.law-progress{width:100%;height:1px;background:rgba(201,169,110,0.08);margin-top:24px;overflow:hidden;position:relative;}
+.law-bar{position:absolute;left:0;top:0;height:100%;background:var(--gold);width:0;transition:width 0.1s linear;}
+.law-cta-row{margin-top:44px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 
-    /* ── PROGRAMS — 3 CSS cards ── */
-    .programs{padding:100px 80px;background:<%= t.bg %>}
-    .sec-head{text-align:center;margin-bottom:56px}
-    .prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
-    .prog{
-      position:relative;height:520px;overflow:hidden;cursor:pointer;
-      display:flex;flex-direction:column;justify-content:flex-end
-    }
-    .prog-bg{
-      position:absolute;inset:0;transition:transform .65s cubic-bezier(.16,1,.3,1)
-    }
-    .prog:hover .prog-bg{transform:scale(1.05)}
-    .prog:nth-child(1) .prog-bg{background:linear-gradient(155deg,<%= t.dark2 %> 0%,<%= t.dark %> 100%)}
-    .prog:nth-child(2) .prog-bg{background:linear-gradient(155deg,<%= t.bg3 %> 0%,<%= t.dark2 %> 100%)}
-    .prog:nth-child(3) .prog-bg{background:linear-gradient(155deg,<%= t.dark %> 0%,<%= t.bg3 %> 100%)}
-    /* 배경 한자 */
-    .prog-glyph{
-      position:absolute;top:32px;right:32px;
-      font-family:'Noto Serif KR',serif;font-size:7rem;font-weight:200;
-      color:rgba(<%= t.acR %>,.12);line-height:1;
-      pointer-events:none;user-select:none
-    }
-    /* 하단 그라디언트 */
-    .prog-fade{
-      position:absolute;inset:0;
-      background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.1) 55%,rgba(0,0,0,0) 100%)
-    }
-    /* 하단 강조선 */
-    .prog::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-      background:<%= t.ac %>;transform:scaleX(0);transform-origin:left;
-      transition:transform .4s ease
-    }
-    .prog:hover::after{transform:scaleX(1)}
-    .prog-body{position:relative;z-index:2;padding:32px;transform:translateY(16px);transition:transform .4s ease}
-    .prog:hover .prog-body{transform:translateY(0)}
-    .prog-n{font-size:9px;letter-spacing:.28em;color:rgba(255,255,255,.4);margin-bottom:8px}
-    .prog-title{font-family:'Noto Serif KR',serif;font-size:1.35rem;font-weight:300;color:#fff;line-height:1.3;margin-bottom:8px}
-    .prog-desc{font-size:12px;color:rgba(255,255,255,.58);line-height:1.75;opacity:0;transition:opacity .35s .05s}
-    .prog:hover .prog-desc{opacity:1}
+/* ─── S7: 참가자 후기 ────────────────── */
+.reviews-section{background:var(--white);}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;}
+.review-card{background:var(--cream);border-radius:var(--radius);padding:32px 28px;border:1px solid rgba(201,169,110,0.1);}
+.review-stars{color:var(--gold);font-size:0.85rem;margin-bottom:14px;letter-spacing:2px;}
+.review-text{font-family:'Noto Serif KR',serif;font-size:0.92rem;color:var(--charcoal);line-height:1.95;margin-bottom:20px;font-style:italic;}
+.review-author{display:flex;align-items:center;gap:12px;}
+.review-avatar{width:38px;height:38px;border-radius:50%;background:var(--gold-light);border:1.5px solid rgba(201,169,110,0.25);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.review-name{font-size:0.82rem;font-weight:700;color:var(--charcoal);}
+.review-meta{font-size:0.72rem;color:var(--muted);}
+.reviews-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;background:var(--charcoal);border-radius:var(--radius);overflow:hidden;}
+.r-stat{padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,0.05);}
+.r-stat:last-child{border-right:none;}
+.r-stat-num{font-family:'Noto Serif KR',serif;font-size:2.2rem;color:var(--gold);font-weight:700;}
+.r-stat-lbl{color:rgba(255,255,255,0.4);font-size:0.78rem;margin-top:6px;line-height:1.6;}
 
-    /* ── SCHEDULE ── */
-    .schedule{background:<%= t.bg2 %>;padding:88px 80px}
-    .sl-head{text-align:center;margin-bottom:52px}
-    .sl-list{}
-    .sl-item{display:grid;grid-template-columns:110px 1fr auto;align-items:center;gap:40px;padding:24px 0;border-bottom:1px solid <%= t.bd %>}
-    .sl-item:first-child{border-top:1px solid <%= t.bd %>}
-    .sl-date{text-align:center}
-    .sl-d{font-family:'Noto Serif KR',serif;font-size:2rem;font-weight:200;color:<%= t.ac %>;line-height:1}
-    .sl-m{font-size:9px;letter-spacing:.18em;color:<%= t.gr %>}
-    .sl-info h4{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:400;color:<%= t.tx %>;margin-bottom:3px}
-    .sl-info p{font-size:12px;color:<%= t.t2 %>}
-    .sl-tag{display:inline-block;padding:5px 16px;border:1px solid <%= t.bd %>;font-size:9px;letter-spacing:.14em;color:<%= t.ac %>}
+/* ─── S8: 수련 일정 ─────────────────── */
+.sch-section{background:var(--cream);}
+.sch-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:56px;}
+.sch-cards{display:flex;flex-direction:column;gap:14px;}
+.sch-card{background:var(--white);border-radius:8px;padding:18px 20px;border:1px solid rgba(201,169,110,0.1);display:flex;gap:16px;align-items:flex-start;}
+.sch-date{min-width:48px;background:var(--charcoal);border-radius:6px;padding:8px;text-align:center;}
+.sch-month{color:var(--gold);font-size:0.58rem;font-weight:700;letter-spacing:1px;}
+.sch-day{color:var(--white);font-family:'Noto Serif KR',serif;font-size:1.4rem;font-weight:700;line-height:1.1;}
+.sch-info h4{font-family:'Noto Serif KR',serif;font-size:0.95rem;font-weight:700;color:var(--charcoal);margin-bottom:3px;}
+.sch-info p{color:var(--muted);font-size:0.8rem;line-height:1.7;}
+.sch-badge{display:inline-block;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:2px;margin-bottom:5px;letter-spacing:0.8px;}
+.sch-open{background:rgba(74,124,89,0.12);color:var(--forest);}
+.sch-soon{background:rgba(201,169,110,0.12);color:var(--gold);}
+.sch-panel{background:var(--charcoal);border-radius:var(--radius);padding:34px 28px;display:flex;flex-direction:column;gap:22px;}
+.sch-stat{border-bottom:1px solid rgba(255,255,255,0.05);padding-bottom:18px;}
+.sch-stat:last-of-type{border-bottom:none;}
+.sch-stat-n{font-family:'Noto Serif KR',serif;font-size:2.2rem;color:var(--gold);font-weight:700;}
+.sch-stat-l{color:rgba(255,255,255,0.4);font-size:0.78rem;margin-top:4px;line-height:1.6;}
 
-    /* ── DHARMA REGISTRATION ── */
-    .beopun-sec{background:<%= t.bg %>;padding:88px 80px;text-align:center}
-    .beopun-intro{font-size:14px;color:<%= t.t2 %>;line-height:2;max-width:560px;margin:0 auto 44px}
-    .beopun-open-btn{display:inline-block;padding:17px 58px;background:<%= t.ac %>;border:1px solid <%= t.ac %>;color:#fff;font-size:11px;font-weight:400;letter-spacing:.2em;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-transform:uppercase;transition:.3s}
-    .beopun-open-btn:hover{background:transparent;color:<%= t.ac %>}
-    @media(max-width:768px){.beopun-sec{padding:48px 24px}}
+/* ─── S9: 갤러리 ────────────────────── */
+.gallery-section{background:var(--charcoal);padding:110px 5%;}
+.gallery-section .s-title{color:var(--white);}
+.gallery-section .s-eye-text,.gallery-section .s-eye-line{color:var(--gold);background:var(--gold);}
+.gallery-section .s-desc{color:rgba(255,255,255,0.45);}
+.gal-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:240px 240px;gap:10px;margin-top:52px;}
+.gal-item{border-radius:8px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;overflow:hidden;cursor:pointer;transition:transform 0.2s;}
+.gal-item:hover{transform:scale(1.02);}
+.gal-item.large{grid-row:span 2;}
+.gal-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,28,28,0.6),transparent);opacity:0;transition:opacity 0.3s;}
+.gal-item:hover .gal-overlay{opacity:1;}
+.gal-label{position:absolute;bottom:14px;left:14px;right:14px;opacity:0;transform:translateY(8px);transition:all 0.3s;color:var(--white);font-size:0.82rem;font-weight:600;}
+.gal-item:hover .gal-label{opacity:1;transform:translateY(0);}
+.gal-cta{text-align:center;margin-top:36px;}
 
-    /* ── CTA ── */
-    .cta{
-      position:relative;height:520px;overflow:hidden;
-      background:radial-gradient(ellipse 90% 80% at 30% 50%, <%= t.dark2 %> 0%, <%= t.dark %> 70%);
-      display:flex;align-items:center;justify-content:center
-    }
-    .cta::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse 50% 60% at 70% 50%, rgba(<%= t.acR %>,.11) 0%, transparent 55%);
-      pointer-events:none
-    }
-    /* 사선 패턴 */
-    .cta::after{
-      content:'';position:absolute;inset:0;
-      background:repeating-linear-gradient(-55deg,transparent,transparent 90px,rgba(<%= t.acR %>,.025) 90px,rgba(<%= t.acR %>,.025) 91px);
-      pointer-events:none
-    }
-    .cta-inner{position:relative;z-index:2;text-align:center;padding:40px 100px}
-    .cta-h{font-family:'Noto Serif KR',serif;font-size:clamp(2rem,3.8vw,3rem);font-weight:200;color:#fff;line-height:1.45;margin-bottom:12px}
-    .cta-sub{font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.08em;margin-bottom:48px}
-    .cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-    .cta-btn{display:inline-block;padding:16px 56px;border:1px solid rgba(255,255,255,.5);color:#fff;font-size:11px;font-weight:300;letter-spacing:.2em;text-decoration:none;transition:.3s}
-    .cta-btn:hover{background:rgba(255,255,255,.1);border-color:#fff}
-    .cta-btn.solid{background:<%= t.ac %>;border-color:<%= t.ac %>}
-    .cta-btn.solid:hover{background:transparent;border-color:#fff}
+/* ─── CTA ─────────────────────────── */
+.cta-section{background:var(--charcoal);padding:120px 5%;text-align:center;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(201,169,110,0.06),transparent 65%);}
+.cta-inner{position:relative;z-index:1;max-width:660px;margin:0 auto;}
+.cta-inner h2{font-family:'Noto Serif KR',serif;font-size:2.5rem;color:var(--white);line-height:1.45;margin-bottom:18px;}
+.cta-inner h2 em{color:var(--gold);font-style:normal;}
+.cta-inner p{color:rgba(255,255,255,0.55);font-size:0.95rem;line-height:1.9;margin-bottom:40px;}
 
-    /* ── 신청 폼 ── */
-    .apply-sec{background:<%= t.dark2 %>;padding:100px clamp(40px,6vw,160px)}
-    .apply-inner{max-width:1200px;margin:0 auto}
-    .apply-h{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:200;color:#fff;margin:16px 0 8px;letter-spacing:.02em}
-    .apply-sub{font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.05em;margin-bottom:40px}
-    .apply-form{display:flex;flex-direction:column;gap:20px}
-    .af-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .af-field{display:flex;flex-direction:column;gap:7px}
-    .af-field label{font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.45)}
-    .af-field input,.af-field select,.af-field textarea{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.85);padding:12px 16px;font-size:13px;font-family:inherit;border-radius:3px;outline:none;transition:border-color .2s}
-    .af-field input:focus,.af-field select,.af-field textarea:focus{border-color:rgba(<%= t.acR %>,.5)}
-    .af-field select option{background:<%= t.dark2 %>;color:#fff}
-    .af-field textarea{resize:vertical;min-height:100px}
-    .af-submit{display:flex;justify-content:center;margin-top:8px}
-    .af-submit button{cursor:pointer;font-family:inherit}
-    .af-notice{font-size:11px;color:rgba(255,255,255,.3);text-align:center;letter-spacing:.04em;margin-top:8px}
+/* Sitemap callout */
+.sitemap-callout{background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:var(--radius);padding:32px 36px;margin-top:56px;}
+.sitemap-callout h4{font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:700;color:var(--charcoal);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.sitemap-callout h4::before{content:'';width:16px;height:1px;background:var(--gold);}
+.sitemap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0;border:1px solid rgba(201,169,110,0.1);border-radius:6px;overflow:hidden;}
+.sitemap-col{padding:14px 10px;border-right:1px solid rgba(201,169,110,0.1);}
+.sitemap-col:last-child{border-right:none;}
+.sitemap-col-head{font-size:0.72rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(201,169,110,0.15);}
+.sitemap-col-item{font-size:0.7rem;color:var(--muted);margin-bottom:6px;line-height:1.6;}
+.sitemap-col-item.new{color:var(--forest);font-weight:600;}
+.sitemap-col-item.new::before{content:'★ ';}
 
-    /* ── 갤러리 ── */
-    .gallery-sec{background:<%= t.dark %>;padding:100px clamp(40px,6vw,160px)}
-    .gallery-inner{max-width:1600px;margin:0 auto}
-    .gallery-h{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:200;color:#fff;margin:16px 0 40px;letter-spacing:.02em}
-    .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-    .gallery-card{border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.07)}
-    .gallery-img-placeholder{height:180px;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,.25);letter-spacing:.06em;background:rgba(255,255,255,.03)}
-    .gallery-img{width:100%;height:200px;object-fit:cover;display:block}
-    .gallery-cap{font-size:11px;color:rgba(255,255,255,.4);padding:10px 14px;letter-spacing:.04em}
-    .gallery-note{font-size:11px;color:rgba(255,255,255,.25);margin-top:32px;text-align:center;letter-spacing:.04em}
+/* Footer */
+footer{background:#0F0F0F;padding:60px 5% 28px;}
+.footer-inner{max-width:1240px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px;}
+.f-brand-logo{font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:700;color:var(--white);margin-bottom:12px;}
+.f-brand-logo .fg{color:var(--gold);}
+.f-brand-p{color:rgba(255,255,255,0.3);font-size:0.8rem;line-height:1.9;}
+.f-col h4{color:rgba(255,255,255,0.6);font-size:0.8rem;font-weight:700;margin-bottom:14px;}
+.f-col ul{list-style:none;}
+.f-col li{margin-bottom:8px;color:rgba(255,255,255,0.3);font-size:0.78rem;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.05);padding-top:22px;text-align:center;color:rgba(255,255,255,0.2);font-size:0.74rem;}
 
-    /* ── 오시는 길 ── */
-    .contact-sec{background:<%= t.dark2 %>;padding:100px clamp(40px,6vw,160px)}
-    .contact-inner{max-width:1600px;margin:0 auto}
-    .contact-h{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:200;color:#fff;margin:16px 0 40px;letter-spacing:.02em}
-    .contact-wrap{display:grid;grid-template-columns:340px 1fr;gap:48px;align-items:start}
-    .contact-info{display:flex;flex-direction:column;gap:28px}
-    .ci-item{display:flex;flex-direction:column;gap:6px}
-    .ci-label{font-size:10px;letter-spacing:.14em;color:rgba(<%= t.acR %>,.7);text-transform:uppercase}
-    .ci-val{font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;letter-spacing:.03em}
-    .ci-kakao{display:inline-block;padding:10px 24px;background:#FEE500;color:#000;font-size:12px;font-weight:500;letter-spacing:.04em;border-radius:4px;text-decoration:none;transition:opacity .2s;margin-top:4px;width:fit-content}
-    .ci-kakao:hover{opacity:.85}
+/* Chatbot */
+.chatbot{position:fixed;bottom:26px;right:26px;z-index:500;}
+.chatbot-btn{width:56px;height:56px;border-radius:50%;background:var(--charcoal);border:1.5px solid var(--gold);color:var(--gold);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,0.4);}
+.chatbot-tip{position:absolute;right:66px;top:50%;transform:translateY(-50%);background:var(--charcoal);color:var(--white);font-size:0.72rem;white-space:nowrap;padding:6px 12px;border-radius:4px;border:1px solid rgba(201,169,110,0.2);opacity:0;transition:opacity 0.2s;}
+.chatbot:hover .chatbot-tip{opacity:1;}
 
-    /* ── 반응형 신규 섹션 ── */
-    @media(max-width:1024px){
-      .apply-sec,.gallery-sec,.contact-sec{padding:80px 44px}
-      .gallery-grid{grid-template-columns:repeat(2,1fr)}
-      .contact-wrap{grid-template-columns:1fr}
-    }
-    @media(max-width:768px){
-      .apply-sec,.gallery-sec,.contact-sec{padding:64px 24px}
-      .af-row{grid-template-columns:1fr}
-      .gallery-grid{grid-template-columns:repeat(2,1fr)}
-    }
-    @media(max-width:480px){
-      .gallery-grid{grid-template-columns:1fr}
-    }
-
-    /* ── 법문 ── */
-    .dharma-sec{background:<%= t.dark %>;padding:100px clamp(40px,6vw,160px)}
-    .dharma-inner{max-width:1600px;margin:0 auto}
-    .dharma-h{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:200;color:#fff;margin:16px 0 40px;letter-spacing:.02em}
-    .dharma-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:28px}
-    .dharma-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:24px;cursor:pointer;transition:background .2s}
-    .dharma-card:hover{background:rgba(255,255,255,.08)}
-    .dharma-badge{font-size:10px;letter-spacing:.08em;color:<%= t.ac %>;margin-bottom:10px;display:block}
-    .dharma-title{font-size:13.5px;line-height:1.6;color:#fff;margin-bottom:10px;font-family:'Noto Serif KR',serif;font-weight:300}
-    .dharma-preview{font-size:12px;line-height:1.7;color:rgba(255,255,255,.45);overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
-    .dharma-date{font-size:10px;color:rgba(255,255,255,.3);margin-top:12px;letter-spacing:.04em}
-    .dharma-more{display:inline-block;margin-top:8px;font-size:11px;letter-spacing:.1em;color:<%= t.ac %>;text-decoration:none;border-bottom:1px solid <%= t.ac %>40;padding-bottom:2px}
-    .dharma-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;overflow-y:auto;padding:60px 20px}
-    .dharma-modal-bg.open{display:flex;align-items:flex-start;justify-content:center}
-    .dharma-modal{background:<%= t.dark2 %>;width:100%;max-width:760px;border-radius:10px;overflow:hidden}
-    .dm-header{padding:20px 28px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
-    .dm-title{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:300;color:#fff;line-height:1.4}
-    .dm-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:24px;cursor:pointer;line-height:1;padding:0 4px;flex-shrink:0}
-    .dm-meta{padding:12px 28px;font-size:11px;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:16px}
-    .dm-body{padding:24px 28px;font-size:14px;line-height:2;color:rgba(255,255,255,.75);max-height:60vh;overflow-y:auto;font-family:'Noto Serif KR',serif;font-weight:300;white-space:pre-wrap}
-    /* ── 공지 ── */
-    .notices-sec{background:<%= t.dark2 %>;padding:80px clamp(40px,6vw,160px)}
-    .notices-inner{max-width:1400px;margin:0 auto}
-    .notices-h{font-family:'Noto Serif KR',serif;font-size:clamp(1.4rem,2.5vw,2rem);font-weight:200;color:#fff;margin:16px 0 28px;letter-spacing:.02em}
-    .notice-list{list-style:none}
-    .notice-item{border-bottom:1px solid rgba(255,255,255,.07);padding:14px 0;display:flex;align-items:baseline;gap:16px;cursor:pointer;transition:opacity .2s}
-    .notice-item:hover{opacity:.8}
-    .notice-date{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.06em;flex-shrink:0;min-width:60px}
-    .notice-title{font-size:13.5px;color:rgba(255,255,255,.8);letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    @media(max-width:900px){.dharma-grid{grid-template-columns:1fr 1fr}.dharma-sec,.notices-sec{padding:64px 44px}}
-    @media(max-width:600px){.dharma-grid{grid-template-columns:1fr}.dharma-sec,.notices-sec{padding:64px 24px}}
-    /* ── 연혁 ── */
-    .history-sec{background:<%= t.dark %>;padding:100px clamp(40px,6vw,160px)}
-    .history-inner{max-width:1400px;margin:0 auto}
-    .history-h{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:200;color:#fff;margin:16px 0 48px;letter-spacing:.02em}
-    .history-timeline{position:relative;padding-left:32px}
-    .history-timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,.12)}
-    .ht-item{position:relative;margin-bottom:40px}
-    .ht-item::before{content:'';position:absolute;left:-36px;top:6px;width:8px;height:8px;border-radius:50%;background:<%= t.ac %>}
-    .ht-year{font-size:11px;letter-spacing:.12em;color:<%= t.ac %>;margin-bottom:6px}
-    .ht-text{font-size:13.5px;line-height:1.7;color:rgba(255,255,255,.7);letter-spacing:.02em}
-    /* ── 후기 ── */
-    .review-sec{background:<%= t.dark2 %>;padding:100px clamp(40px,6vw,160px)}
-    .review-inner{max-width:1600px;margin:0 auto}
-    .review-h{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:200;color:#fff;margin:16px 0 40px;letter-spacing:.02em}
-    .review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-    .review-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:28px 24px}
-    .review-quote{font-size:32px;color:<%= t.ac %>;line-height:1;margin-bottom:12px;opacity:.6}"
-    .review-body{font-size:13px;line-height:1.8;color:rgba(255,255,255,.65);letter-spacing:.02em;margin-bottom:16px}
-    .review-author{font-size:11px;letter-spacing:.08em;color:rgba(255,255,255,.4)}
-    @media(max-width:900px){.review-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:600px){.history-sec,.review-sec{padding:64px 24px}.review-grid{grid-template-columns:1fr}}
-    /* ── FOOTER ── */
-    footer{background:<%= t.foot %>;padding:64px 80px 48px;color:rgba(255,255,255,.4)}
-    .ft-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.06)}
-    .ft-brand{font-family:'Noto Serif KR',serif;font-size:1.25rem;color:<%= t.ac %>;font-weight:300;margin-bottom:8px;letter-spacing:.04em}
-    .ft-desc{font-size:12px;line-height:1.9;max-width:250px}
-    .ft-links{display:flex;flex-direction:column;gap:9px}
-    .ft-links a{font-size:12px;color:rgba(255,255,255,.32);text-decoration:none;letter-spacing:.04em;transition:color .2s}
-    .ft-links a:hover{color:<%= t.ac %>}
-    .ft-copy{padding-top:24px;font-size:11px;text-align:center;letter-spacing:.04em}
-
-    /* ── REVEAL ── */
-    .r{opacity:0;transform:translateY(26px);transition:opacity .75s ease,transform .75s ease}
-    .r.v{opacity:1;transform:translateY(0)}
-    .r.d1{transition-delay:.12s}
-    .r.d2{transition-delay:.24s}
-    .r.d3{transition-delay:.36s}
-
-    /* ── RESPONSIVE ── */
-    @media(max-width:1024px){
-      nav{padding:0 44px}.hero-body{padding:0 56px 80px}
-      .about{grid-template-columns:60% 1fr}
-      .about-txt,.panel-txt{padding:60px 44px}
-      .programs{padding:72px 44px}.schedule{padding:72px 44px}
-      .cta-inner{padding:40px 56px}
-      footer{padding:48px 44px}
-    }
-    /* 모바일 전용 퀵 링크 */
-    .nav-mobile{display:none;gap:16px;align-items:center}
-    .nav-mobile a{font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.65);text-decoration:none;transition:color .2s}
-    nav.solid .nav-mobile a{color:<%= t.t2 %>}
-    .nav-mobile a:hover{color:<%= t.ac %>}
-
-    @media(max-width:900px){
-      nav{padding:0 24px}
-      .nl,.ncta{display:none!important}
-      .nav-mobile{display:flex}
-      .hero-kanji{display:none}
-      .hero-body{padding:0 28px 80px}
-      .about{grid-template-columns:1fr}
-      .about-vis{height:220px}
-      .about-txt{padding:48px 28px}
-      .panel{grid-template-columns:1fr;min-height:auto}
-      .panel:nth-child(2){direction:ltr}
-      .panel:nth-child(2) .panel-txt{text-align:left}
-      .panel:nth-child(2) .divider{margin-left:0}
-      .panel:nth-child(2) .p-body{margin-left:0}
-      .panel-canvas{height:200px}
-      .panel-txt{padding:48px 28px}
-      .fq{height:auto;min-height:420px;padding:56px 0}
-      .fq-inner{padding:40px 28px}
-      .prog-grid{grid-template-columns:1fr}
-      .programs{padding:56px 28px}
-      .schedule{padding:56px 28px}
-      .sl-item{grid-template-columns:80px 1fr;gap:20px}
-      .cta{height:auto;min-height:340px;padding:56px 0}
-      .cta-inner{padding:40px 28px}
-      footer{padding:48px 28px}
-      .ft-inner{flex-direction:column;gap:32px}
-    }
-    @media(max-width:768px){
-      .stats-strip{grid-template-columns:repeat(2,1fr)}
-      .ss{padding:28px 16px;border-bottom:1px solid <%= t.bd %>}
-      .ss:nth-child(1),.ss:nth-child(2){border-right:1px solid <%= t.bd %>}
-      .ss:nth-child(3){border-right:none}
-      .teacher-wrap{grid-template-columns:1fr;gap:32px;padding:48px 28px}
-      .teacher-portrait{max-width:180px;margin:0 auto}
-      .lang-btn{font-size:10px;padding:4px 10px;margin-left:4px}
-      .hero-body{padding:0 24px 80px}
-      .hero-h1{font-size:clamp(1.9rem,6.5vw,3.2rem);margin-bottom:28px}
-      .hero-btn{display:block;text-align:center;padding:14px 32px;width:fit-content}
-      .hero-btn2{display:block;text-align:center;margin-left:0;padding:14px 32px;margin-top:12px;width:fit-content}
-      .phil-strip{grid-template-columns:repeat(3,1fr);height:auto}
-      .ps{padding:12px 6px;min-height:64px}
-      .ps:nth-child(4),.ps:nth-child(5){grid-column:span 1}
-      .panel-canvas{height:180px}
-      .panel-txt{padding:40px 24px}
-      .fq-inner{padding:36px 24px}
-      .programs{padding:48px 24px}
-      .schedule{padding:48px 24px}
-      .sl-item{grid-template-columns:80px 1fr;gap:16px}
-      .sl-tag{display:none}
-      .cta-inner{padding:36px 24px}
-      footer{padding:44px 24px}
-    }
-    @media(max-width:480px){
-      .stats-strip{grid-template-columns:repeat(2,1fr)}
-      .teacher-wrap{padding:40px 20px}
-      nav{padding:0 16px}
-      .logo{font-size:13px}
-      .nav-mobile{gap:8px}
-      .nav-mobile a{font-size:9px;letter-spacing:.04em}
-      .lang-btn{padding:3px 8px;font-size:9px}
-      .hero-h1{font-size:1.7rem}
-      .hero-eyebrow{font-size:9px;letter-spacing:.28em;margin-bottom:16px}
-      .phil-strip{grid-template-columns:repeat(2,1fr)}
-      .ps:nth-child(5){grid-column:1 / -1}
-      .about-txt{padding:36px 20px}
-      .sec-title{font-size:1.4rem}
-      .panel-txt{padding:32px 20px}
-      .prog-card{padding:28px 20px}
-      .sl-item{grid-template-columns:70px 1fr;gap:12px}
-      .cta-inner{padding:32px 20px}
-      footer{padding:36px 20px}
-    }
-
-    /* LANGUAGE TOGGLE */
-    .lang-btn{padding:5px 14px;border:1px solid <%= t.ac %>;background:transparent;color:<%= t.ac %>;border-radius:20px;font-size:12px;cursor:pointer;letter-spacing:.08em;transition:all .2s;font-family:'Noto Sans KR',sans-serif}
-    .lang-btn:hover,.lang-btn.active{background:<%= t.ac %>;color:<%= t.bg %>}
-    [data-en]{display:none}
-    body.lang-en [data-ko]{display:none}
-    body.lang-en [data-en]{display:revert}
-
-    /* ── ENGLISH MODE TYPOGRAPHY ── */
-    body.lang-en{font-family:'Inter','Noto Sans KR',sans-serif;letter-spacing:.01em}
-    /* Hero */
-    body.lang-en .hero-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.8rem,7.4vw,7.2rem);letter-spacing:.015em;line-height:1.1}
-    body.lang-en .hero-h1 em{font-style:italic;font-weight:400;letter-spacing:.025em}
-    body.lang-en .hero-eyebrow{font-family:'Inter',sans-serif;letter-spacing:.24em;font-weight:500;font-size:10.5px}
-    /* Sections */
-    body.lang-en .sec-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2.2rem,3.5vw,3.4rem);letter-spacing:.015em;line-height:1.32}
-    body.lang-en .sec-label{font-family:'Inter',sans-serif;letter-spacing:.24em;font-weight:500;font-size:10px}
-    /* Teaching panels */
-    body.lang-en .p-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2.4rem,3.8vw,3.8rem);letter-spacing:.015em;line-height:1.15}
-    body.lang-en .p-subtitle{font-family:'Inter',sans-serif;font-weight:400;letter-spacing:.1em;font-size:.77rem}
-    body.lang-en .p-order{font-family:'Inter',sans-serif;letter-spacing:.3em;font-weight:500;font-size:9px}
-    body.lang-en .p-body{font-family:'Inter',sans-serif;font-weight:300;font-size:14px;line-height:2.2;letter-spacing:.01em}
-    /* About */
-    body.lang-en .about-p{font-family:'Inter',sans-serif;font-size:14.5px;line-height:2.25;letter-spacing:.01em}
-    body.lang-en .blockq{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(1.25rem,2.3vw,1.7rem);line-height:1.75}
-    /* Quote section */
-    body.lang-en .fq-txt{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;letter-spacing:.015em;font-size:clamp(2.4rem,4.2vw,4rem);line-height:1.65}
-    body.lang-en .fq-cite{font-family:'Inter',sans-serif;letter-spacing:.28em;font-size:9.5px}
-    /* Programs */
-    body.lang-en .prog-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:23px;line-height:1.2}
-    body.lang-en .prog-n{font-family:'Inter',sans-serif;letter-spacing:.3em;font-weight:500;font-size:8.5px}
-    body.lang-en .prog-desc{font-family:'Inter',sans-serif;font-weight:300;font-size:12px;line-height:1.85}
-    /* Schedule */
-    body.lang-en .sl-item h4{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1.2rem}
-    body.lang-en .sl-m{font-family:'Inter',sans-serif;letter-spacing:.1em;font-size:8px}
-    body.lang-en .sl-tag{font-family:'Inter',sans-serif;letter-spacing:.14em;font-size:8px}
-    /* CTA */
-    body.lang-en .cta-h{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2.6rem,4.2vw,3.8rem);letter-spacing:.02em;line-height:1.35}
-    body.lang-en .cta-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:16px;line-height:2;color:rgba(255,255,255,.72);max-width:620px;margin-left:auto;margin-right:auto}
-    /* Nav & logo */
-    body.lang-en .logo{font-family:'Cormorant Garamond',serif;font-weight:500;letter-spacing:.12em;font-size:16px}
-    body.lang-en .nl a{font-family:'Inter',sans-serif;letter-spacing:.09em;font-size:11px}
-    body.lang-en .ncta{font-family:'Inter',sans-serif;letter-spacing:.16em;font-size:10px}
-    body.lang-en .nav-mobile a{font-family:'Inter',sans-serif;letter-spacing:.06em}
-    /* Footer */
-    body.lang-en .ft-brand{font-family:'Cormorant Garamond',serif;font-weight:500;letter-spacing:.06em;font-size:1.45rem}
-    body.lang-en .ft-desc{font-family:'Inter',sans-serif;font-size:12px;line-height:2;letter-spacing:.01em}
-    body.lang-en .ft-links a{font-family:'Inter',sans-serif;letter-spacing:.05em;font-size:12px}
-    /* Phil strip */
-    body.lang-en .ps-ko{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:17px;letter-spacing:.03em}
-    body.lang-en .ps{font-family:'Inter',sans-serif;font-size:8.5px;letter-spacing:.14em}
-
-    /* ── EDITOR MODAL (SmartEditor2 통합) ── */
-    .ed-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.88);overflow-y:auto;padding:0 16px 40px}
-    .ed-overlay.open{display:block}
-    .ed-modal{max-width:960px;margin:48px auto 0;background:<%= t.bg %>;border:1px solid <%= t.bd %>;border-radius:8px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5)}
-    .ed-mhead{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid <%= t.bd %>;background:<%= t.bg2 %>}
-    .ed-mtitle{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:400;color:<%= t.tx %>;letter-spacing:.04em}
-    .ed-close{background:none;border:none;cursor:pointer;color:<%= t.gr %>;font-size:26px;line-height:1;padding:0 2px;transition:color .2s}
-    .ed-close:hover{color:<%= t.ac %>}
-    .ed-body{padding:22px 24px}
-    .ed-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-    .ed-toolbar input[type=text]{padding:7px 11px;border:1px solid <%= t.bd %>;border-radius:5px;font-size:13px;font-family:'Noto Sans KR',sans-serif;background:<%= t.bg2 %>;color:<%= t.tx %>;flex:1;min-width:160px;outline:none;transition:border-color .2s}
-    .ed-toolbar input[type=text]:focus{border-color:<%= t.ac %>}
-    .ed-toolbar input[type=text]::placeholder{color:<%= t.gr %>}
-    .ed-toolbar select{padding:7px 10px;border:1px solid <%= t.bd %>;border-radius:5px;font-size:12px;background:<%= t.bg2 %>;color:<%= t.tx %>;font-family:'Noto Sans KR',sans-serif;outline:none;cursor:pointer}
-    .ed-btn{padding:7px 16px;border:none;border-radius:5px;cursor:pointer;font-size:12px;font-family:'Noto Sans KR',sans-serif;letter-spacing:.04em;transition:.15s}
-    .ed-btn-p{background:<%= t.ac %>;color:#fff}
-    .ed-btn-p:hover{opacity:.82}
-    .ed-btn-s{background:<%= t.bg3 %>;color:<%= t.tx %>;border:1px solid <%= t.bd %>}
-    .ed-btn-s:hover{background:<%= t.bg2 %>}
-    .ed-status{font-size:11px;color:<%= t.gr %>;letter-spacing:.04em;margin-left:4px}
-    .ed-status.ok{color:#4A8A3A}
-    .ed-status.err{color:#C05050}
-    .ed-frame{background:#fff;border:1px solid <%= t.bd %>;border-radius:6px;overflow:hidden;margin-bottom:20px}
-    #se-iframe{width:100%;height:480px;border:none;display:block}
-    #save-progress-wrap{display:none;margin-top:8px;padding:0 2px}
-    #save-progress-label{font-size:11px;color:<%= t.t2 %>;margin-bottom:4px;letter-spacing:.04em}
-    #save-progress-bar-outer{height:8px;background:<%= t.bg3 %>;border-radius:4px;overflow:hidden;width:100%}
-    #save-progress-bar-inner{height:100%;width:0%;background:<%= t.ac %>;border-radius:4px;transition:width .2s}
-    #save-progress-detail{font-size:10px;color:<%= t.gr %>;margin-top:2px}
-    .ed-posts-hd{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:400;color:<%= t.t2 %>;margin-bottom:10px;letter-spacing:.03em}
-    .ed-post-item{background:<%= t.bg2 %>;border:1px solid <%= t.bd %>;border-radius:5px;padding:10px 14px;margin-bottom:7px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s}
-    .ed-post-item:hover{background:<%= t.bg3 %>}
-    .ed-post-title{font-size:13px;color:<%= t.tx %>}
-    .ed-post-meta{font-size:11px;color:<%= t.gr %>;white-space:nowrap;margin-left:10px;flex-shrink:0}
-
-    /* ── ARCHIVE MODAL ── */
-    .arc-overlay{display:none;position:fixed;inset:0;z-index:1800;background:rgba(0,0,0,.88);padding:20px}
-    .arc-overlay.open{display:flex;align-items:flex-start;justify-content:center}
-    .arc-modal{max-width:1100px;width:100%;background:<%= t.bg %>;border:1px solid <%= t.bd %>;border-radius:8px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5);display:flex;flex-direction:column;max-height:calc(100vh - 40px)}
-    .arc-head{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid <%= t.bd %>;background:<%= t.bg2 %>;flex-shrink:0}
-    .arc-title{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:400;color:<%= t.tx %>;letter-spacing:.04em}
-    .arc-close{background:none;border:none;cursor:pointer;color:<%= t.gr %>;font-size:26px;line-height:1;padding:0 4px;transition:color .2s}
-    .arc-close:hover{color:<%= t.ac %>}
-    .arc-body{display:flex;flex:1;overflow:hidden}
-    .arc-sidebar{width:200px;flex-shrink:0;overflow-y:auto;border-right:1px solid <%= t.bd %>;background:<%= t.bg2 %>;padding:8px 0}
-    .arc-board-item{padding:9px 16px;font-size:12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-left:2px solid transparent;transition:all .15s;color:<%= t.t2 %>}
-    .arc-board-item:hover{background:<%= t.bg3 %>;color:<%= t.tx %>}
-    .arc-board-item.active{background:<%= t.bg3 %>;border-left-color:<%= t.ac %>;color:<%= t.ac %>;font-weight:500}
-    .arc-board-cnt{font-size:10px;opacity:.6}
-    .arc-main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
-    .arc-searchbar{padding:12px 16px;border-bottom:1px solid <%= t.bd %>;display:flex;gap:8px;flex-shrink:0;background:<%= t.bg %>}
-    .arc-searchbar input{flex:1;padding:7px 10px;border:1px solid <%= t.bd %>;border-radius:5px;font-size:13px;background:<%= t.bg2 %>;color:<%= t.tx %>;outline:none;font-family:'Noto Sans KR',sans-serif}
-    .arc-searchbar input::placeholder{color:<%= t.gr %>}
-    .arc-searchbar input:focus{border-color:<%= t.ac %>}
-    .arc-searchbar button{padding:7px 14px;border:none;border-radius:5px;background:<%= t.ac %>;color:#fff;cursor:pointer;font-size:12px;font-family:'Noto Sans KR',sans-serif}
-    .arc-post-table{width:100%;border-collapse:collapse}
-    .arc-post-table th{background:<%= t.bg2 %>;padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.06em;color:<%= t.gr %>;border-bottom:1px solid <%= t.bd %>;font-weight:400;position:sticky;top:0;z-index:1}
-    .arc-post-table td{padding:9px 12px;font-size:13px;border-bottom:1px solid <%= t.bd %>;color:<%= t.t2 %>}
-    .arc-post-table tr:hover td{background:<%= t.bg2 %>;cursor:pointer}
-    .arc-post-title-cell{color:<%= t.tx %>;max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
-    .arc-badge{font-size:10px;background:rgba(<%= t.acR %>,.12);color:<%= t.ac %>;padding:2px 7px;border-radius:10px;white-space:nowrap}
-    .arc-pagination{display:flex;justify-content:center;gap:6px;padding:12px;flex-shrink:0;flex-wrap:wrap;border-top:1px solid <%= t.bd %>}
-    .arc-pg-btn{padding:5px 10px;border:1px solid <%= t.bd %>;background:<%= t.bg2 %>;border-radius:4px;cursor:pointer;font-size:12px;color:<%= t.t2 %>;font-family:'Noto Sans KR',sans-serif;transition:.15s}
-    .arc-pg-btn.active{background:<%= t.ac %>;color:#fff;border-color:<%= t.ac %>}
-    .arc-pg-btn:hover:not(.active){background:<%= t.bg3 %>}
-
-    /* ── POST DETAIL ── */
-    .pd-overlay{display:none;position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.72);padding:20px;overflow-y:auto}
-    .pd-overlay.open{display:flex;align-items:flex-start;justify-content:center}
-    .pd-modal{max-width:820px;width:100%;background:<%= t.bg %>;border-radius:8px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5)}
-    .pd-head{padding:16px 24px;background:<%= t.bg2 %>;border-bottom:1px solid <%= t.bd %>;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-    .pd-title{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:400;color:<%= t.tx %>;line-height:1.4;flex:1;margin:0}
-    .pd-close{background:none;border:none;cursor:pointer;color:<%= t.gr %>;font-size:26px;line-height:1;flex-shrink:0;transition:color .2s}
-    .pd-close:hover{color:<%= t.ac %>}
-    .pd-meta{padding:10px 24px;font-size:12px;color:<%= t.gr %>;background:<%= t.bg2 %>;border-bottom:1px solid <%= t.bd %>;display:flex;gap:16px;flex-wrap:wrap}
-    .pd-body{padding:24px;font-size:14px;line-height:2;max-height:55vh;overflow-y:auto;color:<%= t.tx %>}
-    .pd-body img{max-width:100%;height:auto;border-radius:4px;margin:8px 0}
-    .pd-body pre{white-space:pre-wrap;font-family:inherit}
-    .pd-comments{padding:16px 24px;border-top:1px solid <%= t.bd %>;background:<%= t.bg2 %>}
-    .pd-comment{padding:8px 12px;background:<%= t.bg %>;border-radius:4px;margin-bottom:6px;font-size:12px;color:<%= t.t2 %>;border:1px solid <%= t.bd %>}
-    .pd-comment-meta{font-size:11px;color:<%= t.gr %>;margin-bottom:3px}
-
-    /* ── CHAT WIDGET ── */
-    .chat-fab{position:fixed;bottom:32px;right:32px;z-index:1400;width:56px;height:56px;border-radius:50%;background:<%= t.ac %>;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:.25s}
-    .chat-fab:hover{transform:scale(1.08)}
-    .chat-fab svg{width:26px;height:26px;fill:#fff}
-    .chat-panel{position:fixed;bottom:100px;right:28px;z-index:1400;width:360px;max-height:520px;background:<%= t.bg %>;border:1px solid <%= t.bd %>;border-radius:12px;box-shadow:0 16px 56px rgba(0,0,0,.45);display:none;flex-direction:column;overflow:hidden}
-    .chat-panel.open{display:flex}
-    .chat-ph{padding:12px 16px;background:<%= t.bg2 %>;border-bottom:1px solid <%= t.bd %>;display:flex;align-items:center;gap:10px;flex-shrink:0}
-    .chat-ph-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,<%= t.ac %>,<%= t.dark %>);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:14px;color:#fff;flex-shrink:0}
-    .chat-ph-name{font-family:'Noto Serif KR',serif;font-size:14px;color:<%= t.tx %>}
-    .chat-ph-sub{font-size:10px;color:<%= t.gr %>;letter-spacing:.04em;margin-top:2px}
-    .chat-ph-close{background:none;border:none;cursor:pointer;color:<%= t.gr %>;font-size:22px;margin-left:auto;line-height:1;transition:color .2s}
-    .chat-ph-close:hover{color:<%= t.ac %>}
-    .chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;min-height:200px}
-    .chat-msgs::-webkit-scrollbar{width:3px}
-    .chat-msgs::-webkit-scrollbar-thumb{background:<%= t.bd %>;border-radius:2px}
-    .c-msg{display:flex;gap:8px;align-items:flex-start}
-    .c-msg.user{flex-direction:row-reverse}
-    .c-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-family:'Noto Serif KR',serif}
-    .c-msg.user .c-avatar{background:<%= t.dark %>;color:rgba(255,255,255,.8)}
-    .c-msg.bot .c-avatar{background:linear-gradient(135deg,<%= t.ac %>,<%= t.dark %>);color:#fff}
-    .c-bubble{max-width:82%;padding:9px 12px;font-size:13px;line-height:1.75;word-break:break-word}
-    .c-msg.user .c-bubble{background:<%= t.dark %>;color:rgba(255,255,255,.9);border-radius:8px 2px 8px 8px}
-    .c-msg.bot .c-bubble{background:<%= t.bg2 %>;color:<%= t.tx %>;border-radius:2px 8px 8px 8px;border-left:2px solid <%= t.ac %>}
-    .chat-input-wrap{border-top:1px solid <%= t.bd %>;padding:10px;display:flex;gap:8px;flex-shrink:0}
-    .chat-input-wrap textarea{flex:1;padding:8px 10px;border:1px solid <%= t.bd %>;border-radius:6px;font-size:13px;font-family:'Noto Sans KR',sans-serif;background:<%= t.bg2 %>;color:<%= t.tx %>;resize:none;outline:none;line-height:1.5;max-height:80px;overflow-y:auto}
-    .chat-input-wrap textarea::placeholder{color:<%= t.gr %>}
-    .chat-input-wrap textarea:focus{border-color:<%= t.ac %>}
-    .chat-send-btn{padding:8px 14px;background:<%= t.ac %>;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-family:'Noto Sans KR',sans-serif;align-self:flex-end;transition:.2s}
-    .chat-send-btn:hover{opacity:.85}
-    .chat-send-btn:disabled{opacity:.4;cursor:default}
-    .c-cursor{display:inline-block;animation:blink .7s step-end infinite}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-    .c-sources{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;padding-left:36px}
-    .c-src-tag{font-size:10px;padding:2px 7px;border-radius:10px;background:<%= t.bg3 %>;color:<%= t.gr %>;border:1px solid <%= t.bd %>}
-  </style>
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  .hero h1{font-size:2.2rem;}
+  .strip-cards{grid-template-columns:1fr;}
+  .strip-arrow{display:none;}
+  .why-cards,.reviews-grid{grid-template-columns:1fr;}
+  .arts-grid{grid-template-columns:repeat(2,1fr);}
+  .gal-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .gal-item.large{grid-row:span 1;}
+  .sch-grid,.footer-top{grid-template-columns:1fr;}
+  .sitemap-grid{grid-template-columns:repeat(2,1fr);}
+  .section{padding:72px 5%;}
+}
+</style>
 </head>
 <body>
+<div class="plan-badge">E안 — 하이브리드 최적안 ★CEO 추천★</div>
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#hero" class="logo">한울사상</a>
-  <ul class="nl">
-    <li><a href="#about" data-ko>한울사상</a><a href="#about" data-en>Philosophy</a></li>
-    <li><a href="#programs" data-ko>프로그램</a><a href="#programs" data-en>Programs</a></li>
-    <li><a href="#schedule" data-ko>일정</a><a href="#schedule" data-en>Schedule</a></li>
-    <li class="nl-sep" aria-hidden="true">|</li>
-    <li><a href="#gallery" data-ko>시설</a><a href="#gallery" data-en>Facility</a></li>
-    <li><a href="#contact" data-ko>문의</a><a href="#contact" data-en>Contact</a></li>
-    <li><a href="/archive" class="nl-page" data-ko>아카이브</a><a href="/archive" class="nl-page" data-en>Archive</a></li>
-    <li><a href="/chat" class="nl-page" data-ko>챗봇</a><a href="/chat" class="nl-page" data-en>AI Chat</a></li>
-  </ul>
-  <div class="nav-mobile">
-    <a href="#gallery" data-ko>시설</a><a href="#gallery" data-en>Facility</a>
-    <a href="#contact" data-ko>문의</a><a href="#contact" data-en>Contact</a>
-    <a href="/archive" data-ko>아카이브</a><a href="/archive" data-en>Archive</a>
-    <a href="/chat" data-ko>챗봇</a><a href="/chat" data-en>AI Chat</a>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-c">韓</div>
+      <div>
+        <div class="logo-t">한울영성개발원</div>
+        <div class="logo-s">여의명상센터 · Since 1990</div>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#why">한울사상</a></li>
+      <li><a href="#strip">스승님</a></li>
+      <li><a href="#programs">수련 시작하기</a></li>
+      <li><a href="#arts">한울예술</a></li>
+      <li><a href="#lawmun">법문·갤러리</a></li>
+      <li><a href="#schedule">소식</a></li>
+      <li><a href="#cta" class="nav-cta">입문상담</a></li>
+    </ul>
   </div>
-  <button class="lang-btn" id="lang-toggle" onclick="toggleLang()">EN</button>
-  <div id="auth-area" style="display:inline-flex;align-items:center;gap:8px;margin-left:8px"></div>
-  <a href="#apply" class="ncta" data-ko>참여 신청</a>
-  <a href="#apply" class="ncta" data-en>Apply Now</a>
 </nav>
 
-<!-- HERO — 100vh 풀스크린 CSS 배경 -->
-<section class="hero" id="hero">
-  <div class="hero-vline"></div>
-  <div class="hero-kanji" aria-hidden="true">天</div>
-  <div class="hero-body">
-    <span class="hero-eyebrow r" data-ko>한울영성계발원 · 여의명상센터</span>
-    <span class="hero-eyebrow r" data-en>Hanul Spiritual Academy · Yeoui Meditation Center</span>
-    <h1 class="hero-h1 r d1" data-ko>
-      한올들이 어울려<br>
-      <em>한울이 된다</em>
-    </h1>
-    <h1 class="hero-h1 r d1" data-en>
-      Where Every Thread of Being<br>
-      <em>Weaves Into One</em>
-    </h1>
-    <a href="#about" class="hero-btn r d2" data-ko>한울사상 알아보기</a>
-    <a href="#about" class="hero-btn r d2" data-en>Explore Hanul Philosophy</a>
-    <a href="/chat" class="hero-btn2 r d2" data-ko>담당관 채팅</a>
-    <a href="/chat" class="hero-btn2 r d2" data-en>AI Counselor</a>
-  </div>
-  <div class="scroll-ind"><div class="scroll-line"></div><span>SCROLL</span></div>
-</section>
-
-<!-- PHILOSOPHY STRIP — 한울사상 5대 교리 -->
-<div class="phil-strip">
-  <div class="ps"><span class="ps-ko">수도</span><span data-ko>修道 · 닦아가는 길</span><span data-en>修道 · The Path of Practice</span></div>
-  <div class="ps"><span class="ps-ko">제도</span><span data-ko>濟度 · 영격을 높이다</span><span data-en>濟度 · Elevate the Spirit</span></div>
-  <div class="ps"><span class="ps-ko">생명장</span><span data-ko>生命場 · 생명의 공명</span><span data-en>生命場 · Field of Life</span></div>
-  <div class="ps"><span class="ps-ko">유○론적 각성</span><span data-ko>唯○論的 覺醒</span><span data-en>UniO Awakening</span></div>
-  <div class="ps"><span class="ps-ko">성멸오통</span><span data-ko>性滅五通 · 초월하여 통하다</span><span data-en>性滅五通 · Transcend & Unite</span></div>
-</div>
-
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="about-vis r">
-    <span class="about-glyph" aria-hidden="true">한</span>
-  </div>
-  <div class="about-txt">
-    <span class="sec-label r" data-ko>한울사상</span>
-    <span class="sec-label r" data-en>Hanul Philosophy</span>
-    <h2 class="sec-title r d1" data-ko>세상 모든 것을<br>타고 가는 사상</h2>
-    <h2 class="sec-title r d1" data-en>A Wisdom That Transcends<br>All of Creation</h2>
-    <div class="divider r d2"></div>
-    <p class="about-p r d2" data-ko>한울사상은 유○론적 각성법(唯○論的 覺醒法)을 기반으로 합니다. '한 올', '한 올'들이 어울려서 '한울'이 된다는 사상으로, 개체인 한올들이 공존의 질서 위에서 서로 조화를 이루어 온전한 한울이 되어야 한다는 대전제를 바탕으로 합니다.</p>
-    <p class="about-p r d2" data-en>Hanul Philosophy is founded upon the UniO Awakening method (唯○論的 覺醒法) — a profound cosmology that perceives the ultimate reality of existence as ○: boundless, whole, and ever-present. Just as countless individual threads (<em>han-ol</em>, 한올) weave together to form the great tapestry of being (Hanul, 한울), each soul carries within it the seed of cosmic wholeness. To practise is to remember this unity — and to live it.</p>
-    <blockquote class="blockq r d2" data-ko>
-      "수도자 1인은 세상자 만인이요,<br>
-      중생자 억이라"<br>
-      <small style="font-size:.8em;opacity:.7">— 한울 김준원 큰스승님 말씀</small>
-    </blockquote>
-    <blockquote class="blockq r d2" data-en>
-      "One practitioner equals ten thousand in the world,<br>
-      and a billion in the realm of liberation."<br>
-      <small style="font-size:.8em;opacity:.7">— Hanul Grandmaster Kim Jun-won</small>
-    </blockquote>
-  </div>
-</section>
-
-<!-- STATS STRIP -->
-<div class="stats-strip">
-  <div class="ss">
-    <div class="ss-num">32<span class="ss-unit" data-ko>년</span><span class="ss-unit" data-en>yrs</span></div>
-    <div class="ss-label" data-ko>수련원 역사</div>
-    <div class="ss-label" data-en>Years of Heritage</div>
-  </div>
-  <div class="ss">
-    <div class="ss-num">10,313</div>
-    <div class="ss-label" data-ko>법문·말씀 아카이브</div>
-    <div class="ss-label" data-en>Archived Teachings</div>
-  </div>
-  <div class="ss">
-    <div class="ss-num">5</div>
-    <div class="ss-label" data-ko>핵심 가르침</div>
-    <div class="ss-label" data-en>Core Teachings</div>
-  </div>
-  <div class="ss">
-    <div class="ss-num">365</div>
-    <div class="ss-label" data-ko>연중 상시 수련</div>
-    <div class="ss-label" data-en>Days Open</div>
-  </div>
-</div>
-
-<!-- TEACHING PANELS -->
-<section class="panels" id="phil">
-
-  <div class="panel r">
-    <div class="panel-canvas">
-      <span class="p-num-bg" aria-hidden="true">01</span>
-    </div>
-    <div class="panel-txt">
-      <div class="p-order r">CORE TEACHING 01</div>
-      <h3 class="p-title r d1" data-ko>유○론적 각성</h3>
-      <h3 class="p-title r d1" data-en>UniO Awakening</h3>
-      <p class="p-subtitle r d1" data-ko>唯○論的 覺醒 · 깨어남의 근원 원리</p>
-      <p class="p-subtitle r d1" data-en>唯○論的 覺醒 · The Foundational Principle of Awakening</p>
-      <div class="divider r d2"></div>
-      <p class="p-body r d2" data-ko>한울사상은 유○론적 각성법을 기반으로 합니다. 우주 궁극의 실체를 ○으로 보는 우주관이며, 개체인 한올들이 공존의 질서 위에서 서로 조화를 이루어 온전한 한울이 되어야 한다는 사상입니다. — 큰스승님 말씀</p>
-      <p class="p-body r d2" data-en>At the heart of Hanul Philosophy lies the UniO Awakening (唯○論的 覺醒法) — a cosmology that perceives the ultimate reality of all existence as ○: formless, boundless, and whole. The individual soul (한올, <em>han-ol</em>) is not separate from this wholeness; it is a living thread within it. Practice is the art of weaving oneself back into the whole. — Grandmaster Kim Jun-won</p>
-    </div>
-  </div>
-
-  <div class="panel r">
-    <div class="panel-canvas">
-      <span class="p-num-bg" aria-hidden="true">02</span>
-    </div>
-    <div class="panel-txt">
-      <div class="p-order r">CORE TEACHING 02</div>
-      <h3 class="p-title r d1" data-ko>생명장</h3>
-      <h3 class="p-title r d1" data-en>Life Field</h3>
-      <p class="p-subtitle r d1" data-ko>生命場 · 모든 생명의 근원 장</p>
-      <p class="p-subtitle r d1" data-en>生命場 · The Resonant Field of All Life</p>
-      <div class="divider r d2"></div>
-      <p class="p-body r d2" data-ko>생명장(生命場)이란 생명체의 몸氣(몸을 운영하는 기운)와, 몸을 조종하는 영기(靈氣)와, 생명활동을 보장하는 지기(地氣)의 조합이 이루어내는 氣의 場입니다. 생명장을 통해 자기표현을 해야 상대와 충돌하지 않고 공명현상을 통해 서로 조화가 이루어집니다. — 여의선원 [여의수행원리]</p>
-      <p class="p-body r d2" data-en>The Life Field (生命場) is the luminous energetic field that arises from the convergence of body vital force (몸氣), spiritual essence (靈氣), and earth energy (地氣). When one expresses authentically through this field, conflict dissolves and deep resonance takes its place — allowing each soul to vibrate in harmony with all of life. — Yeoui Seonwon, <em>Principles of Yeoui Practice</em></p>
-    </div>
-  </div>
-
-  <div class="panel r">
-    <div class="panel-canvas">
-      <span class="p-num-bg" aria-hidden="true">03</span>
-    </div>
-    <div class="panel-txt">
-      <div class="p-order r">CORE TEACHING 03</div>
-      <h3 class="p-title r d1" data-ko>제도</h3>
-      <h3 class="p-title r d1" data-en>Spiritual Elevation</h3>
-      <p class="p-subtitle r d1" data-ko>濟度 · 영격을 높이다</p>
-      <p class="p-subtitle r d1" data-en>濟度 · Rising Through the Spirit</p>
-      <div class="divider r d2"></div>
-      <p class="p-body r d2" data-ko>삶은 궁극적으로 영적진화를 통해 영격을 높이는데 목적이 있습니다. 이제 인격의 완성에서 영격의 완성으로 차원을 높여야 할 때입니다. 우주영제도는 개체의 영을 우주영으로 높이기 위한 제도법입니다. — 여의선원 [수행프로그램]</p>
-      <p class="p-body r d2" data-en>Life's deepest purpose is the elevation of one's spiritual rank (영격) through conscious inner evolution. The age of merely perfecting human character is passing; we are called now to the greater completion — the ascension of the spirit itself. Cosmic Spirit Elevation (우주영제도) is the sacred method for raising the individual spirit toward universal consciousness. — Yeoui Seonwon, <em>Practice Programs</em></p>
-    </div>
-  </div>
-
-  <div class="panel r">
-    <div class="panel-canvas">
-      <span class="p-num-bg" aria-hidden="true">04</span>
-    </div>
-    <div class="panel-txt">
-      <div class="p-order r">CORE TEACHING 04</div>
-      <h3 class="p-title r d1" data-ko>성멸오통</h3>
-      <h3 class="p-title r d1" data-en>Transcendence</h3>
-      <p class="p-subtitle r d1" data-ko>性滅五通 · 초월하여 통하다</p>
-      <p class="p-subtitle r d1" data-en>性滅五通 · Dissolve the Self · Unite With All</p>
-      <div class="divider r d2"></div>
-      <p class="p-body r d2" data-ko>성멸제도일은 자신이 멸해야 할 성(性), 즉 사람 성·사람 정을 소멸하는 날입니다. 성(性)에 묶이지 않고 초월해야 전체와 통할 수 있습니다. 성멸오통은 그 완성의 경지를 뜻합니다. — 여의선원 큰스승님 말씀</p>
-      <p class="p-body r d2" data-en>Seongmyeol (性滅) is the sacred dissolution of human nature — the release of personal desire, attachment, and the illusions of the separate self. When the self is no longer grasping, the five gates of transcendence open: perception, wisdom, compassion, freedom, and unity. Seongmyeol-otong is not an ending — it is the great opening. — Grandmaster Kim Jun-won, Yeoui Seonwon</p>
-    </div>
-  </div>
-
-</section>
-
-<!-- FULLSCREEN QUOTE — 100vh CSS 배경 -->
-<section class="fq" id="quote">
-  <div class="fq-qdeco" aria-hidden="true">❝</div>
-  <div class="fq-inner">
-    <blockquote class="fq-txt r" data-ko>
-      세상이 너를 타게 하지 말고<br>
-      <em>네가 세상을 타라</em>
-    </blockquote>
-    <blockquote class="fq-txt r" data-en>
-      Do not let the world ride you —<br>
-      <em>you ride the world</em>
-    </blockquote>
-    <div class="fq-rule r d1"></div>
-    <cite class="fq-cite r d1" data-ko>— 한울계시록</cite>
-    <cite class="fq-cite r d1" data-en>— Hanul Revelation</cite>
-  </div>
-</section>
-
-<!-- JIPSUN SUDO — 집중수도 소개 -->
-<section class="about" id="jipsun" style="background:<%= t.bg2 %>">
-  <div class="about-vis r">
-    <span class="about-glyph" aria-hidden="true">道</span>
-  </div>
-  <div class="about-txt">
-    <span class="sec-label r" data-ko>집중수도</span>
-    <span class="sec-label r" data-en>Intensive Practice</span>
-    <h2 class="sec-title r d1" data-ko>무견 스승님과 함께하는<br>집중 수행의 길</h2>
-    <h2 class="sec-title r d1" data-en>The Path of Intensive Practice<br>with Master Mugyeon</h2>
-    <div class="divider r d2"></div>
-    <p class="about-p r d2" data-ko>집중수도는 무견 김상국 스승님의 직접 지도 아래 수도자들이 모여 집중적으로 수행하는 과정입니다. 1박2일 집중수도와 정기 수련이 운영되며, 참여자들은 스승님의 법문과 생명장 수련, 성멸제도 수행을 통해 영격을 높여 나갑니다.</p>
-    <p class="about-p r d2" data-en>Intensive Practice (집중수도) is a concentrated retreat journey held under the direct and personal guidance of Master Mugyeon, Kim Sang-guk. Conducted as 1-night 2-day immersive retreats and regular sessions, practitioners gather to deepen their path through dharma teachings, Life Field cultivation, and the transformative practices of Seongmyeol elevation — stepping beyond the ordinary mind into the light of the whole.</p>
-    <blockquote class="blockq r d2" data-ko>
-      "수도자 1인은 세상자 만인이요,<br>중생자 억이라"<br>
-      <small style="font-size:.8em;opacity:.7">— 한울 김준원 큰스승님 말씀</small>
-    </blockquote>
-    <blockquote class="blockq r d2" data-en>
-      "One practitioner equals ten thousand in the world,<br>and a billion in the realm of liberation."<br>
-      <small style="font-size:.8em;opacity:.7">— Grandmaster Kim Jun-won's Teaching</small>
-    </blockquote>
-  </div>
-</section>
-
-<!-- TEACHER PROFILE -->
-<section class="teacher-wrap" id="teacher">
-  <div class="teacher-portrait r">
-    <span class="teacher-glyph" aria-hidden="true">見</span>
-  </div>
-  <div class="teacher-txt">
-    <span class="sec-label r" data-ko>지도 스승</span>
-    <span class="sec-label r" data-en>Our Teacher</span>
-    <h2 class="teacher-name r d1" data-ko>무견(無見) 김상국 스승님</h2>
-    <h2 class="teacher-name r d1" data-en>Master Mugyeon (Kim Sang-guk)</h2>
-    <div class="teacher-title r d1" data-ko>여의선원 원장 · 한울사상 지도자</div>
-    <div class="teacher-title r d1" data-en>Director, Yeoui Seonwon · Hanul Philosophy Teacher</div>
-    <div class="teacher-divider r d2"></div>
-    <p class="teacher-body r d2" data-ko>무견 김상국 스승님은 한울 김준원 큰스승님의 가르침을 이어받아 여의선원을 이끌고 계십니다. 「한울말씀강론」의 저자이시며, 여의수행법 체계를 정립하셨습니다. 매주 수련 지도와 집중수도, 법문 강론을 통해 수행자들이 유○론적 각성의 길을 걸어갈 수 있도록 직접 지도하십니다.</p>
-    <p class="teacher-body r d2" data-en>Master Mugyeon (Kim Sang-guk) continues the lineage of Grandmaster Hanul Kim Jun-won, leading Yeoui Seonwon today. Author of <em>Hanul's Dharma Discourses</em> (한울말씀강론) and the architect of the Yeoui Practice System, he guides practitioners personally through weekly sessions, intensive retreats, and dharma lectures — walking each student along the path of UniO Awakening.</p>
-    <blockquote class="blockq r d3" data-en style="margin-top:24px">
-      "The path of practice is not a retreat from the world —<br>it is the deepest engagement with it."<br>
-      <small style="font-size:.8em;opacity:.7">— Master Mugyeon, Yeoui Seonwon</small>
-    </blockquote>
-  </div>
-</section>
-
-<!-- PROGRAMS -->
-<section class="programs" id="programs">
-  <div class="sec-head r">
-    <span class="sec-label" data-ko>수행 프로그램</span>
-    <span class="sec-label" data-en>Practice Programs</span>
-    <h2 class="sec-title" data-ko style="text-align:center;margin:12px auto 0">당신의 수행을 시작하세요</h2>
-    <h2 class="sec-title" data-en style="text-align:center;margin:12px auto 0">Begin Your Practice</h2>
-  </div>
-  <div class="prog-grid">
-    <div class="prog r">
-      <div class="prog-bg"></div>
-      <div class="prog-glyph" aria-hidden="true">入</div>
-      <div class="prog-fade"></div>
-      <div class="prog-body">
-        <div class="prog-n">PROGRAM 01</div>
-        <div class="prog-title" data-ko>생명장 수련</div>
-        <div class="prog-title" data-en>Life Field Training</div>
-        <div class="prog-desc" data-ko>생명장 점검·조정 수련<br>여의명상센터 정기 수련 과정</div>
-        <div class="prog-desc" data-en>Life Field inspection & adjustment<br>Regular sessions at Yeoui Center</div>
+<!-- S1: Hero -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag"><div class="hero-tag-line"></div><div class="hero-tag-text">韓蔚思想 · 한울영성개발원</div></div>
+      <h1>韓蔚思想<br><em>한올과 한울의 조화</em></h1>
+      <div class="hero-div"></div>
+      <p class="hero-quote">"종교의 본래 의미는<br>정상에 오르도록 하는 가르침이다."<br><small style="font-size:0.76rem;opacity:0.65;font-style:normal;">— 무견 김상국 스승님, 2022년 법문</small></p>
+      <div class="btns">
+        <a href="#cta" class="btn-gold">입문 상담 예약 →</a>
+        <a href="#programs" class="btn-outline">수련 시작하기</a>
+      </div>
+      <div class="hero-lineage">
+        <span style="opacity:0.5;font-size:0.65rem;letter-spacing:1px;">법통</span>
+        <span>한울 김준원 큰스승님</span>
+        <span class="arr">→</span>
+        <span>무견 김상국 스승님</span>
+        <span class="arr">→</span>
+        <span style="opacity:0.7;">여의명상센터</span>
       </div>
     </div>
-    <div class="prog r d1">
-      <div class="prog-bg"></div>
-      <div class="prog-glyph" aria-hidden="true">深</div>
-      <div class="prog-fade"></div>
-      <div class="prog-body">
-        <div class="prog-n">PROGRAM 02</div>
-        <div class="prog-title" data-ko>집중수도</div>
-        <div class="prog-title" data-en>Intensive Retreat</div>
-        <div class="prog-desc" data-ko>무견 스승님 지도 집중 수도<br>영성 여행·수도자 과정 포함</div>
-        <div class="prog-desc" data-en>Intensive practice under Master Mugyeon<br>Includes spiritual journeys & practitioner courses</div>
-      </div>
-    </div>
-    <div class="prog r d2">
-      <div class="prog-bg"></div>
-      <div class="prog-glyph" aria-hidden="true">道</div>
-      <div class="prog-fade"></div>
-      <div class="prog-body">
-        <div class="prog-n">PROGRAM 03</div>
-        <div class="prog-title" data-ko>법문 강론</div>
-        <div class="prog-title" data-en>Dharma Teachings</div>
-        <div class="prog-desc" data-ko>스승님 법문·강론 공부<br>큰스승님 영상 법문 포함</div>
-        <div class="prog-desc" data-en>Study of dharma talks & lecture series<br>Includes Grandmaster's recorded teachings</div>
+    <div class="hero-right">
+      <div class="hero-frame">
+        <div class="hero-frame-img"></div>
+        <div class="hero-frame-over"></div>
+        <div class="hero-frame-cap">
+          <div class="hero-frame-name">한울 김준원 큰스승님</div>
+          <div class="hero-frame-role">韓蔚思想 創立者 · 1990</div>
+        </div>
+        <div class="hero-frame-badge"><strong>1990</strong><span>창립</span></div>
+        <div class="hero-successor" style="position:relative;margin-top:12px;">
+          <div class="hero-succ-img"></div>
+          <div>
+            <div class="hero-succ-label">법통 계승자</div>
+            <div class="hero-succ-name">무견 김상국 스승님</div>
+          </div>
+          <div class="hero-succ-arrow">↓ 2005 여의선원</div>
+        </div>
       </div>
     </div>
   </div>
+  <div class="hero-scroll">SCROLL<div class="hero-scroll-bar"></div></div>
 </section>
 
-<!-- SCHEDULE -->
-<section class="schedule" id="schedule">
-  <div class="sl-head">
-    <span class="sec-label r" data-ko>수련 일정</span>
-    <span class="sec-label r" data-en>Practice Schedule</span>
-    <h2 class="sec-title r d1" data-ko style="text-align:center;margin:12px auto 0">함께하는 수행의 길</h2>
-    <h2 class="sec-title r d1" data-en style="text-align:center;margin:12px auto 0">Walking the Path Together</h2>
-  </div>
-  <div class="sl-list">
-    <div class="sl-item r">
-      <div class="sl-date"><div class="sl-d" data-ko>토</div><div class="sl-d" data-en>Sat</div><div class="sl-m" data-ko>매주</div><div class="sl-m" data-en>Weekly</div></div>
-      <div class="sl-info">
-        <h4 data-ko>생명장 수련</h4><h4 data-en>Life Field Training</h4>
-        <p data-ko>여의명상센터 본원 · 생명장 점검·조정</p>
-        <p data-en>Yeoui Meditation Center · Life Field adjustment</p>
-      </div>
-      <span class="sl-tag" data-ko>정기 수련</span><span class="sl-tag" data-en>Regular</span>
-    </div>
-    <div class="sl-item r">
-      <div class="sl-date"><div class="sl-d" data-ko>1박</div><div class="sl-d" data-en>2D</div><div class="sl-m" data-ko>2일</div><div class="sl-m" data-en>1 Night</div></div>
-      <div class="sl-info">
-        <h4 data-ko>집중수도</h4><h4 data-en>Intensive Retreat</h4>
-        <p data-ko>무견 스승님 직접 지도 · 수도자 집중 과정</p>
-        <p data-en>Direct guidance by Master Mugyeon</p>
-      </div>
-      <span class="sl-tag" data-ko>집중 수도</span><span class="sl-tag" data-en>Intensive</span>
-    </div>
-    <div class="sl-item r">
-      <div class="sl-date"><div class="sl-d" data-ko>토</div><div class="sl-d" data-en>Sat</div><div class="sl-m" data-ko>격주</div><div class="sl-m" data-en>Bi-weekly</div></div>
-      <div class="sl-info">
-        <h4 data-ko>법문 강론</h4><h4 data-en>Dharma Talks</h4>
-        <p data-ko>스승님 법문·영상 강론 공부</p>
-        <p data-en>Study of dharma talks & recorded teachings</p>
-      </div>
-      <span class="sl-tag" data-ko>법문</span><span class="sl-tag" data-en>Dharma</span>
-    </div>
-    <div class="sl-item r">
-      <div class="sl-date"><div class="sl-d" data-ko>상시</div><div class="sl-d" data-en>Anytime</div><div class="sl-m" data-ko>예약제</div><div class="sl-m" data-en>By Appt.</div></div>
-      <div class="sl-info">
-        <h4 data-ko>개인 수련 지도</h4><h4 data-en>Personal Guidance</h4>
-        <p data-ko>지도 수사와 1:1 맞춤 수련</p>
-        <p data-en>1:1 tailored practice with a guide</p>
-      </div>
-      <span class="sl-tag" data-ko>개인 지도</span><span class="sl-tag" data-en>Private</span>
-    </div>
-  </div>
-</section>
+<!-- S2: 법통 계승 스트립 -->
 
-<!-- DHARMA REGISTRATION -->
-<section class="beopun-sec" id="beopun">
-  <div class="sec-head r">
-    <span class="sec-label" data-ko>법문 · 말씀 등록</span>
-    <span class="sec-label" data-en>Add Dharma Teaching</span>
-    <h2 class="sec-title r d1" data-ko style="text-align:center;margin:12px auto 0">큰스승님 법문과 말씀을<br>직접 등록하세요</h2>
-    <h2 class="sec-title r d1" data-en style="text-align:center;margin:12px auto 0">Register Grandmaster's<br>Dharma Teachings</h2>
-  </div>
-  <div class="divider r d1" style="margin:24px auto 0"></div>
-  <p class="beopun-intro r d2" data-ko>아카이브에 새로운 법문이나 말씀을 등록하거나, 기존 게시글을 SmartEditor2 WYSIWYG 에디터로 직접 편집할 수 있습니다.</p>
-  <p class="beopun-intro r d2" data-en>Register new dharma teachings to the archive, or edit existing posts with the SmartEditor2 WYSIWYG editor directly from this page.</p>
-  <button class="beopun-open-btn r d3" onclick="openEditorModal()" data-ko>에디터 열기 — 법문 등록</button>
-  <button class="beopun-open-btn r d3" onclick="openEditorModal()" data-en>Open Editor — Add Teaching</button>
-</section>
 
 <!-- CTA -->
-<section class="cta" id="cta">
+<section class="cta-section" id="cta">
   <div class="cta-inner">
-    <h2 class="cta-h r" data-ko>한울사상과 함께하세요</h2>
-    <h2 class="cta-h r" data-en>Step Into the Path<br><em style="font-style:italic">Toward Wholeness</em></h2>
-    <p class="cta-sub r d1" data-ko>수도자 1인은 세상자 만인이요, 중생자 억이라</p>
-    <p class="cta-sub r d1" data-en>"One who practises with sincerity equals ten thousand in the world, and a billion in the realm of liberation."<br><small style="font-size:.85em;letter-spacing:.08em;opacity:.8">— Grandmaster Kim Jun-won</small></p>
-    <div class="cta-btns">
-      <a href="#schedule" class="cta-btn solid r d1" data-ko>수련 신청</a>
-      <a href="#schedule" class="cta-btn solid r d1" data-en>Apply Now</a>
+    <h2>수도의 여정,<br><em>지금 시작하십시오</em></h2>
+    <p>한울사상 입문 상담은 언제든지 환영합니다.<br>근원을 향한 첫 걸음, 함께하겠습니다.</p>
+    <div class="btns" style="justify-content:center;">
+      <a href="mailto:contact@hanul-spiritual.kr" class="btn-gold">✉ 입문 상담 문의</a>
+      <a href="#why" class="btn-outline">한울사상 더 알아보기</a>
     </div>
   </div>
 </section>
 
-<!-- ══ 온라인 수련 신청 폼 ══ -->
-<section class="apply-sec" id="apply">
-  <div class="apply-inner">
-    <span class="sec-label r" data-ko>수련 신청</span>
-    <span class="sec-label r" data-en>Apply</span>
-    <h2 class="apply-h r d1" data-ko>온라인 수련 신청</h2>
-    <h2 class="apply-h r d1" data-en>Online Application</h2>
-    <p class="apply-sub r d2" data-ko>아래 양식을 작성하시면 담당자가 개별 연락드립니다.</p>
-    <p class="apply-sub r d2" data-en>Fill in the form below and our coordinator will contact you.</p>
-    <form class="apply-form r d2" id="applyForm" onsubmit="submitApply(event)">
-      <div class="af-row">
-        <div class="af-field">
-          <label data-ko>성함 *</label><label data-en>Name *</label>
-          <input type="text" name="name" required placeholder="홍길동" />
-        </div>
-        <div class="af-field">
-          <label data-ko>연락처 *</label><label data-en>Phone *</label>
-          <input type="tel" name="phone" required placeholder="010-0000-0000" />
-        </div>
-      </div>
-      <div class="af-row">
-        <div class="af-field">
-          <label data-ko>이메일</label><label data-en>Email</label>
-          <input type="email" name="email" placeholder="example@email.com" />
-        </div>
-        <div class="af-field">
-          <label data-ko>희망 프로그램 *</label><label data-en>Program *</label>
-          <select name="program" required>
-            <option value="" data-ko>선택해주세요</option>
-            <option value="" data-en>Please select</option>
-            <option value="집중수도-1박2일" data-ko>집중수도 (1박2일)</option>
-            <option value="집중수도-1박2일" data-en>Intensive Practice (2 Days)</option>
-            <option value="정기수련" data-ko>정기 수련 (주 1회)</option>
-            <option value="정기수련" data-en>Regular Practice (Weekly)</option>
-            <option value="수도자과정" data-ko>수도자 과정 (장기)</option>
-            <option value="수도자과정" data-en>Practitioner Course (Long-term)</option>
-            <option value="개인지도" data-ko>개인 수련 지도</option>
-            <option value="개인지도" data-en>Personal Guidance</option>
-          </select>
-        </div>
-      </div>
-      <div class="af-field">
-        <label data-ko>문의 내용</label><label data-en>Message</label>
-        <textarea name="message" rows="4" placeholder="궁금하신 점이나 특이사항을 입력해 주세요."></textarea>
-      </div>
-      <div class="af-submit">
-        <button type="submit" class="cta-btn solid" data-ko>신청하기</button>
-        <button type="submit" class="cta-btn solid" data-en>Submit</button>
-      </div>
-      <p class="af-notice r" data-ko>* 신청 후 2~3 영업일 내 담당자가 연락드립니다.</p>
-      <p class="af-notice r" data-en>* You will be contacted within 2–3 business days.</p>
-    </form>
-    <div id="applyResult" style="display:none;text-align:center;padding:32px;font-size:13px;letter-spacing:.04em;color:rgba(255,255,255,.7)"></div>
-  </div>
-</section>
-
-<!-- ══ 시설 갤러리 ══ -->
-<section class="gallery-sec" id="gallery">
-  <div class="gallery-inner">
-    <span class="sec-label r" data-ko>시설 안내</span>
-    <span class="sec-label r" data-en>Our Space</span>
-    <h2 class="gallery-h r d1" data-ko>수련 공간</h2>
-    <h2 class="gallery-h r d1" data-en>Practice Space</h2>
-    <div class="gallery-grid r d2">
-      <div class="gallery-card">
-        <img src="https://cafeptthumb-phinf.pstatic.net/MjAyNTA5MTJfMzYg/MDAxNzU3NjMyMDg5NDAw.wDtwuNcPpjj0zJM70DFKvUdgHKgnSgMHJj-q3npsB2Ag.hAKky-12fXpKPl7pA7ExIebRN4pusxVCvmF9Kj0GRT0g.JPEG/%EC%8A%A4%EC%8A%B9%EB%8B%98_-1-1_%EB%B3%B5%EC%82%AC.jpg?type=w1600" alt="천안영성여행" class="gallery-img" loading="lazy">
-        <p class="gallery-cap" data-ko>천안 영성여행 — 스승님과 함께</p><p class="gallery-cap" data-en>Cheonan Spiritual Journey</p>
-      </div>
-      <div class="gallery-card">
-        <img src="https://cafeptthumb-phinf.pstatic.net/MjAyNTA5MDhfNTcg/MDAxNzU3MzE4MTI2ODY4.bxhsiISyqSdrMpMYPT9rsr_Kv6b6JgTFOfB0twZWPK4g.6hz9zW4O1Uq4tke0tEhba9xCPWOS8lrsIS3wxu4wIkwg.JPEG/%ED%95%9C%EC%9A%B8_%EB%AA%A9%EA%B1%B8%EC%9D%B4_1.jpg?type=w1600" alt="한울 목걸이" class="gallery-img" loading="lazy">
-        <p class="gallery-cap" data-ko>한울 영성 수련</p><p class="gallery-cap" data-en>Hanul Spiritual Practice</p>
-      </div>
-      <div class="gallery-card">
-        <img src="https://cafeptthumb-phinf.pstatic.net/MjAyNTA4MzBfMTAz/MDAxNzU2NTQ5NjQyMTcy.jXrO5DR1_qnZhSubcVqsvzs37WuXJ_Vi3lRmtm0Tg0Eg.uB2SLfM1Q--cN_yMdwMRdSA4TodChR8DA_4Efcn2FTIg.JPEG/%EA%B7%B8%EB%A6%AC%EA%B3%A0_%E6%B0%A3%EC%A7%80%EB%8F%84_%EB%B0%91%EC%97%90_%E2%80%98%EC%9A%B0%EC%A3%BC%EC%B2%9C%EC%A3%BC%EB%A8%B8%EB%A6%BF%EB%A7%90%EC%94%80.jpg?type=w1600" alt="기지도" class="gallery-img" loading="lazy">
-        <p class="gallery-cap" data-ko>기지도 기운영 수련</p><p class="gallery-cap" data-en>Qi Practice</p>
-      </div>
-      <div class="gallery-card">
-        <img src="https://cafeptthumb-phinf.pstatic.net/MjAyMDEwMjhfOCAg/MDAxNjAzODY3OTk2MzYx.UrzBhXUixJQB7ccIBtG9Vafs8Y1PCZoBpwF-aB8Yzd0g.Fh9fgRSD2sm5BUxSIpVNwSL8SJaxrs5H8sEA7wdS1pgg.JPEG/1_%282%29.jpg?type=w1600" alt="부석사 지기문화답사" class="gallery-img" loading="lazy">
-        <p class="gallery-cap" data-ko>봉황산 부석사 지기문화답사</p><p class="gallery-cap" data-en>Cultural Spiritual Journey</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 공지사항 ══ -->
-<section class="notices-sec" id="notices">
-  <div class="notices-inner">
-    <span class="sec-label r" data-ko>공지</span>
-    <span class="sec-label r" data-en>Announcements</span>
-    <h2 class="notices-h r d1" data-ko>공지사항</h2>
-    <h2 class="notices-h r d1" data-en>Announcements</h2>
-    <ul class="notice-list r d2" id="noticeList">
-      <li class="notice-item"><span class="notice-date">—</span><span class="notice-title" data-ko>불러오는 중…</span></li>
-    </ul>
-    <a href="/archive?board=공지사항" class="dharma-more r d3" data-ko>공지 전체 보기 →</a>
-    <a href="/archive?board=%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD" class="dharma-more r d3" data-en>All Announcements →</a>
-  </div>
-</section>
-
-<!-- ══ 법문 / 말씀 ══ -->
-<section class="dharma-sec" id="dharma">
-  <div class="dharma-inner">
-    <span class="sec-label r" data-ko>법문 · 말씀</span>
-    <span class="sec-label r" data-en>Teachings</span>
-    <h2 class="dharma-h r d1" data-ko>스승님 말씀</h2>
-    <h2 class="dharma-h r d1" data-en>Dharma Teachings</h2>
-    <div class="dharma-grid r d2" id="dharmaGrid">
-      <div class="dharma-card"><span class="dharma-badge">불러오는 중…</span></div>
-    </div>
-    <a href="/archive?board=큰스승님말씀중에서" class="dharma-more r d3" data-ko>법문 아카이브 전체 보기 →</a>
-    <a href="/archive" class="dharma-more r d3" data-en>Full Dharma Archive →</a>
-  </div>
-</section>
-
-<!-- 법문 모달 -->
-<div class="dharma-modal-bg" id="dharmaModalBg" onclick="if(event.target===this)closeDharmaModal()">
-  <div class="dharma-modal">
-    <div class="dm-header">
-      <p class="dm-title" id="dmTitle"></p>
-      <button class="dm-close" onclick="closeDharmaModal()">×</button>
-    </div>
-    <div class="dm-meta" id="dmMeta"></div>
-    <div class="dm-body" id="dmBody"></div>
-  </div>
-</div>
-
-<!-- ══ 연혁 ══ -->
-<section class="history-sec" id="history">
-  <div class="history-inner">
-    <span class="sec-label r" data-ko>걸어온 길</span>
-    <span class="sec-label r" data-en>Our History</span>
-    <h2 class="history-h r d1" data-ko>한울영성계발원 연혁</h2>
-    <h2 class="history-h r d1" data-en>Milestones</h2>
-    <div class="history-timeline r d2">
-      <div class="ht-item">
-        <p class="ht-year">2025 – 현재</p>
-        <p class="ht-text" data-ko>천안 영성여행 정례화. 한울영성계발원 홈페이지 개설</p>
-        <p class="ht-text" data-en>Regular Cheonan Spiritual Journey. Hanul Spiritual Academy website launched</p>
-      </div>
-      <div class="ht-item">
-        <p class="ht-year">2024</p>
-        <p class="ht-text" data-ko>한울제도전(Light) 개최. 총 게시글 10,000건 돌파</p>
-        <p class="ht-text" data-en>Hanul Jesodo-jeon Exhibition. Community archive surpassed 10,000 posts</p>
-      </div>
-      <div class="ht-item">
-        <p class="ht-year">2022 – 2023</p>
-        <p class="ht-text" data-ko>이달의 말씀 정기 법문 연재. 수행자 연구실 개설</p>
-        <p class="ht-text" data-en>Monthly Dharma Teaching series. Practitioner Research Center opened</p>
-      </div>
-      <div class="ht-item">
-        <p class="ht-year">2020 – 2021</p>
-        <p class="ht-text" data-ko>비대면 재택 수련 전환 (코로나). 동계수도 공부 체계 정립</p>
-        <p class="ht-text" data-en>Remote practice program during COVID-19. Winter spiritual study program</p>
-      </div>
-      <div class="ht-item">
-        <p class="ht-year">2019</p>
-        <p class="ht-text" data-ko>새해 법어 공개 정례화. 지기문화답사 프로그램 확대</p>
-        <p class="ht-text" data-en>Annual New Year Dharma Teaching. Expanded cultural pilgrimage program</p>
-      </div>
-      <div class="ht-item">
-        <p class="ht-year">2015 – 2017</p>
-        <p class="ht-text" data-ko>동계·하계 수련 정례화. 집중수도 법문 아카이브 구축 (689건)</p>
-        <p class="ht-text" data-en>Regular winter/summer retreats. Dharma archive established (689+ records)</p>
-      </div>
-      <div class="ht-item">
-        <p class="ht-year">2013</p>
-        <p class="ht-text" data-ko>성찰 주간·봉사 주간 정례화. 집중수련 프로그램 체계 수립</p>
-        <p class="ht-text" data-en>Established regular Reflection Week &amp; Service Week. Intensive retreat program</p>
-      </div>
-      <div class="ht-item">
-        <p class="ht-year">2006</p>
-        <p class="ht-text" data-ko>여의선원 창설 — 한울사상 수행 공동체 발족</p>
-        <p class="ht-text" data-en>Founded Yeoui Seonwon — Hanul Philosophy Practice Community</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 수련 후기 ══ -->
-<section class="review-sec" id="reviews">
-  <div class="review-inner">
-    <span class="sec-label r" data-ko>수련 후기</span>
-    <span class="sec-label r" data-en>Testimonials</span>
-    <h2 class="review-h r d1" data-ko>수련자 이야기</h2>
-    <h2 class="review-h r d1" data-en>Practitioner Stories</h2>
-    <div class="review-grid r d2">
-      <div class="review-card">
-        <div class="review-quote">&ldquo;</div>
-        <p class="review-body" data-ko>동계수도 공부가 시작되었습니다. 각자 재택공부로 이뤄진 이번 수련에서 영적진화에 한발 다가선 느낌을 받았습니다. 몸기보조를 통해 스스로를 더 깊이 바라볼 수 있었습니다.</p>
-        <p class="review-body" data-en>During the winter spiritual study, I felt one step closer to spiritual evolution. Through body-qi practice, I could look within myself more deeply.</p>
-        <p class="review-author" data-ko>— 수련자 우주참빛 은영</p>
-        <p class="review-author" data-en>— Practitioner, 2021</p>
-      </div>
-      <div class="review-card">
-        <div class="review-quote">&ldquo;</div>
-        <p class="review-body" data-ko>호흡수련을 세 번째 하면서 어느 순간 내 자신이 사라지는 듯한 고요함을 경험했습니다. 오랜 시간 찾던 평안이 여기에 있었습니다.</p>
-        <p class="review-body" data-en>During my third breathing practice, I experienced a deep stillness where the self seemed to dissolve. The peace I had long sought was right here.</p>
-        <p class="review-author" data-ko>— 수련자 참자유</p>
-        <p class="review-author" data-en>— Practitioner, Breathing Practice</p>
-      </div>
-      <div class="review-card">
-        <div class="review-quote">&ldquo;</div>
-        <p class="review-body" data-ko>31일간의 수련을 마치고 나서 일상이 달라졌음을 느꼈습니다. 단톡의 체험기들을 읽으며 많은 도움을 받았고, 이제 저도 그 여정에 동참할 수 있어 감사합니다.</p>
-        <p class="review-body" data-en>After completing 31 days of practice, I felt my daily life had transformed. Reading others' experiences helped me greatly, and I'm grateful to be part of this journey.</p>
-        <p class="review-author" data-ko>— 수련자 김우주인</p>
-        <p class="review-author" data-en>— Practitioner, Intensive Retreat</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 오시는 길 / 문의 ══ -->
-<section class="contact-sec" id="contact">
-  <div class="contact-inner">
-    <span class="sec-label r" data-ko>오시는 길</span>
-    <span class="sec-label r" data-en>Contact & Location</span>
-    <h2 class="contact-h r d1" data-ko>문의 및 오시는 길</h2>
-    <h2 class="contact-h r d1" data-en>Find Us</h2>
-    <div class="contact-wrap r d2">
-      <div class="contact-info">
-        <div class="ci-item">
-          <span class="ci-label" data-ko>주소</span><span class="ci-label" data-en>Address</span>
-          <span class="ci-val" data-ko>서울특별시 영등포구 여의도동<br>(상세 주소는 신청 후 안내)</span>
-          <span class="ci-val" data-en>Yeouido-dong, Yeongdeungpo-gu, Seoul<br>(Detailed address provided upon registration)</span>
-        </div>
-        <div class="ci-item">
-          <span class="ci-label" data-ko>연락처</span><span class="ci-label" data-en>Phone</span>
-          <span class="ci-val">010-0000-0000</span>
-        </div>
-        <div class="ci-item">
-          <span class="ci-label" data-ko>이메일</span><span class="ci-label" data-en>Email</span>
-          <span class="ci-val">hanul@yeouiseonwon.kr</span>
-        </div>
-        <div class="ci-item">
-          <span class="ci-label" data-ko>카카오톡</span><span class="ci-label" data-en>KakaoTalk</span>
-          <a href="https://pf.kakao.com/_placeholder" target="_blank" rel="noopener" class="ci-kakao" data-ko>카카오 채널 상담하기</a>
-          <a href="https://pf.kakao.com/_placeholder" target="_blank" rel="noopener" class="ci-kakao" data-en>Chat on KakaoTalk</a>
-        </div>
-      </div>
-      <div class="contact-map">
-        <iframe
-          src="https://map.kakao.com/link/map/여의명상센터,37.5212,126.9244"
-          style="width:100%;height:280px;border:0;border-radius:8px;filter:grayscale(.3)"
-          allowfullscreen
-          loading="lazy"
-          title="오시는 길"
-        ></iframe>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
+<!-- Footer -->
 <footer>
-  <div class="ft-inner">
-    <div>
-      <div class="ft-brand" data-ko>한울사상</div>
-      <div class="ft-brand" data-en>Hanul Philosophy</div>
-      <p class="ft-desc" data-ko>한울영성계발원 · 여의명상센터<br>한울사상 수련 안내</p>
-      <p class="ft-desc" data-en>Hanul Spiritual Academy · Yeoui Meditation Center<br>Hanul Philosophy Practice Guidance</p>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div><div class="f-brand-logo"><span class="fg">韓</span> 한울영성개발원</div><p class="f-brand-p">여의명상센터 · 1990년 창립<br>한울사상을 통한 영적 수도의 길을 21년 이상 전승해 오고 있습니다.</p></div>
+      <div class="f-col"><h4>수련 안내</h4><ul><li>21일 과정</li><li>49일 과정</li><li>생명장 조정</li><li>기지도 체험</li></ul></div>
+      <div class="f-col"><h4>안내</h4><ul><li>수련 문의</li><li>오시는 길</li><li>법문 보기</li><li>개인정보처리방침</li></ul></div>
     </div>
-    <div class="ft-links">
-      <a href="#about" data-ko>한울사상</a>
-      <a href="#about" data-en>Philosophy</a>
-      <a href="#phil" data-ko>핵심 가르침</a>
-      <a href="#phil" data-en>Core Teachings</a>
-      <a href="#programs" data-ko>수행 프로그램</a>
-      <a href="#programs" data-en>Programs</a>
-      <a href="#schedule" data-ko>강의 일정</a>
-      <a href="#schedule" data-en>Schedule</a>
-      <a href="http://211.104.37.65:4200" target="_blank" data-ko>법문 아카이브</a>
-      <a href="http://211.104.37.65:4200" target="_blank" data-en>Dharma Archive</a>
-    </div>
-    <div class="ft-links">
-      <a href="#" data-ko>여의도 · 한울영성계발원</a>
-      <a href="#" data-en>Yeouido · Hanul Spiritual Academy</a>
-      <a href="#" data-ko>수련 문의</a>
-      <a href="#" data-en>Contact Us</a>
-      <a href="#" data-ko>개인정보처리방침</a>
-      <a href="#" data-en>Privacy Policy</a>
-    </div>
+    <div class="footer-bottom">© 2026 한울영성개발원 여의명상센터 · E안: 하이브리드 최적안</div>
   </div>
-  <div class="ft-copy">© 2026 한울사상 · 여의명상센터 · Hanul Philosophy · All rights reserved.</div>
 </footer>
 
-<script>
-  /* ── 공지사항 로드 ── */
-  (async()=>{
-    try{
-      const r=await fetch('/api/posts?board='+encodeURIComponent('공지사항')+'&limit=6').then(x=>x.json());
-      const ul=document.getElementById('noticeList');
-      if(!ul||!r.posts?.length)return;
-      ul.innerHTML=r.posts.map(p=>{
-        const dt=p.created_at?new Date(p.created_at).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'}):'';
-        return`<li class="notice-item" onclick="openDharmaPost('${p.post_id}')"><span class="notice-date">${dt}</span><span class="notice-title">${escD(p.title||'')}</span></li>`;
-      }).join('');
-    }catch(e){console.warn('notice load fail',e);}
-  })();
-
-  /* ── 법문 로드 ── */
-  (async()=>{
-    try{
-      const boards=['큰스승님말씀중에서','무견선생님말씀','이달의 말씀'];
-      const params='board='+boards.map(b=>encodeURIComponent(b)).join('&board=');
-      // 각 보드에서 2건씩 fetch
-      const results=await Promise.all(boards.map(b=>
-        fetch('/api/posts?board='+encodeURIComponent(b)+'&limit=2').then(x=>x.json())
-      ));
-      const posts=results.flatMap(r=>r.posts||[]).slice(0,6);
-      const grid=document.getElementById('dharmaGrid');
-      if(!grid||!posts.length)return;
-      grid.innerHTML=posts.map(p=>{
-        const dt=p.created_at?new Date(p.created_at).toLocaleDateString('ko-KR',{year:'numeric',month:'short'}):'';
-        const preview=(p.preview||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim().substring(0,80);
-        return`<div class="dharma-card" onclick="openDharmaPost('${p.post_id}')">
-          <span class="dharma-badge">${escD(p.board||'')}</span>
-          <p class="dharma-title">${escD(p.title||'')}</p>
-          <p class="dharma-preview">${escD(preview)}</p>
-          <p class="dharma-date">${dt}</p>
-        </div>`;
-      }).join('');
-    }catch(e){console.warn('dharma load fail',e);}
-  })();
-
-  /* ── 법문/공지 모달 ── */
-  async function openDharmaPost(postId){
-    try{
-      const data=await fetch('/api/posts/'+postId).then(r=>r.json());
-      document.getElementById('dmTitle').textContent=data.title||'';
-      const dt=data.created_at?new Date(data.created_at).toLocaleDateString('ko-KR'):'';
-      document.getElementById('dmMeta').innerHTML=`<span>${escD(data.board||'')}</span><span>${escD(data.author||'')}</span><span>${dt}</span>`;
-      const body=document.getElementById('dmBody');
-      if(data.content_html){
-        body.innerHTML=data.content_html;
-        body.style.whiteSpace='normal';
-      }else{
-        body.style.whiteSpace='pre-wrap';
-        body.textContent=data.content||'(내용 없음)';
-      }
-      document.getElementById('dharmaModalBg').classList.add('open');
-      document.body.style.overflow='hidden';
-    }catch(e){console.warn('post load fail',e);}
-  }
-  function closeDharmaModal(){
-    document.getElementById('dharmaModalBg').classList.remove('open');
-    document.body.style.overflow='';
-  }
-  function escD(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-  /* ── 신청 폼 submit ── */
-  async function submitApply(e){
-    e.preventDefault();
-    const form=e.target;
-    const btn=form.querySelector('button[type=submit]');
-    btn.disabled=true;
-    const data={
-      name:form.name.value,
-      phone:form.phone.value,
-      email:form.email.value,
-      program:form.program.value,
-      message:form.message.value
-    };
-    try{
-      const res=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-      const result=await res.json();
-      const resultEl=document.getElementById('applyResult');
-      form.style.display='none';
-      resultEl.style.display='block';
-      const isEn=document.body.classList.contains('lang-en');
-      resultEl.innerHTML=isEn
-        ?'<p style="font-size:1.2rem;margin-bottom:8px">✓ Application Received</p><p>We will contact you within 2–3 business days.</p>'
-        :'<p style="font-size:1.2rem;margin-bottom:8px">✓ 신청이 접수되었습니다</p><p>2~3 영업일 내 담당자가 연락드립니다.</p>';
-    }catch(err){
-      btn.disabled=false;
-      const isEn=document.body.classList.contains('lang-en');
-      alert(isEn?'Submission failed. Please try again.':'신청 중 오류가 발생했습니다. 다시 시도해주세요.');
-    }
-  }
-
-  /* 네비 신규 링크 */
-  document.querySelectorAll('a[href="#apply"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.getElementById('apply').scrollIntoView({behavior:'smooth'});});});
-  document.querySelectorAll('a[href="#contact"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.getElementById('contact').scrollIntoView({behavior:'smooth'});});});
-  document.querySelectorAll('a[href="#gallery"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.getElementById('gallery').scrollIntoView({behavior:'smooth'});});});
-
-  /* NAV 스크롤 */
-  const nav=document.getElementById('nav');
-  window.addEventListener('scroll',()=>{nav.classList.toggle('solid',window.scrollY>40)},{passive:true});
-
-  /* Reveal on scroll */
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})
-  },{threshold:.1,rootMargin:'0px 0px -36px 0px'});
-  document.querySelectorAll('.r').forEach(el=>obs.observe(el));
-
-  /* Language Toggle */
-  function toggleLang(){
-    const isEn=document.body.classList.toggle('lang-en');
-    const btn=document.getElementById('lang-toggle');
-    btn.textContent=isEn?'KO':'EN';
-    btn.classList.toggle('active',isEn);
-    document.documentElement.lang=isEn?'en':'ko';
-    try{localStorage.setItem('hanul-lang',isEn?'en':'ko');}catch(e){}
-  }
-  try{if(localStorage.getItem('hanul-lang')==='en')toggleLang();}catch(e){}
-
-  /* 네이버 로그인 상태 표시 */
-  (function(){
-    const area=document.getElementById('auth-area');
-    if(!area)return;
-    fetch('/api/auth/me').then(r=>r.json()).then(data=>{
-      if(data.user){
-        area.innerHTML=`<span style="font-size:11px;color:inherit;opacity:.7;letter-spacing:.04em">${data.user.nickname||data.user.name}님</span><a href="/auth/logout" style="font-size:11px;color:inherit;opacity:.5;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px;transition:opacity .2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='.5'">로그아웃</a>`;
-      } else {
-        area.innerHTML=`<a href="/auth/naver/login" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:inherit;opacity:.6;text-decoration:none;letter-spacing:.04em;transition:opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/></svg>네이버 로그인</a>`;
-      }
-    }).catch(()=>{});
-  })();
-</script>
-
-<!-- EDITOR MODAL (SmartEditor2 통합) -->
-<div class="ed-overlay" id="ed-overlay">
-  <div class="ed-modal">
-    <div class="ed-mhead">
-      <span class="ed-mtitle">법문·말씀 게시판</span>
-      <button class="ed-close" onclick="closeEditorModal()" aria-label="닫기">×</button>
-    </div>
-    <div class="ed-body">
-      <div class="ed-toolbar">
-        <select id="ed-board" onchange="edFilterBoard()" style="max-width:160px">
-          <option value="">전체 게시판</option>
-        </select>
-        <input type="text" id="ed-search" placeholder="제목 검색…" onkeydown="if(event.key==='Enter')edDoSearch()">
-        <button class="ed-btn ed-btn-s" onclick="edDoSearch()">검색</button>
-      </div>
-      <div class="ed-toolbar">
-        <input type="text" id="ed-post-id" placeholder="게시글 ID 입력 후 불러오기…">
-        <button class="ed-btn ed-btn-s" onclick="edLoadPost()">불러오기</button>
-        <button class="ed-btn ed-btn-p" id="save-btn" onclick="edSavePost()">저장</button>
-        <span class="ed-status" id="ed-status"></span>
-      </div>
-      <div class="ed-frame">
-        <iframe id="se-iframe" src="/public/se-wrapper.html?v=<%= Date.now() %>" title="SmartEditor2 법문 에디터"></iframe>
-      </div>
-      <div id="save-progress-wrap">
-        <div id="save-progress-label">이미지 업로드 중…</div>
-        <div id="save-progress-bar-outer"><div id="save-progress-bar-inner"></div></div>
-        <div id="save-progress-detail"></div>
-      </div>
-      <div>
-        <div class="ed-posts-hd">최근 게시글 (클릭하여 편집)</div>
-        <div id="ed-post-list">불러오는 중…</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
-<script src="/public/js/se-init-v2.js?v=<%= Date.now() %>"></script>
-<script>
-(function(){
-  let edState={board:'',search:'',page:1};
-  let edCurrentId=null;
-
-  function openEditorModal(){document.getElementById('ed-overlay').classList.add('open');document.body.style.overflow='hidden';edLoadBoards();edLoadRecent();}
-  function closeEditorModal(){document.getElementById('ed-overlay').classList.remove('open');document.body.style.overflow='';}
-  window.openEditorModal=openEditorModal;
-  window.closeEditorModal=closeEditorModal;
-
-  document.querySelectorAll('a[href="/editor"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();openEditorModal();});});
-  document.getElementById('ed-overlay').addEventListener('click',function(e){if(e.target===this)closeEditorModal();});
-
-  function edGetEditor(){try{const cw=document.getElementById('se-iframe').contentWindow;return cw&&cw.oEditors&&cw.oEditors.getById&&cw.oEditors.getById['ir1'];}catch{return null;}}
-  function edGetHTML(){
-    const ed=edGetEditor();if(!ed)return'';
-    try{ed.exec('UPDATE_CONTENTS_FIELD',[]);}catch{}
-    try{const val=document.getElementById('se-iframe').contentWindow.document.getElementById('ir1').value;if(val)return val;}catch{}
-    try{if(ed.elIRFrame){const d=ed.elIRFrame.contentWindow||ed.elIRFrame.contentDocument;const doc=d.document||d;return doc.body?doc.body.innerHTML:''}}catch{}
-    return'';
-  }
-  function edSetHTML(html){const ed=edGetEditor();if(!ed){setTimeout(()=>edSetHTML(html),300);return;}try{ed.exec('SET_IR_VALUE',[html||'']);}catch{try{const ta=document.getElementById('se-iframe').contentWindow.document.getElementById('ir1');if(ta)ta.value=html||'';}catch{}}}
-
-  async function edLoadPost(){
-    const pid=document.getElementById('ed-post-id').value.trim();if(!pid)return;edSetStatus('불러오는 중…');
-    try{const d=await fetch('/api/posts/'+encodeURIComponent(pid)).then(r=>r.json());if(d.error){edSetStatus('오류: '+d.error,true);return;}edCurrentId=d.post_id;edSetHTML(d.content_html||'<p>'+(d.content||'').replace(/\n/g,'<br>')+'</p>');edSetStatus('"'+d.title+'" 불러옴',false,true);}
-    catch(e){edSetStatus('오류: '+e.message,true);}
-  }
-  // blob: URL → dataUrl 변환 (서버는 blob URL 처리 불가 — 클라이언트에서 변환 필수)
-  async function edBlobUrlToDataUrl(blobUrl){
-    const res=await fetch(blobUrl);const blob=await res.blob();
-    const dataUrl=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});
-    if(!dataUrl.startsWith('data:image/jpeg')&&!dataUrl.startsWith('data:image/png')&&!dataUrl.startsWith('data:image/gif')&&!dataUrl.startsWith('data:image/webp')){
-      return new Promise((resolve)=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth||800;c.height=img.naturalHeight||600;c.getContext('2d').drawImage(img,0,0);resolve(c.toDataURL('image/png'));};img.onerror=()=>resolve(dataUrl);img.src=blobUrl;});
-    }
-    return dataUrl;
-  }
-  // img src 분류: uploaded(http/https) / pending(data:/blob:/file:) / broken(src없음)
-  function edAuditImgSrcs(html){
-    const details=[];const re=/<img\b([^>]*)>/gi;let m;
-    while((m=re.exec(html))!==null){const srcM=/\bsrc\s*=\s*["']([^"']*)["']/i.exec(m[1]);const src=srcM?srcM[1]:'';let status;if(!src)status='broken';else if(/^https?:\/\//i.test(src))status='uploaded';else status='pending';details.push({src,status});}
-    return details;
-  }
-  function edShowProgress(visible){document.getElementById('save-progress-wrap').style.display=visible?'block':'none';document.getElementById('save-btn').disabled=visible;}
-  function edUpdateProgress(current,total,successCount,failCount){
-    const pct=total>0?Math.round((current/total)*100):0;
-    document.getElementById('save-progress-bar-inner').style.width=pct+'%';
-    document.getElementById('save-progress-label').textContent=`이미지 업로드 중… ${current} / ${total}개 (${pct}%)`;
-    const f=typeof failCount==='number'?failCount:0;
-    document.getElementById('save-progress-detail').textContent=`성공 ${successCount}건${f>0?' / 실패 '+f+'건':''}`;
-  }
-  async function edSavePost(){
-    if(!edCurrentId){edSetStatus('먼저 게시글을 불러오세요',true);return;}
-    if(window.PASTE_BUSY){edSetStatus('⏳ 이미지 업로드 진행 중입니다. 완료 후 저장하세요.',true);return;}
-    edSetStatus('이미지 감사 중…');
-    try{
-      let html=edGetHTML();
-      // ── 1. 이미지 감사 ──────────────────────────────────────────
-      const details=edAuditImgSrcs(html);
-      const total=details.length;
-      const pendingList=details.filter(d=>d.status==='pending');
-      console.log('[edSavePost] 이미지 총',total,'개 / 미업로드',pendingList.length,'개');
-      if(total>0)edSetStatus(`이미지 총 ${total}개 — 미업로드 ${pendingList.length}개`);
-      // ── 2. 진행 상태바 표시 ──────────────────────────────────────
-      if(total>0){
-        edShowProgress(true);
-        if(pendingList.length===0){
-          document.getElementById('save-progress-label').textContent=`이미지 ${total}개 전체 업로드 확인 완료 (${total}/${total})`;
-          document.getElementById('save-progress-bar-inner').style.width='100%';
-          document.getElementById('save-progress-detail').textContent=`업로드 완료 ${total}건`;
-          await new Promise(r=>{setTimeout(r,900);});
-          edShowProgress(false);
-        }
-      }
-      // ── 3. 미업로드 이미지 순차 업로드 ──────────────────────────
-      if(pendingList.length>0){
-        edShowProgress(true);
-        document.getElementById('save-progress-label').textContent=`이미지 업로드 시작… 0 / ${pendingList.length}개 (0%)`;
-        document.getElementById('save-progress-bar-inner').style.width='0%';
-        const uploadFn=window.SE2_uploadQueue;const replaceFn=window.SE2_replaceDataUrls;
-        const tasks=[];
-        for(const d of pendingList){
-          let dataUrl=d.src;
-          if(d.src.startsWith('blob:')){try{dataUrl=await edBlobUrlToDataUrl(d.src);}catch{dataUrl=null;}}
-          if(!dataUrl||typeof dataUrl!=='string'||!dataUrl.startsWith('data:')){tasks.push({kind:'skip',dataUrl:null,key:d.src});}
-          else{tasks.push({kind:'dataUrl',dataUrl,key:d.src});}
-        }
-        if(uploadFn&&replaceFn){
-          const urls=await uploadFn(tasks,1,edUpdateProgress);
-          const map=new Map();tasks.forEach((t,i)=>{if(urls[i])map.set(t.key,urls[i]);});
-          html=replaceFn(html,map);
-        }else{
-          let suc=0;let fail=0;
-          for(let i=0;i<tasks.length;i++){
-            edUpdateProgress(i,tasks.length,suc,fail);const t=tasks[i];
-            if(!t.dataUrl){fail++;continue;}
-            let uploaded=null;
-            for(let attempt=0;attempt<3;attempt++){
-              try{const r=await fetch('/api/upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({dataUrl:t.dataUrl})});const j=await r.json();if(j&&j.url){uploaded=j.url;break;}}catch{if(attempt===2)break;}
-            }
-            if(uploaded){html=html.split(t.key).join(uploaded);suc++;}else fail++;
-          }
-          edUpdateProgress(tasks.length,tasks.length,suc,fail);
-        }
-        edShowProgress(false);
-      }
-      // ── 4. 저장 전 최종 검증 — 미업로드 이미지 있으면 차단 ──────
-      const preCheck=edAuditImgSrcs(html);
-      const stillPending=preCheck.filter(d=>d.status==='pending');
-      if(stillPending.length>0){edSetStatus(`⛔ 이미지 ${stillPending.length}개 업로드 실패 — 저장 중단. 재시도하거나 이미지를 확인하세요.`,true);return;}
-      // ── 5. PUT 저장 ─────────────────────────────────────────────
-      edSetStatus('저장 중…');
-      const r=await fetch('/api/posts/'+encodeURIComponent(edCurrentId),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({content_html:html})}).then(r=>r.json());
-      if(!r.ok){edSetStatus('오류: '+r.error,true);return;}
-      // ── 6. 저장 후 검증 ─────────────────────────────────────────
-      const saved=edAuditImgSrcs(html);
-      const failedCount=saved.filter(d=>d.status==='pending').length;
-      const okCount=saved.filter(d=>d.status==='uploaded').length;
-      if(failedCount>0){edSetStatus(`⚠️ 이미지 ${failedCount}개 미업로드 상태로 저장됨`,true);}
-      else{edSetStatus(total>0?`저장 완료 — 이미지 ${okCount} / ${total}개 전체 업로드 확인`:'저장 완료',false,true);}
-    }catch(e){edShowProgress(false);edSetStatus('오류: '+e.message,true);}
-  }
-  function edSetStatus(msg,isErr=false,isOk=false){const el=document.getElementById('ed-status');el.textContent=msg;el.className='ed-status'+(isErr?' err':isOk?' ok':'');}
-  async function edLoadBoards(){const boards=await fetch('/api/boards').then(r=>r.json());const sel=document.getElementById('ed-board');sel.innerHTML='<option value="">전체 게시판</option>'+boards.map(b=>`<option value="${edEsc(b.board)}">${edEsc(b.board)} (${b.count})</option>`).join('');}
-  function edFilterBoard(){edState.board=document.getElementById('ed-board').value;edState.page=1;edLoadRecent();}
-  function edDoSearch(){edState.search=document.getElementById('ed-search').value;edState.page=1;edLoadRecent();}
-  async function edLoadRecent(){
-    const p=new URLSearchParams({limit:15,page:edState.page});if(edState.board)p.set('board',edState.board);if(edState.search)p.set('search',edState.search);
-    const data=await fetch('/api/posts?'+p).then(r=>r.json());const el=document.getElementById('ed-post-list');
-    if(!data.posts?.length){el.innerHTML='<p style="font-size:12px;opacity:.5;padding:8px">게시글 없음</p>';return;}
-    el.innerHTML=data.posts.map(p=>`<div class="ed-post-item" onclick="document.getElementById('ed-post-id').value='${edEscJs(p.post_id)}';edLoadPost()"><span class="ed-post-title">${edEsc(p.title||'(제목없음)')}</span><span class="ed-post-meta">${edEsc(p.board||'')} · ${p.created_at?new Date(p.created_at).toLocaleDateString('ko'):''}</span></div>`).join('');
-    const tot=data.totalPages||1,cur=data.page||1;
-    if(tot>1){const pages=[];for(let i=Math.max(1,cur-2);i<=Math.min(tot,cur+2);i++)pages.push(`<button onclick="edState.page=${i};edLoadRecent()" style="padding:3px 8px;border:1px solid;border-radius:3px;cursor:pointer;font-size:11px;font-family:inherit">${i}</button>`);el.innerHTML+=`<div style="display:flex;gap:4px;margin-top:8px;justify-content:center">${pages.join('')}</div>`;}
-  }
-  function edEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-  function edEscJs(s){return String(s||'').replace(/'/g,"\\'").replace(/\n/g,'');}
-  window.edFilterBoard=edFilterBoard;window.edDoSearch=edDoSearch;window.edLoadPost=edLoadPost;window.edSavePost=edSavePost;
-})();
-</script>
-
-<!-- ══ ARCHIVE MODAL ══ -->
-<div class="arc-overlay" id="arc-overlay">
-  <div class="arc-modal">
-    <div class="arc-head">
-      <span class="arc-title">법문 아카이브 — 여의선원</span>
-      <button class="arc-close" onclick="closeArcModal()" aria-label="닫기">×</button>
-    </div>
-    <div class="arc-body">
-      <div class="arc-sidebar" id="arc-sidebar">
-        <div class="arc-board-item active" data-board="" onclick="arcSelectBoard('')">
-          전체 게시판 <span class="arc-board-cnt" id="arc-total-cnt"></span>
-        </div>
-      </div>
-      <div class="arc-main">
-        <div class="arc-searchbar">
-          <input type="text" id="arc-search" placeholder="제목·내용 검색…" onkeydown="if(event.key==='Enter')arcDoSearch()">
-          <button onclick="arcDoSearch()">검색</button>
-        </div>
-        <table class="arc-post-table">
-          <thead>
-            <tr>
-              <th>제목</th>
-              <th style="width:120px">게시판</th>
-              <th style="width:50px;text-align:center">댓글</th>
-              <th style="width:90px;white-space:nowrap">날짜</th>
-            </tr>
-          </thead>
-          <tbody id="arc-tbody">
-            <tr><td colspan="4" style="text-align:center;padding:40px;opacity:.5">불러오는 중…</td></tr>
-          </tbody>
-        </table>
-        <div class="arc-pagination" id="arc-pagination"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- POST DETAIL MODAL (z-index 2500, above arc-overlay) -->
-<div class="pd-overlay" id="pd-overlay">
-  <div class="pd-modal">
-    <div class="pd-head">
-      <h2 class="pd-title" id="pd-title">불러오는 중…</h2>
-      <button class="pd-close" onclick="closePdModal()" aria-label="닫기">×</button>
-    </div>
-    <div class="pd-meta" id="pd-meta"></div>
-    <div class="pd-body" id="pd-body"><div style="text-align:center;padding:40px;opacity:.5">불러오는 중…</div></div>
-    <div class="pd-comments" id="pd-comments"></div>
-  </div>
-</div>
-
-<!-- ══ CHAT FLOATING WIDGET ══ -->
-<button class="chat-fab" id="chat-fab" onclick="toggleChat()" aria-label="AI 한울 상담">
-  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
-</button>
-<div class="chat-panel" id="chat-panel">
-  <div class="chat-ph">
-    <div class="chat-ph-avatar">韓</div>
-    <div>
-      <div class="chat-ph-name">한울 담당관</div>
-      <div class="chat-ph-sub">AI · 한울사상 전문 상담</div>
-    </div>
-    <button class="chat-ph-close" onclick="toggleChat()" aria-label="닫기">×</button>
-  </div>
-  <div class="chat-msgs" id="chat-msgs">
-    <div class="c-msg bot">
-      <div class="c-avatar">韓</div>
-      <div class="c-bubble">안녕하세요. 한울사상과 여의수행에 대해 궁금하신 것을 물어보세요.</div>
-    </div>
-  </div>
-  <div class="chat-input-wrap">
-    <textarea id="chat-input" placeholder="질문을 입력하세요… (Enter=전송)" rows="2"
-      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend()}"></textarea>
-    <button class="chat-send-btn" id="chat-send-btn" onclick="chatSend()">전송</button>
-  </div>
-</div>
+<!-- Chatbot & Archive: hanul-components.js 가 자동 삽입 -->
 
 <script>
-/* ══ ARCHIVE MODAL ══ */
-(function(){
-  var arcState={board:'',search:'',page:1};
-
-  function openArcModal(){
-    document.getElementById('arc-overlay').classList.add('open');
-    document.body.style.overflow='hidden';
-    arcLoadBoards();
-    arcLoad();
-  }
-  function closeArcModal(){
-    document.getElementById('arc-overlay').classList.remove('open');
-    document.body.style.overflow='';
-  }
-  window.openArcModal=openArcModal;
-  window.closeArcModal=closeArcModal;
-
-  // Close on backdrop click
-  document.getElementById('arc-overlay').addEventListener('click',function(e){if(e.target===this)closeArcModal();});
-
-  // Intercept /archive nav links
-  document.querySelectorAll('a[href="/archive"]').forEach(function(a){
-    a.addEventListener('click',function(e){e.preventDefault();openArcModal();});
+// Timeline
+const tlSteps = [{tag:'기초',title:'수련 프로그램',desc:'건강과 삶의 행복을 위한 입문자 과정. 한울사상의 기초를 체험하며 수도의 첫 발걸음을 내딛습니다.'},{tag:'기초',title:'입문과정 1·2',desc:'3개월 단계별 입문 과정. 한울사상의 철학과 수행 방법을 체계적으로 익힙니다.'},{tag:'기초',title:'기초 회로 과정',desc:'입문과정 이수 후 수행의 기초 회로를 확립하고 내면의 흐름을 감지합니다.'},{tag:'중급',title:'특별수련 프로그램',desc:'정화 프로그램과 지기문화답사 참여를 통한 심화 체험 수련입니다.'},{tag:'중급',title:'월제도 프로그램',desc:'재가 수련 회원을 위한 매월 제도 보조 과정. 일상 속 수행을 지속합니다.'},{tag:'심화',title:'생명장 조정 프로그램',desc:'몸氣·地氣·영氣를 조정하는 특수 수련. 생명 에너지 정렬을 목적으로 합니다.'},{tag:'심화',title:'여의수도 프로그램',desc:'영적진화를 목적으로 하는 심화 수도 과정. 근원과의 합일을 향한 여정입니다.'},{tag:'최심화',title:'우주○제도 프로그램',desc:'우주○초대와 우주영제도에 참여하는 최심화 과정. 수도의 정점에 이릅니다.'}];
+const stepEls = document.querySelectorAll('.tl-step');
+function showStep(i){stepEls.forEach((el,j)=>el.classList.toggle('active',j===i));const s=tlSteps[i];document.getElementById('tlNum').textContent=String(i+1).padStart(2,'0');document.getElementById('tlTag').textContent=s.tag;document.getElementById('tlTitle').textContent=s.title;document.getElementById('tlDesc').textContent=s.desc;}
+stepEls.forEach(el=>el.addEventListener('click',()=>showStep(+el.dataset.idx)));
+// 법문 탭 전환
+document.querySelectorAll('.law-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.law-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.law-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    const t=tab.dataset.tab;
+    document.getElementById(t==='gm'?'panelGm':'panelMu').classList.add('active');
+    if(t==='gm'&&!sliderGm.aId){sliderGm.start();}
+    if(t==='mu'&&!sliderMu.aId){sliderMu.start();}
   });
-
-  function arcSelectBoard(board){
-    arcState.board=board;arcState.page=1;
-    document.querySelectorAll('.arc-board-item').forEach(function(el){
-      el.classList.toggle('active',el.dataset.board===board);
-    });
-    arcLoad();
-  }
-  window.arcSelectBoard=arcSelectBoard;
-
-  function arcDoSearch(){arcState.search=document.getElementById('arc-search').value;arcState.page=1;arcLoad();}
-  window.arcDoSearch=arcDoSearch;
-
-  var boardsLoaded=false;
-  async function arcLoadBoards(){
-    if(boardsLoaded)return;boardsLoaded=true;
-    try{
-      var[boards,stats]=await Promise.all([
-        fetch('/api/boards').then(function(r){return r.json();}),
-        fetch('/api/stats').then(function(r){return r.json();})
-      ]);
-      var cntEl=document.getElementById('arc-total-cnt');
-      if(cntEl)cntEl.textContent='('+Number(stats.totalPosts||0).toLocaleString()+')';
-      var sb=document.getElementById('arc-sidebar');
-      boards.forEach(function(b){
-        var d=document.createElement('div');
-        d.className='arc-board-item';d.dataset.board=b.board;
-        d.innerHTML=arcEsc(b.board)+'<span class="arc-board-cnt">'+Number(b.count).toLocaleString()+'</span>';
-        d.onclick=function(){arcSelectBoard(b.board);};
-        sb.appendChild(d);
-      });
-    }catch(e){console.warn('arcLoadBoards',e);}
-  }
-
-  async function arcLoad(){
-    var tbody=document.getElementById('arc-tbody');
-    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:32px;opacity:.5">불러오는 중…</td></tr>';
-    var p=new URLSearchParams({page:arcState.page,limit:20});
-    if(arcState.board)p.set('board',arcState.board);
-    if(arcState.search)p.set('search',arcState.search);
-    try{
-      var data=await fetch('/api/posts?'+p).then(function(r){return r.json();});
-      if(!data.posts||!data.posts.length){
-        tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:32px;opacity:.5">게시글이 없습니다</td></tr>';
-        arcPager(0,1,1);return;
-      }
-      tbody.innerHTML=data.posts.map(function(post){
-        return '<tr onclick="arcOpenPost(\''+arcEscJs(post.post_id)+'\')">'+
-          '<td><span class="arc-post-title-cell">'+arcEsc(post.title||'(제목없음)')+'</span></td>'+
-          '<td><span class="arc-badge">'+arcEsc(post.board||'-')+'</span></td>'+
-          '<td style="text-align:center">'+Number(post.comment_count||0)+'</td>'+
-          '<td style="white-space:nowrap;font-size:12px">'+(post.created_at?new Date(post.created_at).toLocaleDateString('ko'):'-')+'</td>'+
-          '</tr>';
-      }).join('');
-      arcPager(data.total,data.page,data.totalPages);
-    }catch(e){
-      tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:32px;color:#c05">오류: '+arcEsc(e.message)+'</td></tr>';
-    }
-  }
-
-  function arcPager(total,cur,tot){
-    var el=document.getElementById('arc-pagination');
-    if(!tot||tot<=1){el.innerHTML='';return;}
-    var pages=[];
-    if(cur>4)pages.push('<button class="arc-pg-btn" onclick="arcGoPage(1)">1…</button>');
-    for(var i=Math.max(1,cur-3);i<=Math.min(tot,cur+3);i++){
-      pages.push('<button class="arc-pg-btn'+(i===cur?' active':'')+'" onclick="arcGoPage('+i+')">'+i+'</button>');
-    }
-    if(cur<tot-3)pages.push('<button class="arc-pg-btn" onclick="arcGoPage('+tot+')">…'+tot+'</button>');
-    el.innerHTML=pages.join('');
-  }
-  function arcGoPage(n){arcState.page=n;arcLoad();}
-  window.arcGoPage=arcGoPage;
-
-  async function arcOpenPost(postId){
-    document.getElementById('pd-overlay').classList.add('open');
-    document.getElementById('pd-title').textContent='불러오는 중…';
-    document.getElementById('pd-body').innerHTML='<div style="text-align:center;padding:40px;opacity:.5">불러오는 중…</div>';
-    document.getElementById('pd-meta').innerHTML='';
-    document.getElementById('pd-comments').innerHTML='';
-    try{
-      var d=await fetch('/api/posts/'+encodeURIComponent(postId)).then(function(r){return r.json();});
-      document.getElementById('pd-title').textContent=d.title||'(제목없음)';
-      document.getElementById('pd-meta').innerHTML=
-        '<span>'+arcEsc(d.board||'-')+'</span>'+
-        '<span>'+arcEsc(d.author||'-')+'</span>'+
-        '<span>'+(d.created_at?new Date(d.created_at).toLocaleString('ko'):'')+'</span>';
-      // Content: prefer content_html, fallback to text
-      var html=d.content_html||'';
-      if(!html&&d.content)html='<pre>'+arcEsc(d.content)+'</pre>';
-      // Proxy naver images
-      html=html.replace(/src="(https?:\/\/[^"]*pstatic\.net[^"]*)"/gi,function(m,u){
-        return 'src="/api/img-proxy?url='+encodeURIComponent(u)+'"';
-      });
-      document.getElementById('pd-body').innerHTML=html||'<p style="opacity:.5">내용 없음</p>';
-      // Comments
-      if(d.comments&&d.comments.length){
-        document.getElementById('pd-comments').innerHTML=
-          '<div style="font-size:12px;font-weight:500;margin-bottom:8px;opacity:.7">댓글 '+d.comments.length+'개</div>'+
-          d.comments.map(function(c){
-            return '<div class="pd-comment"><div class="pd-comment-meta">'+arcEsc(c.author||'-')+' · '+(c.created_at?new Date(c.created_at).toLocaleDateString('ko'):'')+'</div>'+arcEsc(c.content||'')+'</div>';
-          }).join('');
-      }
-    }catch(e){
-      document.getElementById('pd-body').innerHTML='<p style="color:#c05">오류: '+arcEsc(e.message)+'</p>';
-    }
-  }
-  window.arcOpenPost=arcOpenPost;
-
-  function closePdModal(){document.getElementById('pd-overlay').classList.remove('open');}
-  window.closePdModal=closePdModal;
-  document.getElementById('pd-overlay').addEventListener('click',function(e){if(e.target===this)closePdModal();});
-
-  function arcEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function arcEscJs(s){return String(s||'').replace(/'/g,"\\'").replace(/[\r\n]/g,'');}
-})();
-
-/* ══ CHAT WIDGET ══ */
-(function(){
-  function toggleChat(){
-    var panel=document.getElementById('chat-panel');
-    panel.classList.toggle('open');
-    if(panel.classList.contains('open'))document.getElementById('chat-input').focus();
-  }
-  window.toggleChat=toggleChat;
-
-  // Intercept /chat links (nav + hero buttons)
-  document.querySelectorAll('a[href="/chat"]').forEach(function(a){
-    a.addEventListener('click',function(e){e.preventDefault();toggleChat();});
-  });
-
-  var chatBusy=false;
-  async function chatSend(){
-    var inp=document.getElementById('chat-input');
-    var q=(inp.value||'').trim();if(!q||chatBusy)return;
-    var btn=document.getElementById('chat-send-btn');
-    inp.value='';btn.disabled=true;chatBusy=true;
-    var msgs=document.getElementById('chat-msgs');
-
-    // User bubble
-    msgs.insertAdjacentHTML('beforeend',
-      '<div class="c-msg user"><div class="c-avatar">나</div><div class="c-bubble">'+chatEsc(q)+'</div></div>');
-
-    // Bot bubble (스트리밍 대상)
-    var bid='cb-'+Date.now();
-    msgs.insertAdjacentHTML('beforeend',
-      '<div class="c-msg bot" id="'+bid+'"><div class="c-avatar">韓</div>'+
-      '<div class="c-bubble"><span class="c-cursor">▌</span></div></div>');
-    msgs.scrollTop=msgs.scrollHeight;
-
-    var bubble=document.querySelector('#'+bid+' .c-bubble');
-    var fullText='';
-
-    try{
-      var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
-      var reader=r.body.getReader();
-      var decoder=new TextDecoder();
-      var buf='';
-      while(true){
-        var _a=await reader.read(),done=_a.done,value=_a.value;
-        if(done)break;
-        buf+=decoder.decode(value,{stream:true});
-        var lines=buf.split('\n');
-        buf=lines.pop();
-        for(var li=0;li<lines.length;li++){
-          var line=lines[li].trim();
-          if(!line.startsWith('data:'))continue;
-          var json=line.slice(5).trim();
-          if(!json)continue;
-          try{
-            var ev=JSON.parse(json);
-            if(ev.type==='token'){
-              fullText+=ev.text;
-              bubble.innerHTML=chatMd(fullText)+'<span class="c-cursor">▌</span>';
-              msgs.scrollTop=msgs.scrollHeight;
-            } else if(ev.type==='sources'&&ev.sources&&ev.sources.length){
-              var srcHtml='<div class="c-sources">';
-              ev.sources.slice(0,3).forEach(function(s){
-                if(s.type==='book')srcHtml+='<span class="c-src-tag">'+chatEsc(s.book)+'</span>';
-                else if(s.type==='post')srcHtml+='<span class="c-src-tag">'+chatEsc(s.title)+'</span>';
-              });
-              srcHtml+='</div>';
-              bubble.insertAdjacentHTML('afterend',srcHtml);
-            } else if(ev.type==='done'||ev.type==='error'){
-              if(ev.type==='error')fullText=ev.message||'오류';
-              bubble.innerHTML=chatMd(fullText);
-            }
-          }catch(_){}
-        }
-      }
-      if(!fullText)bubble.innerHTML='<span style="opacity:.5">응답 없음</span>';
-      else bubble.innerHTML=chatMd(fullText);
-    }catch(e){
-      bubble.innerHTML='<span style="color:#c05">오류: '+chatEsc(e.message)+'</span>';
-    }
-    msgs.scrollTop=msgs.scrollHeight;
-    btn.disabled=false;chatBusy=false;
-    inp.focus();
-  }
-  window.chatSend=chatSend;
-
-  function chatEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-  function chatMd(s){
-    // minimal markdown: bold, blockquote, linebreak
-    return chatEsc(s)
-      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-      .replace(/^&gt; (.+)$/gm,'<blockquote style="border-left:2px solid currentColor;padding-left:8px;margin:4px 0;opacity:.85">$1</blockquote>')
-      .replace(/\n/g,'<br>');
-  }
-})();
+});
+// 슬라이더 팩토리
+function makeSlider(slidesId,dotsId,barId){
+  const slides=document.querySelectorAll('#'+slidesId+' .law-slide');
+  const dots=document.querySelectorAll('#'+dotsId+' .law-dot');
+  const bar=document.getElementById(barId);
+  let cur=0,st=Date.now(),aId=null;
+  const IV=6000;
+  function show(i){slides[cur].classList.remove('active');dots[cur].classList.remove('active');cur=i;slides[cur].classList.add('active');dots[cur].classList.add('active');st=Date.now();if(bar)bar.style.width='0%';}
+  function tick(){const e=Date.now()-st;if(bar)bar.style.width=Math.min(e/IV*100,100)+'%';if(e>=IV)show((cur+1)%slides.length);aId=requestAnimationFrame(tick);}
+  function start(){aId=requestAnimationFrame(tick);}
+  dots.forEach(d=>d.addEventListener('click',()=>{cancelAnimationFrame(aId);show(+d.dataset.idx);aId=requestAnimationFrame(tick);}));
+  return{start,get aId(){return aId}};
+}
+const sliderGm=makeSlider('lawSlidesGm','lawDotsGm','lawBarGm');
+const sliderMu=makeSlider('lawSlidesMu','lawDotsMu','lawBarMu');
+sliderGm.start();sliderMu.start();
 </script>
+<script src="/js/hanul-components.js"></script>
 </body>
 </html>

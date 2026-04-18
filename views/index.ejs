@@ -1,735 +1,410 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>한울사상 — 하늘의 뜻으로 사는 삶</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한울영성개발원 — E안: 하이브리드 최적안 (CEO 추천)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --charcoal:#1C1C1C;--charcoal-mid:#2D2D2D;
+  --cream:#FAF8F4;--cream-dark:#F0EDE7;
+  --gold:#C9A96E;--gold-deep:#A8883F;--gold-light:rgba(201,169,110,0.12);
+  --forest:#4A7C59;--white:#fff;--text:#2D2D2D;--muted:#6B6B6B;
+  --radius:10px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden;}
 
-    :root {
-      --navy:      #080D1A;
-      --deep:      #0C1828;
-      --mid:       #122035;
-      --card:      #0F1D30;
-      --gold:      #C9A84C;
-      --gold-lt:   #E3C76B;
-      --gold-dk:   #8A6E2E;
-      --cream:     #F5EFE0;
-      --cream-2:   #D6CEBB;
-      --gray:      #7A8FAA;
-      --border:    rgba(201,168,76,0.18);
-      --serif:     'Noto Serif KR', 'Malgun Gothic', serif;
-      --sans:      'Noto Sans KR', 'Malgun Gothic', sans-serif;
-    }
+/* Plan badge */
+.plan-badge{position:fixed;top:16px;right:16px;z-index:999;background:var(--gold);color:var(--charcoal);padding:8px 16px;border-radius:4px;font-size:0.76rem;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
 
-    html { scroll-behavior: smooth; }
-    body { font-family: var(--sans); background: var(--navy); color: var(--cream); overflow-x: hidden; }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(28,28,28,0.97);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(201,169,110,0.12);}
+.nav-inner{max-width:1240px;margin:0 auto;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-c{width:38px;height:38px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:14px;color:var(--gold);}
+.logo-t{font-family:'Noto Serif KR',serif;font-size:1rem;font-weight:700;color:var(--white);}
+.logo-s{font-size:0.6rem;color:rgba(201,169,110,0.65);display:block;margin-top:1px;}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
+.nav-links a{text-decoration:none;color:rgba(255,255,255,0.65);font-size:0.82rem;transition:color 0.2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{border:1px solid var(--gold)!important;color:var(--gold)!important;padding:8px 20px;border-radius:3px;font-weight:600!important;}
 
-    /* ── NAV ───────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 64px;
-      background: linear-gradient(180deg, rgba(8,13,26,0.98) 0%, rgba(8,13,26,0.0) 100%);
-      transition: background 0.4s, box-shadow 0.4s;
-    }
-    nav.pinned {
-      background: rgba(8,13,26,0.97);
-      box-shadow: 0 1px 0 var(--border);
-    }
-    .nav-logo {
-      font-family: var(--serif); font-size: 20px; font-weight: 600;
-      color: var(--gold); letter-spacing: 0.06em; text-decoration: none;
-    }
-    .nav-logo span { color: var(--cream); }
-    .nav-menu { display: flex; gap: 36px; list-style: none; }
-    .nav-menu a {
-      font-size: 13px; font-weight: 400; letter-spacing: 0.07em;
-      color: var(--cream-2); text-decoration: none; transition: color 0.2s;
-    }
-    .nav-menu a:hover { color: var(--gold); }
-    .nav-cta {
-      padding: 9px 22px; border: 1px solid var(--gold); border-radius: 2px;
-      font-size: 12px; font-weight: 500; letter-spacing: 0.09em;
-      color: var(--gold); background: transparent; text-decoration: none;
-      transition: all 0.22s;
-    }
-    .nav-cta:hover { background: var(--gold); color: var(--navy); }
+/* Section commons */
+.section{padding:110px 5%;}
+.section-inner{max-width:1240px;margin:0 auto;}
+.s-eye{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.s-eye-line{width:22px;height:1px;background:var(--gold);}
+.s-eye-text{color:var(--gold);font-size:0.68rem;letter-spacing:2.5px;text-transform:uppercase;}
+.s-title{font-family:'Noto Serif KR',serif;font-size:2.3rem;font-weight:700;color:var(--charcoal);margin-bottom:14px;line-height:1.35;}
+.s-title em{color:var(--gold);font-style:normal;}
+.s-desc{color:var(--muted);font-size:0.95rem;line-height:2;max-width:560px;}
+.btn-gold{background:var(--gold);color:var(--charcoal);padding:15px 36px;border-radius:3px;font-weight:700;font-size:0.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:background 0.2s;}
+.btn-gold:hover{background:var(--gold-deep);}
+.btn-outline{border:1px solid rgba(201,169,110,0.5);color:var(--gold);padding:15px 36px;border-radius:3px;font-size:0.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:border-color 0.2s;}
+.btn-outline:hover{border-color:var(--gold);}
+.btns{display:flex;gap:12px;flex-wrap:wrap;}
 
-    /* ── HERO ──────────────────────────────── */
-    .hero {
-      position: relative; min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-      background: radial-gradient(ellipse 80% 60% at 50% 35%, #152444 0%, #080D1A 65%);
-    }
-    .stars {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image:
-        radial-gradient(1.5px 1.5px at 8%  18%, rgba(255,255,255,.55) 0%, transparent 100%),
-        radial-gradient(1px   1px   at 18% 72%, rgba(255,255,255,.35) 0%, transparent 100%),
-        radial-gradient(1px   1px   at 28% 10%, rgba(255,255,255,.50) 0%, transparent 100%),
-        radial-gradient(2px   2px   at 42% 58%, rgba(201,168,76,.30)  0%, transparent 100%),
-        radial-gradient(1px   1px   at 55% 25%, rgba(255,255,255,.45) 0%, transparent 100%),
-        radial-gradient(1px   1px   at 63% 80%, rgba(255,255,255,.30) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 75% 12%, rgba(255,255,255,.60) 0%, transparent 100%),
-        radial-gradient(1px   1px   at 82% 45%, rgba(255,255,255,.40) 0%, transparent 100%),
-        radial-gradient(2px   2px   at 90% 68%, rgba(201,168,76,.25)  0%, transparent 100%),
-        radial-gradient(1px   1px   at 95% 30%, rgba(255,255,255,.35) 0%, transparent 100%);
-    }
-    .mandala {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 900px; height: 900px; pointer-events: none;
-    }
-    .mandala svg { width: 100%; height: 100%; animation: mandalaSpin 120s linear infinite; }
-    @keyframes mandalaSpin { to { transform: rotate(360deg); } }
+/* ─── S1: HERO ─────────────────────── */
+.hero{min-height:100vh;background:var(--charcoal);display:flex;align-items:center;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:url('great-master.png') center 20%/cover;opacity:0.26;filter:grayscale(18%);}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(110deg,rgba(28,28,28,0.93) 50%,rgba(28,28,28,0.55));}
+.hero-inner{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:140px 5% 100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.hero-tag{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.hero-tag-line{width:28px;height:1px;background:var(--gold);}
+.hero-tag-text{color:var(--gold);font-size:0.7rem;letter-spacing:2.5px;text-transform:uppercase;}
+.hero h1{font-family:'Noto Serif KR',serif;font-size:3.1rem;color:var(--white);line-height:1.42;margin-bottom:24px;}
+.hero h1 em{color:var(--gold);font-style:normal;}
+.hero-div{width:44px;height:2px;background:var(--gold);margin:24px 0;}
+.hero-quote{font-family:'Noto Serif KR',serif;color:rgba(255,255,255,0.62);font-size:0.97rem;line-height:2.1;margin-bottom:40px;font-style:italic;}
+.hero-lineage{display:flex;align-items:center;gap:10px;margin-top:28px;opacity:0.55;}
+.hero-lineage span{font-size:0.7rem;color:rgba(201,169,110,0.8);letter-spacing:0.5px;}
+.hero-lineage .arr{color:rgba(201,169,110,0.4);}
+/* hero right: portrait */
+.hero-right{position:relative;}
+.hero-frame{width:100%;max-width:360px;margin:0 auto;aspect-ratio:3/4;position:relative;}
+.hero-frame-img{width:100%;height:100%;background:url('great-master.png') center/cover;border-radius:4px;filter:brightness(0.78);}
+.hero-frame-over{position:absolute;inset:0;border-radius:4px;background:linear-gradient(to top,rgba(28,28,28,0.65),transparent 50%);}
+.hero-frame-cap{position:absolute;bottom:20px;left:20px;right:20px;}
+.hero-frame-name{font-family:'Noto Serif KR',serif;font-size:1.2rem;font-weight:700;color:var(--white);}
+.hero-frame-role{color:var(--gold);font-size:0.7rem;letter-spacing:1.2px;margin-top:3px;}
+.hero-frame-badge{position:absolute;top:-14px;right:-14px;background:var(--gold);color:var(--charcoal);padding:12px 16px;border-radius:4px;text-align:center;}
+.hero-frame-badge strong{font-family:'Noto Serif KR',serif;font-size:1.2rem;font-weight:700;display:block;}
+.hero-frame-badge span{font-size:0.6rem;display:block;margin-top:1px;}
+/* successor */
+.hero-successor{display:flex;align-items:center;gap:12px;margin-top:16px;background:rgba(28,28,28,0.7);border:1px solid rgba(201,169,110,0.25);border-radius:6px;padding:10px 14px;}
+.hero-succ-img{width:44px;height:44px;border-radius:50%;background:url('mugyeon-master.png') center/cover;border:2px solid var(--gold);flex-shrink:0;}
+.hero-succ-label{font-size:0.6rem;color:rgba(201,169,110,0.7);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+.hero-succ-name{font-family:'Noto Serif KR',serif;font-size:0.84rem;font-weight:700;color:var(--white);}
+.hero-succ-arrow{margin-left:auto;color:rgba(201,169,110,0.5);font-size:0.7rem;white-space:nowrap;}
+/* scroll */
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);text-align:center;color:rgba(255,255,255,0.35);font-size:0.65rem;letter-spacing:2px;}
+.hero-scroll-bar{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);margin:8px auto 0;animation:sp 2s ease-in-out infinite;}
+@keyframes sp{0%,100%{opacity:0.4}50%{opacity:1}}
 
-    .hero-inner { position: relative; z-index: 2; text-align: center; padding: 0 24px; }
-    .eyebrow {
-      display: inline-block;
-      font-size: 11px; font-weight: 500; letter-spacing: 0.45em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 32px;
-      opacity: 0; animation: fadeUp .9s ease .2s forwards;
-    }
-    .hero-title {
-      font-family: var(--serif);
-      font-size: clamp(48px, 8vw, 96px); font-weight: 600;
-      color: var(--cream); line-height: 1.08; letter-spacing: -0.01em;
-      margin-bottom: 28px;
-      opacity: 0; animation: fadeUp .9s ease .4s forwards;
-    }
-    .hero-title em { font-style: normal; color: var(--gold); }
-    .hero-sub {
-      font-family: var(--serif);
-      font-size: clamp(15px, 2vw, 19px); font-weight: 300;
-      color: var(--cream-2); line-height: 1.95; max-width: 560px; margin: 0 auto 52px;
-      opacity: 0; animation: fadeUp .9s ease .6s forwards;
-    }
-    .hero-btns {
-      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
-      opacity: 0; animation: fadeUp .9s ease .8s forwards;
-    }
-    .btn-fill {
-      display: inline-block; padding: 15px 40px;
-      background: var(--gold); color: var(--navy);
-      font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: 0.07em;
-      border-radius: 2px; text-decoration: none; transition: all .22s;
-    }
-    .btn-fill:hover { background: var(--gold-lt); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,.3); }
-    .btn-line {
-      display: inline-block; padding: 15px 40px;
-      border: 1px solid rgba(201,168,76,.45); color: var(--cream-2);
-      font-family: var(--sans); font-size: 14px; font-weight: 400; letter-spacing: 0.07em;
-      border-radius: 2px; text-decoration: none; transition: all .22s;
-    }
-    .btn-line:hover { border-color: var(--gold); color: var(--gold); }
+/* ─── S2: 법통 스트립 ────────────────── */
+.strip-section{background:var(--white);padding:72px 5%;border-top:1px solid rgba(201,169,110,0.08);}
+.strip-inner{max-width:1240px;margin:0 auto;}
+.strip-eye{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:52px;}
+.strip-eye-line{width:28px;height:1px;background:rgba(201,169,110,0.4);}
+.strip-eye-text{color:var(--gold);font-size:0.68rem;letter-spacing:2.5px;text-transform:uppercase;}
+.strip-cards{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;}
+.strip-card{text-align:center;padding:0 24px;}
+.strip-portrait{width:130px;height:168px;border-radius:8px;background-size:cover;background-position:center;margin:0 auto 18px;filter:brightness(0.82);}
+.sp-gm{background-image:url('great-master.png');}
+.sp-mu{background-image:url('mugyeon-master.png');}
+.sp-center{width:90px;height:90px;border-radius:50%;background:var(--gold-light);border:2px solid rgba(201,169,110,0.28);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:1.8rem;color:var(--gold);}
+.strip-card-lbl{font-size:0.62rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:8px;}
+.strip-card-name{font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:700;color:var(--charcoal);margin-bottom:4px;}
+.strip-card-desc{font-size:0.78rem;color:var(--muted);line-height:1.7;}
+.strip-arrow{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;}
+.sa-line{width:56px;height:1px;background:linear-gradient(to right,rgba(201,169,110,0.15),var(--gold),rgba(201,169,110,0.15));}
+.sa-arr{color:var(--gold);font-size:1rem;}
+.sa-txt{font-size:0.6rem;color:rgba(201,169,110,0.6);white-space:nowrap;}
 
-    .scroll-hint {
-      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
-      opacity: 0; animation: fadeIn 1s ease 1.4s forwards;
-    }
-    .scroll-hint span { font-size: 10px; letter-spacing: 0.38em; color: var(--gray); text-transform: uppercase; }
-    .scroll-bar { width: 1px; height: 44px; background: linear-gradient(180deg, var(--gold) 0%, transparent 100%); animation: scrollAnim 2s ease-in-out infinite; }
-    @keyframes scrollAnim { 0%,100%{opacity:0;transform:scaleY(0) translateY(-100%)} 40%{opacity:1;transform:scaleY(1) translateY(0)} 80%{opacity:0;transform:scaleY(0) translateY(100%)} }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes fadeIn { to{opacity:1} }
+/* ─── S3: 왜 한울인가 ─────────────────── */
+.why-section{background:var(--cream);}
+.why-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px;}
+.why-card{background:var(--white);border-radius:var(--radius);padding:36px 28px;border:1px solid rgba(201,169,110,0.1);transition:transform 0.25s,box-shadow 0.25s;}
+.why-card:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(0,0,0,0.07);}
+.why-num{font-family:'Noto Serif KR',serif;font-size:2.8rem;color:rgba(201,169,110,0.2);font-weight:700;margin-bottom:12px;line-height:1;}
+.why-card h3{font-family:'Noto Serif KR',serif;font-size:1.1rem;font-weight:700;color:var(--charcoal);margin-bottom:10px;}
+.why-card p{color:var(--muted);font-size:0.86rem;line-height:1.9;}
+.why-card .why-cta{display:inline-block;color:var(--gold);font-size:0.8rem;margin-top:16px;text-decoration:none;font-weight:600;}
 
-    /* ── SECTION BASE ──────────────────────── */
-    section { padding: 120px 64px; }
-    .wrap { max-width: 1120px; margin: 0 auto; }
-    .s-label {
-      font-size: 10.5px; font-weight: 600; letter-spacing: 0.42em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 18px;
-    }
-    .s-title {
-      font-family: var(--serif);
-      font-size: clamp(26px, 3.5vw, 44px); font-weight: 500;
-      color: var(--cream); line-height: 1.28; margin-bottom: 20px;
-    }
-    .s-bar { width: 44px; height: 2px; background: var(--gold); margin-bottom: 36px; }
-    .s-body {
-      font-family: var(--serif); font-size: 17px; font-weight: 300;
-      color: var(--cream-2); line-height: 2.0; max-width: 580px;
-    }
+/* ─── S4: 수련 과정 타임라인 ─────────── */
+.timeline-section{background:var(--white);}
+.tl-wrap{margin-top:60px;}
+.tl-track{display:grid;grid-template-columns:repeat(8,1fr);gap:0;position:relative;}
+.tl-track::before{content:'';position:absolute;top:29px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.tl-step{text-align:center;padding:0 6px;cursor:pointer;}
+.tl-dot{width:18px;height:18px;border-radius:50%;border:2px solid rgba(201,169,110,0.3);background:var(--white);margin:20px auto 16px;position:relative;z-index:1;transition:all 0.3s;}
+.tl-step.active .tl-dot,.tl-step:hover .tl-dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 5px rgba(201,169,110,0.12);}
+.tl-num{font-size:0.62rem;color:var(--gold);font-weight:700;margin-bottom:6px;opacity:0.7;}
+.tl-step.active .tl-num{opacity:1;}
+.tl-name{font-family:'Noto Serif KR',serif;font-size:0.76rem;font-weight:700;color:var(--charcoal-mid);line-height:1.5;}
+.tl-detail{background:var(--cream);border-radius:var(--radius);padding:40px 44px;margin-top:44px;border:1px solid rgba(201,169,110,0.12);display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:center;}
+.tl-detail-num{font-family:'Noto Serif KR',serif;font-size:4rem;font-weight:700;color:rgba(201,169,110,0.18);line-height:1;}
+.tl-tag{display:inline-block;background:var(--gold-light);color:var(--gold);padding:3px 12px;border-radius:2px;font-size:0.66rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;}
+.tl-title{font-family:'Noto Serif KR',serif;font-size:1.28rem;font-weight:700;color:var(--charcoal);margin-bottom:10px;}
+.tl-desc{color:var(--muted);font-size:0.88rem;line-height:1.95;}
+.tl-cta-wrap{text-align:center;margin-top:36px;}
 
-    /* ── ABOUT (한울이란) ─────────────────── */
-    .about { background: var(--deep); }
-    .about-intro { max-width: 680px; margin-bottom: 72px; }
-    .about-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; }
-    .about-card {
-      background: var(--card); padding: 48px 36px 44px;
-      position: relative; overflow: hidden;
-      transition: transform .3s;
-    }
-    .about-card::after {
-      content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
-      background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform .4s;
-    }
-    .about-card:hover { transform: translateY(-6px); }
-    .about-card:hover::after { transform: scaleX(1); }
-    .ac-hanja {
-      position: absolute; top: 28px; right: 28px;
-      font-family: var(--serif); font-size: 52px; font-weight: 700;
-      color: rgba(201,168,76,.08); line-height: 1; pointer-events: none;
-    }
-    .ac-num { font-size: 11px; letter-spacing: 0.3em; color: var(--gold-dk); margin-bottom: 24px; }
-    .ac-name {
-      font-family: var(--serif); font-size: 24px; font-weight: 500;
-      color: var(--cream); margin-bottom: 10px;
-    }
-    .ac-sub { font-size: 12px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 20px; }
-    .ac-desc {
-      font-family: var(--serif); font-size: 15px; font-weight: 300;
-      color: var(--cream-2); line-height: 1.95;
-    }
+/* ─── S5: 한울예술 ───────────────────── */
+.arts-section{background:var(--cream);}
+.arts-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:56px;}
+.art-card{background:var(--white);border-radius:var(--radius);padding:30px 18px;text-align:center;border:1px solid rgba(201,169,110,0.1);transition:transform 0.25s,box-shadow 0.25s;}
+.art-card:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(0,0,0,0.07);border-color:rgba(201,169,110,0.35);}
+.art-icon{width:56px;height:56px;border-radius:50%;background:var(--gold-light);border:1px solid rgba(201,169,110,0.2);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.art-card .art-tag{font-size:0.62rem;color:var(--gold);letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
+.art-card h4{font-family:'Noto Serif KR',serif;font-size:0.95rem;font-weight:700;color:var(--charcoal);margin-bottom:8px;}
+.art-card p{color:var(--muted);font-size:0.78rem;line-height:1.85;}
 
-    /* ── TEACHINGS (핵심 가르침) ─────────── */
-    .teachings { background: var(--navy); }
-    .teach-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 60px; }
-    .teach-card {
-      background: var(--card); padding: 44px 36px 40px;
-      border: 1px solid var(--border); border-radius: 2px;
-      transition: border-color .3s, transform .3s;
-    }
-    .teach-card:hover { border-color: rgba(201,168,76,.45); transform: translateY(-6px); }
-    .t-icon {
-      width: 52px; height: 52px; border-radius: 50%;
-      border: 1px solid var(--gold-dk);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--serif); font-size: 22px; color: var(--gold);
-      margin-bottom: 24px;
-    }
-    .t-name {
-      font-family: var(--serif); font-size: 22px; font-weight: 500;
-      color: var(--cream); margin-bottom: 8px;
-    }
-    .t-hanja-sm { font-size: 12px; letter-spacing: 0.22em; color: var(--gold); margin-bottom: 18px; }
-    .t-desc {
-      font-family: var(--serif); font-size: 15px; font-weight: 300;
-      color: var(--cream-2); line-height: 1.95;
-    }
+/* ─── S6: 오늘의 법문 ────────────────── */
+.lawmun-section{background:var(--charcoal);padding:112px 5%;overflow:hidden;}
+.lawmun-inner{max-width:960px;margin:0 auto;text-align:center;}
+.law-eye{color:var(--gold);font-size:0.68rem;letter-spacing:3px;margin-bottom:36px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.law-eye::before,.law-eye::after{content:'';width:40px;height:1px;background:rgba(201,169,110,0.3);}
+/* 탭 UI */
+.law-tabs{display:flex;justify-content:center;gap:0;margin-bottom:44px;border:1px solid rgba(201,169,110,0.2);border-radius:6px;overflow:hidden;max-width:480px;margin-left:auto;margin-right:auto;}
+.law-tab{flex:1;padding:12px 20px;font-size:0.82rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:rgba(201,169,110,0.5);letter-spacing:0.5px;transition:all 0.25s;font-family:inherit;}
+.law-tab.active{background:rgba(201,169,110,0.12);color:var(--gold);border-bottom:2px solid var(--gold);}
+.law-tab-count{font-size:0.68rem;color:rgba(201,169,110,0.4);margin-left:6px;}
+.law-tab.active .law-tab-count{color:rgba(201,169,110,0.7);}
+.law-panel{display:none;}.law-panel.active{display:block;}
+.law-slides{position:relative;min-height:200px;}
+.law-slide{position:absolute;inset:0;opacity:0;transform:translateY(14px);transition:opacity 0.8s,transform 0.8s;display:flex;flex-direction:column;justify-content:center;}
+.law-slide.active{opacity:1;transform:translateY(0);}
+.law-mark{font-family:'Noto Serif KR',serif;font-size:4.5rem;color:rgba(201,169,110,0.18);line-height:0.8;margin-bottom:14px;display:block;}
+.law-text{font-family:'Noto Serif KR',serif;font-size:1.5rem;color:rgba(255,255,255,0.86);line-height:1.9;letter-spacing:-0.2px;}
+.law-src{margin-top:28px;color:rgba(201,169,110,0.6);font-size:0.76rem;}
+.law-dots{display:flex;justify-content:center;gap:8px;margin-top:52px;}
+.law-dot{width:5px;height:5px;border-radius:50%;background:rgba(201,169,110,0.22);cursor:pointer;border:none;transition:all 0.3s;}
+.law-dot.active{background:var(--gold);transform:scale(1.35);}
+.law-progress{width:100%;height:1px;background:rgba(201,169,110,0.08);margin-top:24px;overflow:hidden;position:relative;}
+.law-bar{position:absolute;left:0;top:0;height:100%;background:var(--gold);width:0;transition:width 0.1s linear;}
+.law-cta-row{margin-top:44px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 
-    /* ── QUOTES (법문 발췌) ──────────────── */
-    .quotes {
-      background: linear-gradient(160deg, #0C1828 0%, #142238 50%, #0C1828 100%);
-      position: relative; overflow: hidden;
-    }
-    .quotes-bg {
-      position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
-      font-family: var(--serif); font-size: 180px; font-weight: 700;
-      color: rgba(201,168,76,.035); letter-spacing: -0.04em; pointer-events: none; white-space: nowrap;
-    }
-    .quotes-grid { display: grid; grid-template-columns: 1fr; gap: 56px; position: relative; z-index: 1; }
-    .quote-item { max-width: 760px; }
-    .q-mark {
-      font-family: var(--serif); font-size: 64px; font-weight: 700;
-      color: var(--gold); line-height: 0.6; margin-bottom: 16px; opacity: 0.5;
-    }
-    .q-text {
-      font-family: var(--serif);
-      font-size: clamp(18px, 2.4vw, 26px); font-weight: 400;
-      color: var(--cream); line-height: 1.72; margin-bottom: 20px;
-    }
-    .q-attr {
-      font-family: var(--serif); font-size: 13px; font-weight: 300;
-      color: var(--gold); letter-spacing: 0.08em;
-    }
-    .q-divider { width: 40px; height: 1px; background: var(--gold-dk); margin: 40px 0; opacity: 0.5; }
+/* ─── S7: 참가자 후기 ────────────────── */
+.reviews-section{background:var(--white);}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;}
+.review-card{background:var(--cream);border-radius:var(--radius);padding:32px 28px;border:1px solid rgba(201,169,110,0.1);}
+.review-stars{color:var(--gold);font-size:0.85rem;margin-bottom:14px;letter-spacing:2px;}
+.review-text{font-family:'Noto Serif KR',serif;font-size:0.92rem;color:var(--charcoal);line-height:1.95;margin-bottom:20px;font-style:italic;}
+.review-author{display:flex;align-items:center;gap:12px;}
+.review-avatar{width:38px;height:38px;border-radius:50%;background:var(--gold-light);border:1.5px solid rgba(201,169,110,0.25);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.review-name{font-size:0.82rem;font-weight:700;color:var(--charcoal);}
+.review-meta{font-size:0.72rem;color:var(--muted);}
+.reviews-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;background:var(--charcoal);border-radius:var(--radius);overflow:hidden;}
+.r-stat{padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,0.05);}
+.r-stat:last-child{border-right:none;}
+.r-stat-num{font-family:'Noto Serif KR',serif;font-size:2.2rem;color:var(--gold);font-weight:700;}
+.r-stat-lbl{color:rgba(255,255,255,0.4);font-size:0.78rem;margin-top:6px;line-height:1.6;}
 
-    /* ── CENTER (여의명상센터) ──────────── */
-    .center { background: var(--deep); }
-    .center-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-    .programs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
-    .prog-item {
-      padding: 28px 24px;
-      border: 1px solid var(--border);
-      background: rgba(201,168,76,.025); border-radius: 2px;
-      transition: border-color .3s, background .3s;
-    }
-    .prog-item:hover { border-color: rgba(201,168,76,.4); background: rgba(201,168,76,.05); }
-    .prog-item h4 {
-      font-family: var(--serif); font-size: 16px; font-weight: 500;
-      color: var(--cream); margin-bottom: 8px;
-    }
-    .prog-item p {
-      font-family: var(--serif); font-size: 13px; font-weight: 300;
-      color: var(--cream-2); line-height: 1.8;
-    }
-    .center-symbol {
-      display: flex; align-items: center; justify-content: center;
-      height: 460px; position: sticky; top: 120px;
-    }
-    .center-symbol svg { width: 360px; height: 360px; }
+/* ─── S8: 수련 일정 ─────────────────── */
+.sch-section{background:var(--cream);}
+.sch-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:56px;}
+.sch-cards{display:flex;flex-direction:column;gap:14px;}
+.sch-card{background:var(--white);border-radius:8px;padding:18px 20px;border:1px solid rgba(201,169,110,0.1);display:flex;gap:16px;align-items:flex-start;}
+.sch-date{min-width:48px;background:var(--charcoal);border-radius:6px;padding:8px;text-align:center;}
+.sch-month{color:var(--gold);font-size:0.58rem;font-weight:700;letter-spacing:1px;}
+.sch-day{color:var(--white);font-family:'Noto Serif KR',serif;font-size:1.4rem;font-weight:700;line-height:1.1;}
+.sch-info h4{font-family:'Noto Serif KR',serif;font-size:0.95rem;font-weight:700;color:var(--charcoal);margin-bottom:3px;}
+.sch-info p{color:var(--muted);font-size:0.8rem;line-height:1.7;}
+.sch-badge{display:inline-block;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:2px;margin-bottom:5px;letter-spacing:0.8px;}
+.sch-open{background:rgba(74,124,89,0.12);color:var(--forest);}
+.sch-soon{background:rgba(201,169,110,0.12);color:var(--gold);}
+.sch-panel{background:var(--charcoal);border-radius:var(--radius);padding:34px 28px;display:flex;flex-direction:column;gap:22px;}
+.sch-stat{border-bottom:1px solid rgba(255,255,255,0.05);padding-bottom:18px;}
+.sch-stat:last-of-type{border-bottom:none;}
+.sch-stat-n{font-family:'Noto Serif KR',serif;font-size:2.2rem;color:var(--gold);font-weight:700;}
+.sch-stat-l{color:rgba(255,255,255,0.4);font-size:0.78rem;margin-top:4px;line-height:1.6;}
 
-    /* ── ARCHIVE (법문 아카이브) ─────────── */
-    .archive { background: var(--navy); text-align: center; }
-    .archive-num {
-      font-family: var(--serif);
-      font-size: clamp(64px, 10vw, 120px); font-weight: 700;
-      color: var(--gold); line-height: 1; margin-bottom: 8px;
-      opacity: 0.85;
-    }
-    .archive-sub {
-      font-size: 12px; letter-spacing: 0.4em; color: var(--gray); text-transform: uppercase;
-      margin-bottom: 40px;
-    }
-    .archive-desc {
-      font-family: var(--serif); font-size: 18px; font-weight: 300;
-      color: var(--cream-2); line-height: 1.85; max-width: 520px; margin: 0 auto 52px;
-    }
+/* ─── S9: 갤러리 ────────────────────── */
+.gallery-section{background:var(--charcoal);padding:110px 5%;}
+.gallery-section .s-title{color:var(--white);}
+.gallery-section .s-eye-text,.gallery-section .s-eye-line{color:var(--gold);background:var(--gold);}
+.gallery-section .s-desc{color:rgba(255,255,255,0.45);}
+.gal-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:240px 240px;gap:10px;margin-top:52px;}
+.gal-item{border-radius:8px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;overflow:hidden;cursor:pointer;transition:transform 0.2s;}
+.gal-item:hover{transform:scale(1.02);}
+.gal-item.large{grid-row:span 2;}
+.gal-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,28,28,0.6),transparent);opacity:0;transition:opacity 0.3s;}
+.gal-item:hover .gal-overlay{opacity:1;}
+.gal-label{position:absolute;bottom:14px;left:14px;right:14px;opacity:0;transform:translateY(8px);transition:all 0.3s;color:var(--white);font-size:0.82rem;font-weight:600;}
+.gal-item:hover .gal-label{opacity:1;transform:translateY(0);}
+.gal-cta{text-align:center;margin-top:36px;}
 
-    /* ── QA (챗봇) ─────────────────────────── */
-    .qa-sec {
-      background: radial-gradient(ellipse 70% 80% at 50% 50%, #142238 0%, #080D1A 70%);
-      text-align: center; position: relative; overflow: hidden;
-    }
-    .qa-rings {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-      pointer-events: none;
-    }
-    .qa-rings span {
-      display: block; position: absolute; border-radius: 50%;
-      border: 1px solid rgba(201,168,76,.07);
-      transform: translate(-50%,-50%);
-    }
-    .qa-inner { position: relative; z-index: 2; }
-    .qa-badge {
-      display: inline-block; padding: 6px 16px;
-      border: 1px solid rgba(201,168,76,.3); border-radius: 20px;
-      font-size: 11px; letter-spacing: 0.28em; color: var(--gold-dk);
-      text-transform: uppercase; margin-bottom: 28px;
-    }
-    .qa-title {
-      font-family: var(--serif);
-      font-size: clamp(24px, 3.6vw, 46px); font-weight: 500;
-      color: var(--cream); line-height: 1.35; margin-bottom: 20px;
-    }
-    .qa-body {
-      font-family: var(--serif); font-size: 17px; font-weight: 300;
-      color: var(--cream-2); line-height: 1.85; max-width: 480px; margin: 0 auto 48px;
-    }
-    .qa-input-wrap {
-      display: flex; max-width: 560px; margin: 0 auto;
-      border: 1px solid rgba(201,168,76,.35); border-radius: 2px;
-      overflow: hidden;
-    }
-    .qa-input {
-      flex: 1; padding: 16px 20px;
-      background: rgba(201,168,76,.04); border: none; outline: none;
-      font-family: var(--serif); font-size: 15px; color: var(--cream);
-    }
-    .qa-input::placeholder { color: var(--gray); }
-    .qa-btn {
-      padding: 16px 28px;
-      background: var(--gold); color: var(--navy);
-      font-family: var(--sans); font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
-      border: none; cursor: pointer; transition: background .2s;
-    }
-    .qa-btn:hover { background: var(--gold-lt); }
-    .qa-coming { font-size: 12px; color: var(--gray); margin-top: 16px; }
+/* ─── CTA ─────────────────────────── */
+.cta-section{background:var(--charcoal);padding:120px 5%;text-align:center;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(201,169,110,0.06),transparent 65%);}
+.cta-inner{position:relative;z-index:1;max-width:660px;margin:0 auto;}
+.cta-inner h2{font-family:'Noto Serif KR',serif;font-size:2.5rem;color:var(--white);line-height:1.45;margin-bottom:18px;}
+.cta-inner h2 em{color:var(--gold);font-style:normal;}
+.cta-inner p{color:rgba(255,255,255,0.55);font-size:0.95rem;line-height:1.9;margin-bottom:40px;}
 
-    /* ── FOOTER ─────────────────────────────── */
-    footer {
-      background: #030810; padding: 64px;
-      border-top: 1px solid var(--border);
-    }
-    .ft-inner {
-      max-width: 1120px; margin: 0 auto;
-      display: flex; gap: 48px; justify-content: space-between; flex-wrap: wrap;
-    }
-    .ft-brand .logo { font-family: var(--serif); font-size: 20px; color: var(--gold); font-weight: 600; margin-bottom: 14px; }
-    .ft-brand p { font-size: 13px; color: var(--gray); line-height: 1.8; max-width: 260px; }
-    .ft-col h4 { font-size: 10px; letter-spacing: 0.36em; color: var(--gold); text-transform: uppercase; margin-bottom: 18px; }
-    .ft-col ul { list-style: none; }
-    .ft-col li { margin-bottom: 10px; }
-    .ft-col a { font-size: 14px; color: var(--gray); text-decoration: none; transition: color .2s; }
-    .ft-col a:hover { color: var(--cream); }
-    .ft-copy {
-      max-width: 1120px; margin: 40px auto 0; padding-top: 24px;
-      border-top: 1px solid rgba(255,255,255,.05);
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-      font-size: 12px; color: var(--gray);
-    }
+/* Sitemap callout */
+.sitemap-callout{background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:var(--radius);padding:32px 36px;margin-top:56px;}
+.sitemap-callout h4{font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:700;color:var(--charcoal);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.sitemap-callout h4::before{content:'';width:16px;height:1px;background:var(--gold);}
+.sitemap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0;border:1px solid rgba(201,169,110,0.1);border-radius:6px;overflow:hidden;}
+.sitemap-col{padding:14px 10px;border-right:1px solid rgba(201,169,110,0.1);}
+.sitemap-col:last-child{border-right:none;}
+.sitemap-col-head{font-size:0.72rem;font-weight:700;color:var(--gold);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(201,169,110,0.15);}
+.sitemap-col-item{font-size:0.7rem;color:var(--muted);margin-bottom:6px;line-height:1.6;}
+.sitemap-col-item.new{color:var(--forest);font-weight:600;}
+.sitemap-col-item.new::before{content:'★ ';}
 
-    /* ── RESPONSIVE ─────────────────────────── */
-    @media (max-width: 960px) {
-      nav { padding: 16px 24px; }
-      .nav-menu { display: none; }
-      section { padding: 80px 24px; }
-      .about-cards, .teach-grid, .center-grid, .programs { grid-template-columns: 1fr; }
-      .center-symbol { height: auto; position: static; padding: 40px 0; }
-      footer { padding: 40px 24px; }
-    }
-  </style>
+/* Footer */
+footer{background:#0F0F0F;padding:60px 5% 28px;}
+.footer-inner{max-width:1240px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px;}
+.f-brand-logo{font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:700;color:var(--white);margin-bottom:12px;}
+.f-brand-logo .fg{color:var(--gold);}
+.f-brand-p{color:rgba(255,255,255,0.3);font-size:0.8rem;line-height:1.9;}
+.f-col h4{color:rgba(255,255,255,0.6);font-size:0.8rem;font-weight:700;margin-bottom:14px;}
+.f-col ul{list-style:none;}
+.f-col li{margin-bottom:8px;color:rgba(255,255,255,0.3);font-size:0.78rem;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.05);padding-top:22px;text-align:center;color:rgba(255,255,255,0.2);font-size:0.74rem;}
+
+/* Chatbot */
+.chatbot{position:fixed;bottom:26px;right:26px;z-index:500;}
+.chatbot-btn{width:56px;height:56px;border-radius:50%;background:var(--charcoal);border:1.5px solid var(--gold);color:var(--gold);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,0.4);}
+.chatbot-tip{position:absolute;right:66px;top:50%;transform:translateY(-50%);background:var(--charcoal);color:var(--white);font-size:0.72rem;white-space:nowrap;padding:6px 12px;border-radius:4px;border:1px solid rgba(201,169,110,0.2);opacity:0;transition:opacity 0.2s;}
+.chatbot:hover .chatbot-tip{opacity:1;}
+
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  .hero h1{font-size:2.2rem;}
+  .strip-cards{grid-template-columns:1fr;}
+  .strip-arrow{display:none;}
+  .why-cards,.reviews-grid{grid-template-columns:1fr;}
+  .arts-grid{grid-template-columns:repeat(2,1fr);}
+  .gal-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .gal-item.large{grid-row:span 1;}
+  .sch-grid,.footer-top{grid-template-columns:1fr;}
+  .sitemap-grid{grid-template-columns:repeat(2,1fr);}
+  .section{padding:72px 5%;}
+}
+</style>
 </head>
 <body>
+<div class="plan-badge">E안 — 하이브리드 최적안 ★CEO 추천★</div>
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-logo">한울<span>사상</span></a>
-  <ul class="nav-menu">
-    <li><a href="#about">한울이란</a></li>
-    <li><a href="#teachings">핵심 가르침</a></li>
-    <li><a href="#center">여의명상센터</a></li>
-    <li><a href="#archive">법문 아카이브</a></li>
-  </ul>
-  <a href="http://211.104.37.65:4200" class="nav-cta" target="_blank">법문 아카이브 →</a>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-c">韓</div>
+      <div>
+        <div class="logo-t">한울영성개발원</div>
+        <div class="logo-s">여의명상센터 · Since 1990</div>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#why">한울사상</a></li>
+      <li><a href="#strip">스승님</a></li>
+      <li><a href="#programs">수련 시작하기</a></li>
+      <li><a href="#arts">한울예술</a></li>
+      <li><a href="#lawmun">법문·갤러리</a></li>
+      <li><a href="#schedule">소식</a></li>
+      <li><a href="#cta" class="nav-cta">입문상담</a></li>
+    </ul>
+  </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="stars"></div>
-  <div class="mandala">
-    <svg viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="450" cy="450" r="440" stroke="rgba(201,168,76,0.06)" stroke-width="1"/>
-      <circle cx="450" cy="450" r="400" stroke="rgba(201,168,76,0.08)" stroke-width="0.5"/>
-      <circle cx="450" cy="450" r="360" stroke="rgba(201,168,76,0.10)" stroke-width="0.5"/>
-      <circle cx="450" cy="450" r="310" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
-      <circle cx="450" cy="450" r="260" stroke="rgba(201,168,76,0.16)" stroke-width="0.5"/>
-      <circle cx="450" cy="450" r="210" stroke="rgba(201,168,76,0.14)" stroke-width="1"/>
-      <line x1="450" y1="10"  x2="450" y2="890"  stroke="rgba(201,168,76,0.05)" stroke-width="0.5"/>
-      <line x1="10"  y1="450" x2="890" y2="450"  stroke="rgba(201,168,76,0.05)" stroke-width="0.5"/>
-      <line x1="137" y1="137" x2="763" y2="763"  stroke="rgba(201,168,76,0.04)" stroke-width="0.5"/>
-      <line x1="763" y1="137" x2="137" y2="763"  stroke="rgba(201,168,76,0.04)" stroke-width="0.5"/>
-      <g stroke="rgba(201,168,76,0.3)" stroke-width="1">
-        <line x1="450" y1="12" x2="450" y2="30"/>
-        <line x1="450" y1="870" x2="450" y2="888"/>
-        <line x1="12" y1="450" x2="30" y2="450"/>
-        <line x1="870" y1="450" x2="888" y2="450"/>
-      </g>
-      <text x="450" y="48"  text-anchor="middle" font-family="serif" font-size="18" fill="rgba(201,168,76,0.45)">天</text>
-      <text x="450" y="878" text-anchor="middle" font-family="serif" font-size="18" fill="rgba(201,168,76,0.45)">地</text>
-      <text x="34"  y="455" text-anchor="middle" font-family="serif" font-size="18" fill="rgba(201,168,76,0.45)">人</text>
-      <text x="867" y="455" text-anchor="middle" font-family="serif" font-size="18" fill="rgba(201,168,76,0.45)">氣</text>
-    </svg>
-  </div>
-
+<!-- S1: Hero -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
   <div class="hero-inner">
-    <span class="eyebrow">한울영성계발원 · 여의명상센터</span>
-    <h1 class="hero-title">한울사상<br><em>하늘의 뜻으로</em> 사는 삶</h1>
-    <p class="hero-sub">
-      수도자 1인은 세상자 만인이요<br>
-      중생자 억이라
-    </p>
-    <div class="hero-btns">
-      <a href="http://211.104.37.65:4200" class="btn-fill" target="_blank">법문 아카이브 보기</a>
-      <a href="#about" class="btn-line">한울사상이란</a>
-    </div>
-  </div>
-
-  <div class="scroll-hint">
-    <span>scroll</span>
-    <div class="scroll-bar"></div>
-  </div>
-</section>
-
-<!-- ABOUT: 한울이란 -->
-<section class="about" id="about">
-  <div class="wrap">
-    <div class="about-intro">
-      <p class="s-label">한울이란</p>
-      <h2 class="s-title">한울(韓蔚)은 하늘의 순우리말<br>만물의 근원</h2>
-      <div class="s-bar"></div>
-      <p class="s-body">
-        한울은 동서고금의 어떤 종교나 사상과도 구별되는 독자적 사상 체계입니다.
-        우주의 이치(道)가 인간의 삶 속에서 어떻게 펼쳐지는가를 밝히고,
-        그 이치에 따라 사는 삶의 길을 제시합니다.
-      </p>
-    </div>
-    <div class="about-cards">
-      <div class="about-card">
-        <p class="ac-num">01</p>
-        <span class="ac-hanja">道</span>
-        <h3 class="ac-name">우주도리</h3>
-        <p class="ac-sub">우주의 이치를 깨닫다</p>
-        <p class="ac-desc">
-          "우주의 모든 것은 돈다 — 자전하고 공전하는 것이 우주의 도리."
-          한울사상은 우주의 순환 원리를 삶의 근본으로 삼습니다.
-          돌고 도는 이치 안에서 인간의 자리를 찾는 것이 수행의 출발점입니다.
-        </p>
+    <div>
+      <div class="hero-tag"><div class="hero-tag-line"></div><div class="hero-tag-text">韓蔚思想 · 한울영성개발원</div></div>
+      <h1>韓蔚思想<br><em>한올과 한울의 조화</em></h1>
+      <div class="hero-div"></div>
+      <p class="hero-quote">"종교의 본래 의미는<br>정상에 오르도록 하는 가르침이다."<br><small style="font-size:0.76rem;opacity:0.65;font-style:normal;">— 무견 김상국 스승님, 2022년 법문</small></p>
+      <div class="btns">
+        <a href="#cta" class="btn-gold">입문 상담 예약 →</a>
+        <a href="#programs" class="btn-outline">수련 시작하기</a>
       </div>
-      <div class="about-card">
-        <p class="ac-num">02</p>
-        <span class="ac-hanja">靈</span>
-        <h3 class="ac-name">영적 진화</h3>
-        <p class="ac-sub">한울의 존재로 깨어나다</p>
-        <p class="ac-desc">
-          "나비가 될 번데기는 무엇인가를 단단하게 붙잡지 않고서는
-          허물을 벗고 나올 수 없다."
-          인간은 수련과 삶의 실천을 통해 더 높은 존재로 진화할 수 있습니다.
-        </p>
-      </div>
-      <div class="about-card">
-        <p class="ac-num">03</p>
-        <span class="ac-hanja">責</span>
-        <h3 class="ac-name">세상에 대한 책임</h3>
-        <p class="ac-sub">한 사람이 세상을 바꾼다</p>
-        <p class="ac-desc">
-          "수도자 1인은 세상자 만인이요, 중생자 억이라."
-          한울사상은 개인의 수행이 곧 세상을 위한 실천임을 강조합니다.
-          나 한 사람의 각성이 만인의 삶에 영향을 미칩니다.
-        </p>
+      <div class="hero-lineage">
+        <span style="opacity:0.5;font-size:0.65rem;letter-spacing:1px;">법통</span>
+        <span>한울 김준원 큰스승님</span>
+        <span class="arr">→</span>
+        <span>무견 김상국 스승님</span>
+        <span class="arr">→</span>
+        <span style="opacity:0.7;">여의명상센터</span>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- TEACHINGS: 핵심 가르침 -->
-<section class="teachings" id="teachings">
-  <div class="wrap">
-    <p class="s-label">핵심 가르침</p>
-    <h2 class="s-title">한울사상이 가리키는<br>세 가지 길</h2>
-    <div class="s-bar"></div>
-    <div class="teach-grid">
-      <div class="teach-card">
-        <div class="t-icon">制</div>
-        <h3 class="t-name">제도 (制道)</h3>
-        <p class="t-hanja-sm">수행의 목표이자 결과물</p>
-        <p class="t-desc">
-          제도는 단순히 도를 터득하는 것이 아니라,
-          도를 삶 속에서 구현하고 세상의 질서를 바로잡는 것입니다.
-          수행의 목표는 깨달음을 넘어 세상에 대한 책임으로 완성됩니다.
-        </p>
-      </div>
-      <div class="teach-card">
-        <div class="t-icon">場</div>
-        <h3 class="t-name">생명장 (生命場)</h3>
-        <p class="t-hanja-sm">몸을 감싸는 기(氣)의 장</p>
-        <p class="t-desc">
-          생명장은 몸을 감싸고 있는 에너지 장(場)입니다.
-          이 장이 강하고 맑을수록 건강하고 밝은 삶이 펼쳐집니다.
-          생명장 수련은 이 기운을 키우고 정화하는 한울 고유의 수행법입니다.
-        </p>
-      </div>
-      <div class="teach-card">
-        <div class="t-icon">損</div>
-        <h3 class="t-name">수련 — 손지손지심</h3>
-        <p class="t-hanja-sm">損之損之心 · 채우기보다 비우는 수행</p>
-        <p class="t-desc">
-          "죄는 조이는 것이다. 자신과 상대를 무리하게 조이는 것."
-          한울의 수련은 채우는 것이 아닌 비우는 것에서 시작합니다.
-          손지손지심(損之損之心) — 덜고 또 덜어내는 마음이 수행의 핵심입니다.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- QUOTES: 법문 발췌 -->
-<section class="quotes" id="quotes">
-  <div class="wrap">
-    <p class="s-label">큰스승님 법문</p>
-    <h2 class="s-title">실제 법문에서 가져온<br>한울의 말씀</h2>
-    <div class="s-bar"></div>
-    <div class="quotes-grid" style="margin-top:60px;">
-      <div class="quote-item">
-        <div class="q-mark">"</div>
-        <p class="q-text">
-          나비가 될 번데기는 무엇인가를<br>
-          단단하게 붙잡지 않고서는<br>
-          허물을 벗고 나올 수 없다
-        </p>
-        <p class="q-attr">— 한울 법문 아카이브 수록</p>
-      </div>
-      <div class="q-divider"></div>
-      <div class="quote-item">
-        <div class="q-mark">"</div>
-        <p class="q-text">
-          죄는 조이는 것이다.<br>
-          자신과 상대를<br>
-          무리하게 조이는 것
-        </p>
-        <p class="q-attr">— 한울 법문 아카이브 수록</p>
-      </div>
-      <div class="q-divider"></div>
-      <div class="quote-item">
-        <div class="q-mark">"</div>
-        <p class="q-text">
-          우주의 모든 것은 돈다.<br>
-          자전하고 공전하는 것이<br>
-          우주의 도리
-        </p>
-        <p class="q-attr">— 한울 법문 아카이브 수록</p>
-      </div>
-    </div>
-  </div>
-  <div class="quotes-bg">法文</div>
-</section>
-
-<!-- CENTER: 여의명상센터 -->
-<section class="center" id="center">
-  <div class="wrap">
-    <div class="center-grid">
-      <div>
-        <p class="s-label">여의명상센터</p>
-        <h2 class="s-title">한울영성계발원<br>수련 프로그램</h2>
-        <div class="s-bar"></div>
-        <p class="s-body" style="margin-bottom:48px;">
-          여의명상센터 한울영성계발원은 한울사상을 직접 체험하고 실천하는
-          수련 공동체입니다. 집중수련부터 일상 수련까지, 각자의 삶에서
-          한울의 가르침을 실현하는 다양한 프로그램을 운영합니다.
-        </p>
-        <div class="programs">
-          <div class="prog-item">
-            <h4>집중수련</h4>
-            <p>한울사상의 깊이를 체험하는 집중 수련 과정</p>
+    <div class="hero-right">
+      <div class="hero-frame">
+        <div class="hero-frame-img"></div>
+        <div class="hero-frame-over"></div>
+        <div class="hero-frame-cap">
+          <div class="hero-frame-name">한울 김준원 큰스승님</div>
+          <div class="hero-frame-role">韓蔚思想 創立者 · 1990</div>
+        </div>
+        <div class="hero-frame-badge"><strong>1990</strong><span>창립</span></div>
+        <div class="hero-successor" style="position:relative;margin-top:12px;">
+          <div class="hero-succ-img"></div>
+          <div>
+            <div class="hero-succ-label">법통 계승자</div>
+            <div class="hero-succ-name">무견 김상국 스승님</div>
           </div>
-          <div class="prog-item">
-            <h4>생명장 수련</h4>
-            <p>몸을 감싸는 기(氣)의 장을 키우는 수련</p>
-          </div>
-          <div class="prog-item">
-            <h4>기운영</h4>
-            <p>우주의 기운을 바르게 운용하는 수행법</p>
-          </div>
-          <div class="prog-item">
-            <h4>토요법문</h4>
-            <p>매주 토요일 법문 청취 및 공동 수련</p>
-          </div>
-          <div class="prog-item">
-            <h4>지기문화답사</h4>
-            <p>우주도리를 자연 속에서 체험하는 답사</p>
-          </div>
-          <div class="prog-item">
-            <h4>공동체 활동</h4>
-            <p>한울사상을 함께 실천하는 삶의 공동체</p>
-          </div>
+          <div class="hero-succ-arrow">↓ 2005 여의선원</div>
         </div>
       </div>
-      <div class="center-symbol">
-        <svg viewBox="0 0 380 380" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="190" cy="190" r="178" stroke="rgba(201,168,76,0.08)" stroke-width="1.5"/>
-          <circle cx="190" cy="190" r="162" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
-          <circle cx="190" cy="190" r="138" stroke="rgba(201,168,76,0.20)" stroke-width="1"/>
-          <circle cx="190" cy="190" r="114" stroke="rgba(201,168,76,0.26)" stroke-width="1.5"/>
-          <circle cx="190" cy="190" r="90"  stroke="rgba(201,168,76,0.30)" stroke-width="1"/>
-          <circle cx="190" cy="190" r="66"  stroke="rgba(201,168,76,0.40)" stroke-width="1.5"/>
-          <circle cx="190" cy="190" r="42"  stroke="rgba(201,168,76,0.55)" stroke-width="1.5"/>
-          <circle cx="190" cy="190" r="22"  fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
-          <circle cx="190" cy="190" r="6"   fill="rgba(201,168,76,0.9)"/>
-          <line x1="190" y1="16"  x2="190" y2="364" stroke="rgba(201,168,76,0.1)" stroke-width="0.8"/>
-          <line x1="16"  y1="190" x2="364" y2="190" stroke="rgba(201,168,76,0.1)" stroke-width="0.8"/>
-          <line x1="60"  y1="60"  x2="320" y2="320" stroke="rgba(201,168,76,0.07)" stroke-width="0.8"/>
-          <line x1="320" y1="60"  x2="60"  y2="320" stroke="rgba(201,168,76,0.07)" stroke-width="0.8"/>
-          <g stroke="rgba(201,168,76,0.5)" stroke-width="1.2">
-            <line x1="190" y1="18" x2="190" y2="30"/>
-            <line x1="190" y1="350" x2="190" y2="362"/>
-            <line x1="18" y1="190" x2="30" y2="190"/>
-            <line x1="350" y1="190" x2="362" y2="190"/>
-          </g>
-          <text x="190" y="13" text-anchor="middle" font-family="serif" font-size="14" fill="rgba(201,168,76,0.65)">天</text>
-          <text x="190" y="378" text-anchor="middle" font-family="serif" font-size="14" fill="rgba(201,168,76,0.65)">地</text>
-          <text x="8"   y="195" text-anchor="middle" font-family="serif" font-size="14" fill="rgba(201,168,76,0.65)">人</text>
-          <text x="373" y="195" text-anchor="middle" font-family="serif" font-size="14" fill="rgba(201,168,76,0.65)">氣</text>
-        </svg>
-      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">SCROLL<div class="hero-scroll-bar"></div></div>
+</section>
+
+<!-- S2: 법통 계승 스트립 -->
+
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-inner">
+    <h2>수도의 여정,<br><em>지금 시작하십시오</em></h2>
+    <p>한울사상 입문 상담은 언제든지 환영합니다.<br>근원을 향한 첫 걸음, 함께하겠습니다.</p>
+    <div class="btns" style="justify-content:center;">
+      <a href="mailto:contact@hanul-spiritual.kr" class="btn-gold">✉ 입문 상담 문의</a>
+      <a href="#why" class="btn-outline">한울사상 더 알아보기</a>
     </div>
   </div>
 </section>
 
-<!-- ARCHIVE: 법문 아카이브 -->
-<section class="archive" id="archive">
-  <div class="wrap">
-    <p class="s-label" style="text-align:center;margin-bottom:24px;">법문 아카이브</p>
-    <div class="archive-num">10,311</div>
-    <p class="archive-sub">법문과 가르침이 수록된 아카이브</p>
-    <p class="archive-desc">
-      수십 년에 걸쳐 수집된 한울 법문 전체를 아카이빙했습니다.<br>
-      검색하고, 읽고, 당신만의 방식으로 한울사상을 만나보세요.
-    </p>
-    <a href="http://211.104.37.65:4200" class="btn-fill" target="_blank">법문 아카이브 열기</a>
-  </div>
-</section>
-
-<!-- QA: 한울 챗봇 -->
-<section class="qa-sec" id="qa">
-  <div class="qa-rings">
-    <span style="width:700px;height:700px;margin-top:-350px;margin-left:-350px;"></span>
-    <span style="width:500px;height:500px;margin-top:-250px;margin-left:-250px;"></span>
-    <span style="width:300px;height:300px;margin-top:-150px;margin-left:-150px;border-color:rgba(201,168,76,0.11);"></span>
-  </div>
-  <div class="wrap">
-    <div class="qa-inner">
-      <div class="qa-badge">Coming Soon</div>
-      <h2 class="qa-title">한울사상이 궁금하신가요?<br>무엇이든 물어보세요</h2>
-      <p class="qa-body">
-        10,311건의 법문을 학습한 한울 AI가<br>
-        당신의 질문에 답합니다.
-      </p>
-      <div class="qa-input-wrap">
-        <input class="qa-input" type="text" placeholder="예: 생명장이란 무엇인가요?" disabled />
-        <button class="qa-btn" disabled>묻기</button>
-      </div>
-      <p class="qa-coming">한울 Q&A 챗봇은 준비 중입니다</p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
+<!-- Footer -->
 <footer>
-  <div class="ft-inner">
-    <div class="ft-brand">
-      <div class="logo">한울영성계발원</div>
-      <p>여의명상센터 · 한울사상<br>하늘의 뜻으로 사는 삶을 실천하는<br>수련 공동체</p>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div><div class="f-brand-logo"><span class="fg">韓</span> 한울영성개발원</div><p class="f-brand-p">여의명상센터 · 1990년 창립<br>한울사상을 통한 영적 수도의 길을 21년 이상 전승해 오고 있습니다.</p></div>
+      <div class="f-col"><h4>수련 안내</h4><ul><li>21일 과정</li><li>49일 과정</li><li>생명장 조정</li><li>기지도 체험</li></ul></div>
+      <div class="f-col"><h4>안내</h4><ul><li>수련 문의</li><li>오시는 길</li><li>법문 보기</li><li>개인정보처리방침</li></ul></div>
     </div>
-    <div class="ft-col">
-      <h4>한울사상</h4>
-      <ul>
-        <li><a href="#about">한울이란</a></li>
-        <li><a href="#teachings">핵심 가르침</a></li>
-        <li><a href="#quotes">법문 발췌</a></li>
-      </ul>
-    </div>
-    <div class="ft-col">
-      <h4>여의명상센터</h4>
-      <ul>
-        <li><a href="#center">집중수련</a></li>
-        <li><a href="#center">생명장 수련</a></li>
-        <li><a href="#center">토요법문</a></li>
-        <li><a href="#center">지기문화답사</a></li>
-      </ul>
-    </div>
-    <div class="ft-col">
-      <h4>법문 아카이브</h4>
-      <ul>
-        <li><a href="http://211.104.37.65:4200" target="_blank">아카이브 열기</a></li>
-        <li><a href="#qa">한울 Q&A</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="ft-copy">
-    <span>© 2026 한울영성계발원 여의명상센터. All rights reserved.</span>
-    <span>수도자 1인은 세상자 만인이요 — 한울사상</span>
+    <div class="footer-bottom">© 2026 한울영성개발원 여의명상센터 · E안: 하이브리드 최적안</div>
   </div>
 </footer>
 
+<!-- Chatbot & Archive: hanul-components.js 가 자동 삽입 -->
+
 <script>
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('pinned', window.scrollY > 50);
-  }, { passive: true });
-
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.about-card, .teach-card, .prog-item, .quote-item').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(24px)';
-    el.style.transition = 'opacity .6s ease, transform .6s ease';
-    io.observe(el);
+// Timeline
+const tlSteps = [{tag:'기초',title:'수련 프로그램',desc:'건강과 삶의 행복을 위한 입문자 과정. 한울사상의 기초를 체험하며 수도의 첫 발걸음을 내딛습니다.'},{tag:'기초',title:'입문과정 1·2',desc:'3개월 단계별 입문 과정. 한울사상의 철학과 수행 방법을 체계적으로 익힙니다.'},{tag:'기초',title:'기초 회로 과정',desc:'입문과정 이수 후 수행의 기초 회로를 확립하고 내면의 흐름을 감지합니다.'},{tag:'중급',title:'특별수련 프로그램',desc:'정화 프로그램과 지기문화답사 참여를 통한 심화 체험 수련입니다.'},{tag:'중급',title:'월제도 프로그램',desc:'재가 수련 회원을 위한 매월 제도 보조 과정. 일상 속 수행을 지속합니다.'},{tag:'심화',title:'생명장 조정 프로그램',desc:'몸氣·地氣·영氣를 조정하는 특수 수련. 생명 에너지 정렬을 목적으로 합니다.'},{tag:'심화',title:'여의수도 프로그램',desc:'영적진화를 목적으로 하는 심화 수도 과정. 근원과의 합일을 향한 여정입니다.'},{tag:'최심화',title:'우주○제도 프로그램',desc:'우주○초대와 우주영제도에 참여하는 최심화 과정. 수도의 정점에 이릅니다.'}];
+const stepEls = document.querySelectorAll('.tl-step');
+function showStep(i){stepEls.forEach((el,j)=>el.classList.toggle('active',j===i));const s=tlSteps[i];document.getElementById('tlNum').textContent=String(i+1).padStart(2,'0');document.getElementById('tlTag').textContent=s.tag;document.getElementById('tlTitle').textContent=s.title;document.getElementById('tlDesc').textContent=s.desc;}
+stepEls.forEach(el=>el.addEventListener('click',()=>showStep(+el.dataset.idx)));
+// 법문 탭 전환
+document.querySelectorAll('.law-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.law-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.law-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    const t=tab.dataset.tab;
+    document.getElementById(t==='gm'?'panelGm':'panelMu').classList.add('active');
+    if(t==='gm'&&!sliderGm.aId){sliderGm.start();}
+    if(t==='mu'&&!sliderMu.aId){sliderMu.start();}
   });
+});
+// 슬라이더 팩토리
+function makeSlider(slidesId,dotsId,barId){
+  const slides=document.querySelectorAll('#'+slidesId+' .law-slide');
+  const dots=document.querySelectorAll('#'+dotsId+' .law-dot');
+  const bar=document.getElementById(barId);
+  let cur=0,st=Date.now(),aId=null;
+  const IV=6000;
+  function show(i){slides[cur].classList.remove('active');dots[cur].classList.remove('active');cur=i;slides[cur].classList.add('active');dots[cur].classList.add('active');st=Date.now();if(bar)bar.style.width='0%';}
+  function tick(){const e=Date.now()-st;if(bar)bar.style.width=Math.min(e/IV*100,100)+'%';if(e>=IV)show((cur+1)%slides.length);aId=requestAnimationFrame(tick);}
+  function start(){aId=requestAnimationFrame(tick);}
+  dots.forEach(d=>d.addEventListener('click',()=>{cancelAnimationFrame(aId);show(+d.dataset.idx);aId=requestAnimationFrame(tick);}));
+  return{start,get aId(){return aId}};
+}
+const sliderGm=makeSlider('lawSlidesGm','lawDotsGm','lawBarGm');
+const sliderMu=makeSlider('lawSlidesMu','lawDotsMu','lawBarMu');
+sliderGm.start();sliderMu.start();
 </script>
+<script src="/js/hanul-components.js"></script>
 </body>
 </html>
