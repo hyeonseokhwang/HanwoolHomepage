@@ -1,6 +1,9 @@
 import express from 'express';
 import path from 'path';
+import { createRequire } from 'module';
 import multer from 'multer';
+const require = createRequire(import.meta.url);
+const compression = require('compression');
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import { fileURLToPath } from 'url';
@@ -24,6 +27,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// gzip 압축 — Lighthouse 성능 개선
+app.use(compression());
+
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(session({
@@ -32,7 +38,10 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 7 * 24 * 3600 * 1000 }, // 7일
 }));
-app.use('/public', express.static(path.join(__dirname, '..', 'public')));
+app.use('/public', express.static(path.join(__dirname, '..', 'public'), {
+  maxAge: '7d',
+  etag: true,
+}));
 
 // SEO: sitemap.xml / robots.txt — 루트 경로로 직접 서빙
 app.get('/sitemap.xml', (_req, res) => {
