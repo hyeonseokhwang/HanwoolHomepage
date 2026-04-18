@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-04-15T11:03:12.593Z",
+  "htmlLen": 2492999,
+  "rtfLen": 105798998,
+  "fileImgCount": 54,
+  "sourceA_htmlDataImg": 0,
+  "sourceB_hwpJsonBidt": 1,
+  "sourceC_rtfPict": 54,
+  "sourceD_clipFiles": 0,
+  "clipTypes": [
+    "text/plain",
+    "text/html",
+    "text/rtf"
+  ],
+  "fileUrls": [
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8CDD.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D1C.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D1D.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D2E.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D2F.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D30.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D40.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D41.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D52.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D53.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D54.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D65.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D66.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D76.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D77.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D88.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D89.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D8A.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D9A.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmp8D9B.jpg"
+  ]
+}

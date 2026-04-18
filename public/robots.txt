@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /archive
+Allow: /chat
+
+# 관리자/인증/결제 페이지 크롤링 차단
+Disallow: /editor
+Disallow: /auth/
+Disallow: /api/
+Disallow: /payment/
+
+# 시안 비교 페이지 차단 (운영 페이지 아님)
+Disallow: /v2
+Disallow: /siann/
+Disallow: /siann-
+
+Sitemap: https://hanulspirit.kr/sitemap.xml

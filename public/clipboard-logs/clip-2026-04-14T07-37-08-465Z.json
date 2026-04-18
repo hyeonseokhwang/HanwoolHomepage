@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-04-14T07:37:08.465Z",
+  "htmlLen": 532754,
+  "rtfLen": 2523153,
+  "fileImgCount": 57,
+  "sourceA_htmlDataImg": 0,
+  "sourceB_hwpJsonBidt": 1,
+  "sourceC_rtfPict": 57,
+  "sourceD_clipFiles": 0,
+  "clipTypes": [
+    "text/plain",
+    "text/html",
+    "text/rtf"
+  ],
+  "fileUrls": [
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2BC7.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2BD7.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2BE8.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2BF9.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2BFA.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C0A.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C1B.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C1C.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C2C.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C2D.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C3E.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C4F.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C5F.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C60.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C61.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C72.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C83.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C93.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2C94.jpg",
+    "C:\\Users\\hysra\\AppData\\Local\\Temp\\tmp2CA5.jpg"
+  ]
+}

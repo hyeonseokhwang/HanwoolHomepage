@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-04-10T01:47:43.328Z",
+  "htmlLen": 154424,
+  "rtfLen": 278852,
+  "fileImgCount": 8,
+  "fileUrlNames": [
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpBFE9.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpBFFA.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpBFFB.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC00C.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC00D.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC00E.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC01E.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC01F.jpg"
+  ],
+  "hwpJsonImages": 14,
+  "rtfImages": 0,
+  "htmlDataImages": 0,
+  "clipboardFiles": 0,
+  "hwpMeta": {
+    "bidtKeys": {
+      "01DCC88BCEDE0B600000013A.jpg": 14708,
+      "01DCC88BCEDE80900000013B.gif": 756,
+      "01DCC88BCEDECEB00000013C.jpg": 3180,
+      "01DCC88BCEDF6AF00000013D.jpg": 16468,
+      "01DCC88BCEDFB9100000013E.gif": 940,
+      "01DCC88BCEE007300000013F.jpg": 17312
+    },
+    "srOrder": [
+      "01DCC88BCEDE0B600000013A.jpg",
+      "01DCC88BCEDE80900000013B.gif",
+      "01DCC88BCEDECEB00000013C.jpg",
+      "01DCC88BCEDF6AF00000013D.jpg",
+      "01DCC88BCEDFB9100000013E.gif",
+      "01DCC88BCEE007300000013F.jpg"
+    ],
+    "matched": 14,
+    "total": 6
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-04-10T01:46:09.013Z",
+  "htmlLen": 154424,
+  "rtfLen": 278852,
+  "fileImgCount": 8,
+  "sourceA_htmlDataImg": 0,
+  "sourceB_hwpJsonBidt": 1,
+  "sourceC_rtfPict": 8,
+  "sourceD_clipFiles": 0,
+  "clipTypes": [
+    "text/plain",
+    "text/html",
+    "text/rtf"
+  ],
+  "fileUrls": [
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpBFE9.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpBFFA.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpBFFB.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC00C.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC00D.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC00E.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC01E.jpg",
+    "C:\\Users\\win10\\AppData\\Local\\Temp\\tmpC01F.jpg"
+  ]
+}
