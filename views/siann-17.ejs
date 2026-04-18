@@ -1215,12 +1215,40 @@
     var tid='ct-'+Date.now();
     msgs.insertAdjacentHTML('beforeend','<div class="c-msg bot" id="'+tid+'"><div class="c-avatar">韓</div><div class="c-bubble" style="display:flex;gap:4px;align-items:center"><span style="font-size:11px;opacity:.6">응답 중</span><span style="display:inline-block;width:5px;height:5px;background:currentColor;border-radius:50%;animation:bounce .8s infinite alternate"></span><span style="display:inline-block;width:5px;height:5px;background:currentColor;border-radius:50%;animation:bounce .8s .2s infinite alternate"></span></div></div>');
     msgs.scrollTop=msgs.scrollHeight;
+    var bubble=document.querySelector('#'+tid+' .c-bubble');
+    var fullText='';
     try{
       var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
-      var d=await r.json();
-      var tidEl=document.getElementById(tid);
-      if(tidEl)tidEl.outerHTML='<div class="c-msg bot"><div class="c-avatar">韓</div><div class="c-bubble">'+chatMd(d.answer||d.error||'오류')+'</div></div>';
-    }catch(e){var tidEl2=document.getElementById(tid);if(tidEl2)tidEl2.outerHTML='<div class="c-msg bot"><div class="c-avatar">韓</div><div class="c-bubble" style="color:#c05">오류: '+chatEsc(e.message)+'</div></div>';}
+      var reader=r.body.getReader();
+      var decoder=new TextDecoder();
+      var buf='';
+      while(true){
+        var _a=await reader.read(),done=_a.done,value=_a.value;
+        if(done)break;
+        buf+=decoder.decode(value,{stream:true});
+        var lines=buf.split('\n');
+        buf=lines.pop();
+        for(var li=0;li<lines.length;li++){
+          var line=lines[li].trim();
+          if(!line.startsWith('data:'))continue;
+          var json=line.slice(5).trim();
+          if(!json)continue;
+          try{
+            var ev=JSON.parse(json);
+            if(ev.type==='token'){
+              fullText+=ev.text;
+              if(bubble)bubble.innerHTML=chatMd(fullText)+'<span style="opacity:.5">▌</span>';
+              msgs.scrollTop=msgs.scrollHeight;
+            }else if(ev.type==='done'||ev.type==='error'){
+              if(ev.type==='error')fullText=ev.message||'오류';
+              if(bubble)bubble.innerHTML=chatMd(fullText);
+            }
+          }catch(_){}
+        }
+      }
+      if(!fullText&&bubble)bubble.innerHTML='<span style="opacity:.5">응답 없음</span>';
+      else if(bubble)bubble.innerHTML=chatMd(fullText);
+    }catch(e){if(bubble)bubble.innerHTML='<span style="color:#c05">오류: '+chatEsc(e.message)+'</span>';}
     msgs.scrollTop=msgs.scrollHeight;btn.disabled=false;inp.focus();
   }
   window.chatSend=chatSend;
