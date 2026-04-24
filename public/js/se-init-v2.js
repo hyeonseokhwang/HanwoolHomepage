@@ -754,6 +754,146 @@
       doc.addEventListener('mousedown', forceEdit);
 
       DBG.log('handlers attached to SmartEditor document');
+
+      // ── 이미지 리사이즈 기능 ─────────────────────────────────────────────
+      (function initImgResize() {
+        try {
+          // wysiwyg doc에 CSS 주입
+          const style = doc.createElement('style');
+          style.textContent = [
+            '.se2-resize-overlay{position:absolute;display:none;border:2px solid #4f8ef7;',
+            'box-sizing:border-box;z-index:9999;pointer-events:none;}',
+            '.se2-resize-handle{position:absolute;width:10px;height:10px;background:#fff;',
+            'border:2px solid #4f8ef7;border-radius:2px;box-sizing:border-box;pointer-events:all;z-index:10000;}',
+            '.se2-resize-nw{top:-5px;left:-5px;cursor:nw-resize;}',
+            '.se2-resize-n{top:-5px;left:calc(50% - 5px);cursor:n-resize;}',
+            '.se2-resize-ne{top:-5px;right:-5px;cursor:ne-resize;}',
+            '.se2-resize-e{top:calc(50% - 5px);right:-5px;cursor:e-resize;}',
+            '.se2-resize-se{bottom:-5px;right:-5px;cursor:se-resize;}',
+            '.se2-resize-s{bottom:-5px;left:calc(50% - 5px);cursor:s-resize;}',
+            '.se2-resize-sw{bottom:-5px;left:-5px;cursor:sw-resize;}',
+            '.se2-resize-w{top:calc(50% - 5px);left:-5px;cursor:w-resize;}',
+          ].join('');
+          (doc.head || doc.documentElement).appendChild(style);
+
+          const DIRS = ['nw','n','ne','e','se','s','sw','w'];
+          let overlay = null;
+          let resizeTarget = null;
+
+          function getOverlay() {
+            if (overlay) return overlay;
+            overlay = doc.createElement('div');
+            overlay.className = 'se2-resize-overlay';
+            DIRS.forEach(function(d) {
+              const h = doc.createElement('div');
+              h.className = 'se2-resize-handle se2-resize-' + d;
+              h.dataset.dir = d;
+              overlay.appendChild(h);
+            });
+            doc.body.appendChild(overlay);
+
+            // 핸들 mousedown → 드래그 리사이즈
+            overlay.addEventListener('mousedown', function(e) {
+              const h = e.target.closest && e.target.closest('.se2-resize-handle');
+              if (!h || !resizeTarget) return;
+              e.preventDefault(); e.stopPropagation();
+              const dir = h.dataset.dir;
+              const img = resizeTarget;
+              const sx = e.clientX, sy = e.clientY;
+              const sw = img.offsetWidth  || img.naturalWidth  || 100;
+              const sh = img.offsetHeight || img.naturalHeight || 100;
+              const ratio = sw / (sh || 1);
+
+              function onMove(ev) {
+                const dx = ev.clientX - sx, dy = ev.clientY - sy;
+                let nw = sw, nh = sh;
+                if (dir.indexOf('e') !== -1) nw = sw + dx;
+                if (dir.indexOf('w') !== -1) nw = sw - dx;
+                if (dir.indexOf('s') !== -1) nh = sh + dy;
+                if (dir.indexOf('n') !== -1) nh = sh - dy;
+                // Shift 없음: 기본 비율 유지 / Shift: 자유 비율
+                if (!ev.shiftKey) {
+                  if (dir === 'n' || dir === 's')      { nw = nh * ratio; }
+                  else if (dir === 'e' || dir === 'w') { nh = nw / ratio; }
+                  else {
+                    const sc = Math.max(nw / sw, nh / sh);
+                    nw = sw * sc; nh = sh * sc;
+                  }
+                }
+                nw = Math.max(50, Math.round(nw));
+                nh = Math.max(50, Math.round(nh));
+                img.style.width  = nw + 'px';
+                img.style.height = nh + 'px';
+                positionOverlay(img);
+              }
+              function onUp() {
+                doc.removeEventListener('mousemove', onMove);
+                doc.removeEventListener('mouseup', onUp);
+              }
+              doc.addEventListener('mousemove', onMove);
+              doc.addEventListener('mouseup', onUp);
+            });
+            return overlay;
+          }
+
+          function positionOverlay(img) {
+            const ov = getOverlay();
+            const r  = img.getBoundingClientRect();
+            const br = doc.documentElement.getBoundingClientRect();
+            const sl = doc.documentElement.scrollLeft || doc.body.scrollLeft || 0;
+            const st = doc.documentElement.scrollTop  || doc.body.scrollTop  || 0;
+            ov.style.left    = (r.left - br.left + sl) + 'px';
+            ov.style.top     = (r.top  - br.top  + st) + 'px';
+            ov.style.width   = r.width  + 'px';
+            ov.style.height  = r.height + 'px';
+            ov.style.display = 'block';
+            resizeTarget = img;
+          }
+
+          function hideOverlay() {
+            if (overlay) overlay.style.display = 'none';
+            resizeTarget = null;
+          }
+
+          function attachImg(img) {
+            if (img._se2Resize) return;
+            img._se2Resize = true;
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function(e) {
+              e.stopPropagation();
+              positionOverlay(img);
+            });
+          }
+
+          // 기존 이미지 스캔
+          if (doc.body) doc.body.querySelectorAll('img').forEach(attachImg);
+
+          // 새 이미지 자동 감지 (MutationObserver)
+          new MutationObserver(function(muts) {
+            muts.forEach(function(m) {
+              m.addedNodes.forEach(function(n) {
+                if (n.nodeType !== 1) return;
+                if (n.tagName === 'IMG') attachImg(n);
+                else if (n.querySelectorAll) n.querySelectorAll('img').forEach(attachImg);
+              });
+            });
+          }).observe(doc.body, { childList: true, subtree: true });
+
+          // 이미지·핸들 외 클릭 시 오버레이 숨김
+          doc.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'IMG' &&
+                !(e.target.closest && e.target.closest('.se2-resize-overlay'))) {
+              hideOverlay();
+            }
+          });
+
+          DBG.log('[imgResize] 이미지 리사이즈 초기화 완료');
+        } catch(err) {
+          DBG.err('[imgResize] 초기화 실패', err);
+        }
+      })();
+      // ── 이미지 리사이즈 끝 ───────────────────────────────────────────────
+
       try { if (typeof editor.exec === 'function') { editor.exec('FOCUS'); editor.exec('ENABLE_WYSIWYG'); } } catch {}
     } catch (e) { DBG.err('failed to attach handlers', e); }
   };

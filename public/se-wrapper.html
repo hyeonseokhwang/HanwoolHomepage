@@ -8,6 +8,17 @@
       body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
       .toolbar { padding: 6px 8px; background:#f1f5f9; border-bottom:1px solid #e2e8f0; font-size:12px; color:#334155 }
       #container { padding: 8px; }
+      /* ── 이미지 리사이즈 오버레이 (se-init-v2.js에서 wysiwyg doc에 동적 주입됨) ── */
+      .se2-resize-overlay { position:absolute; display:none; border:2px solid #4f8ef7; box-sizing:border-box; z-index:9999; pointer-events:none; }
+      .se2-resize-handle { position:absolute; width:10px; height:10px; background:#fff; border:2px solid #4f8ef7; border-radius:2px; box-sizing:border-box; pointer-events:all; z-index:10000; }
+      .se2-resize-nw { top:-5px; left:-5px; cursor:nw-resize; }
+      .se2-resize-n  { top:-5px; left:calc(50% - 5px); cursor:n-resize; }
+      .se2-resize-ne { top:-5px; right:-5px; cursor:ne-resize; }
+      .se2-resize-e  { top:calc(50% - 5px); right:-5px; cursor:e-resize; }
+      .se2-resize-se { bottom:-5px; right:-5px; cursor:se-resize; }
+      .se2-resize-s  { bottom:-5px; left:calc(50% - 5px); cursor:s-resize; }
+      .se2-resize-sw { bottom:-5px; left:-5px; cursor:sw-resize; }
+      .se2-resize-w  { top:calc(50% - 5px); left:-5px; cursor:w-resize; }
     </style>
   </head>
   <body>
