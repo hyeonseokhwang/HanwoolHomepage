@@ -39,6 +39,15 @@ const upload = multer({ storage: diskStorage, limits: { fileSize: 20 * 1024 * 10
 const app = express();
 const PORT = process.env.EDITOR_PORT_V2 || 9082;
 
+// ── lucasinit.duckdns.org 접속 시 LI 공식 홈페이지로 리다이렉트 ──
+app.use((req, res, next) => {
+  const host = (req.headers.host || '').split(':')[0];
+  if (host === 'lucasinit.duckdns.org') {
+    return res.redirect(301, 'http://lucasinit.duckdns.org:8181/lucas-homepage/');
+  }
+  next();
+});
+
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
