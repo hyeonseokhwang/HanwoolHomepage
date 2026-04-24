@@ -6,6 +6,7 @@ import pg from 'pg';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
+import { accessLogMiddleware, logPostAction, registerLogRoutes } from './logger.js';
 
 dotenv.config({ path: path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '.env') });
 
@@ -53,6 +54,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 app.use('/uploads', express.static(UPLOADS_DIR));  // Phase 1: /uploads/{uuid}.ext 직접 접근
 
+// ── 접속 로그 미들웨어 (클린 아키텍처: logger 모듈에 위임) ──
+app.use(accessLogMiddleware);
+
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'ejs');
 app.set('view cache', false);
@@ -96,7 +100,10 @@ app.get('/api/posts/:postId', async (req, res) => {
   try {
     const post = await pool.query('SELECT * FROM yeouiseonwon.posts WHERE post_id = $1', [req.params.postId]);
     if (!post.rows.length) return res.status(404).json({ error: 'Not found' });
-    res.json(post.rows[0]);
+    const row = post.rows[0];
+    // 게시글 조회 로그 (fire-and-forget)
+    logPostAction(req, 'view', { post_id: row.post_id, board: row.board, title: row.title });
+    res.json(row);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -105,10 +112,15 @@ app.put('/api/posts/:postId', async (req, res) => {
     const { content_html, title } = req.body;
     if (!content_html) return res.status(400).json({ error: 'content_html required' });
     const text = content_html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    // 기존 board 조회 (로그용)
+    const existing = await pool.query('SELECT board, title FROM yeouiseonwon.posts WHERE post_id=$1', [req.params.postId]);
     await pool.query(
       `UPDATE yeouiseonwon.posts SET content_html=$2, content=$3, title=COALESCE(NULLIF($4,''),title), crawled_at=NOW() WHERE post_id=$1`,
       [req.params.postId, content_html, text, title || '']
     );
+    // 게시글 수정 로그 (fire-and-forget)
+    const meta = existing.rows[0] || {};
+    logPostAction(req, 'update', { post_id: req.params.postId, board: meta.board, title: title || meta.title });
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -360,9 +372,13 @@ app.post('/api/log/final', (req, res) => {
   res.json({ verdict: 'pass' });
 });
 
+// ── 로그 조회 API 라우트 등록 (클린 아키텍처: logger 모듈에 위임) ──
+registerLogRoutes(app);
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`[hanul-editor] 에디터 서버 포트 :${PORT}`);
   console.log(`  / → editor.ejs`);
+  console.log(`  로그 API: GET /api/logs/access | /api/logs/post-actions | /api/logs/summary`);
 });
 
 // HTTP on port 80 (http://hanwool-board.duckdns.org/)
