@@ -863,18 +863,25 @@ try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', heade
           function positionOverlay(img) {
             const ov = getOverlay();
             const r  = img.getBoundingClientRect();
-            const br = doc.documentElement.getBoundingClientRect();
+            // position:absolute 기준: viewport좌표 + 스크롤오프셋 (br 빼면 2배 버그)
             const sl = doc.documentElement.scrollLeft || doc.body.scrollLeft || 0;
             const st = doc.documentElement.scrollTop  || doc.body.scrollTop  || 0;
-            const left = r.left - br.left + sl;
-            const top  = r.top  - br.top  + st;
-            ov.style.left    = left + 'px';
-            ov.style.top     = top + 'px';
-            ov.style.width   = r.width  + 'px';
-            ov.style.height  = r.height + 'px';
+            const left = r.left + sl;
+            const top  = r.top  + st;
+            // 크기: getBoundingClientRect가 너무 작으면 offsetWidth fallback + 최소 40px 보장
+            const MIN = 40;
+            const ow = Math.max(r.width  || 0, img.offsetWidth  || 0, MIN);
+            const oh = Math.max(r.height || 0, img.offsetHeight || 0, MIN);
+            // 이미지보다 오버레이가 크면 중앙 정렬
+            const padW = (ow - (r.width  || 0)) / 2;
+            const padH = (oh - (r.height || 0)) / 2;
+            ov.style.left    = (left - padW) + 'px';
+            ov.style.top     = (top  - padH) + 'px';
+            ov.style.width   = ow + 'px';
+            ov.style.height  = oh + 'px';
             ov.style.display = 'block';
             resizeTarget = img;
-            svrLog('positionOverlay', { src: (img.src||'').slice(0,60), left: Math.round(left), top: Math.round(top), w: Math.round(r.width), h: Math.round(r.height) });
+            svrLog('positionOverlay', { src: (img.src||'').slice(0,60), left: Math.round(left), top: Math.round(top), ow: Math.round(ow), oh: Math.round(oh), rw: Math.round(r.width), rh: Math.round(r.height) });
           }
 
           function hideOverlay() {
