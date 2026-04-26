@@ -372,6 +372,20 @@ app.post('/api/log/final', (req, res) => {
   res.json({ verdict: 'pass' });
 });
 
+// 에디터 이미지 리사이즈 디버그 로그 (Inspector/dev-3 실시간 확인)
+const _dbgLogs = [];
+app.post('/api/editor-debug-log', express.json(), (req, res) => {
+  const { event, data, ts } = req.body || {};
+  const line = `[EDITOR-DBG] ${ts || new Date().toISOString()} event=${event} ${JSON.stringify(data || {})}`;
+  console.log(line);
+  _dbgLogs.push({ ts: ts || new Date().toISOString(), event, data });
+  if (_dbgLogs.length > 200) _dbgLogs.shift();
+  res.json({ ok: true });
+});
+app.get('/api/editor-debug-log', (req, res) => {
+  res.json(_dbgLogs.slice(-50));
+});
+
 // ── 로그 조회 API 라우트 등록 (클린 아키텍처: logger 모듈에 위임) ──
 registerLogRoutes(app);
 
