@@ -51,7 +51,11 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: '200mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use('/public', express.static(path.join(__dirname, '..', 'public')));
+app.use('/public', express.static(path.join(__dirname, '..', 'public'), {
+  etag: false,
+  lastModified: false,
+  setHeaders: (res) => { res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate'); }
+}));
 app.use('/uploads', express.static(UPLOADS_DIR));  // Phase 1: /uploads/{uuid}.ext 직접 접근
 
 // ── 접속 로그 미들웨어 (클린 아키텍처: logger 모듈에 위임) ──
