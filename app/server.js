@@ -504,6 +504,22 @@ app.get('/api/img-proxy', (req, res) => {
   }).on('error', (e) => res.status(502).send(e.message));
 });
 
+// 에디터 디버그 로그 수신 — 클라이언트 이벤트를 PM2 로그로 기록 (Inspector/dev-3 실시간 확인용)
+const _dbgLogs = [];
+app.post('/api/editor-debug-log', (req, res) => {
+  try {
+    const { event, data, ts } = req.body || {};
+    const line = `[EDITOR-DBG] ${ts || new Date().toISOString()} event=${event} ${JSON.stringify(data || {})}`;
+    console.log(line);
+    _dbgLogs.push({ ts: ts || Date.now(), event, data });
+    if (_dbgLogs.length > 200) _dbgLogs.shift();
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+app.get('/api/editor-debug-log', (req, res) => {
+  res.json(_dbgLogs.slice(-50));
+});
+
 app.post('/api/upload', upload.single('file'), async (req, res) => {
   try {
     if (req.file && req.file.path && !hasCloudinary) {

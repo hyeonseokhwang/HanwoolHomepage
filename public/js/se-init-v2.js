@@ -743,9 +743,23 @@
       doc.addEventListener('drop', onDrop);
       doc.addEventListener('dragover', (ev) => ev.preventDefault());
 
-      // Force focus/edit mode on click/mousedown
-      const forceEdit = () => {
+      // 서버 디버그 로그 전송 (PM2 logs에서 Inspector/dev-3 실시간 확인)
+      function svrLog(event, data) {
         try {
+          fetch('/api/editor-debug-log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event: event, data: data, ts: new Date().toISOString() })
+          }).catch(function(){});
+        } catch(e) {}
+      }
+
+      // Force focus/edit mode on click/mousedown
+      const forceEdit = (e) => {
+        try {
+          const tag = e && e.target ? e.target.tagName : '?';
+          const cls = e && e.target ? (e.target.className || '') : '';
+          svrLog('forceEdit', { type: e ? e.type : '?', tag: tag, cls: cls });
           if (typeof editor.exec === 'function') { editor.exec('FOCUS'); editor.exec('ENABLE_WYSIWYG'); }
           if (doc.body) doc.body.focus();
         } catch {}
@@ -842,15 +856,19 @@
             const br = doc.documentElement.getBoundingClientRect();
             const sl = doc.documentElement.scrollLeft || doc.body.scrollLeft || 0;
             const st = doc.documentElement.scrollTop  || doc.body.scrollTop  || 0;
-            ov.style.left    = (r.left - br.left + sl) + 'px';
-            ov.style.top     = (r.top  - br.top  + st) + 'px';
+            const left = r.left - br.left + sl;
+            const top  = r.top  - br.top  + st;
+            ov.style.left    = left + 'px';
+            ov.style.top     = top + 'px';
             ov.style.width   = r.width  + 'px';
             ov.style.height  = r.height + 'px';
             ov.style.display = 'block';
             resizeTarget = img;
+            svrLog('positionOverlay', { src: (img.src||'').slice(0,60), left: Math.round(left), top: Math.round(top), w: Math.round(r.width), h: Math.round(r.height) });
           }
 
           function hideOverlay() {
+            svrLog('hideOverlay', { hadTarget: !!resizeTarget });
             if (overlay) overlay.style.display = 'none';
             resizeTarget = null;
           }
@@ -859,10 +877,20 @@
             if (img._se2Resize) return;
             img._se2Resize = true;
             img.style.cursor = 'pointer';
+            const imgIdx = doc.body ? Array.from(doc.body.querySelectorAll('img')).indexOf(img) : -1;
+            svrLog('attachImg', { src: (img.src||'').slice(0,60), idx: imgIdx });
             img.addEventListener('click', function(e) {
+              svrLog('img.click', { src: (img.src||'').slice(0,60), idx: imgIdx, phase: e.eventPhase });
               e.stopPropagation();
+              e.stopImmediatePropagation();
               positionOverlay(img);
-            });
+            }, true);
+            img.addEventListener('mousedown', function(e) {
+              svrLog('img.mousedown', { src: (img.src||'').slice(0,60), idx: imgIdx, phase: e.eventPhase });
+              e.stopPropagation();
+              e.stopImmediatePropagation();
+              positionOverlay(img);
+            }, true);
           }
 
           // 기존 이미지 스캔
@@ -881,12 +909,16 @@
 
           // 이미지·핸들 외 클릭 시 오버레이 숨김
           doc.addEventListener('click', function(e) {
-            if (e.target.tagName !== 'IMG' &&
-                !(e.target.closest && e.target.closest('.se2-resize-overlay'))) {
+            const tag = e.target ? e.target.tagName : '?';
+            const isOverlay = !!(e.target.closest && e.target.closest('.se2-resize-overlay'));
+            svrLog('doc.click', { tag: tag, isOverlay: isOverlay, overlayVisible: !!(overlay && overlay.style.display === 'block') });
+            if (tag !== 'IMG' && !isOverlay) {
               hideOverlay();
             }
           });
 
+          const initImgCount = doc.body ? doc.body.querySelectorAll('img').length : 0;
+          svrLog('initImgResize', { imgs: initImgCount });
           DBG.log('[imgResize] 이미지 리사이즈 초기화 완료');
         } catch(err) {
           DBG.err('[imgResize] 초기화 실패', err);
