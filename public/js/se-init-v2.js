@@ -880,13 +880,22 @@ try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', heade
             // 이미지보다 오버레이가 크면 중앙 정렬
             const padW = (ow - (r.width  || 0)) / 2;
             const padH = (oh - (r.height || 0)) / 2;
-            ov.style.left    = (left - padW) + 'px';
-            ov.style.top     = (top  - padH) + 'px';
+            const ovLeft = left - padW;
+            const ovTop  = top  - padH;
+            ov.style.left    = ovLeft + 'px';
+            ov.style.top     = ovTop  + 'px';
             ov.style.width   = ow + 'px';
             ov.style.height  = oh + 'px';
             ov.style.display = 'block';
             resizeTarget = img;
-            svrLog('positionOverlay', { src: (img.src||'').slice(0,60), left: Math.round(left), top: Math.round(top), ow: Math.round(ow), oh: Math.round(oh), rw: Math.round(r.width), rh: Math.round(r.height) });
+            // 상세 위치 비교 로그 (Lucas님 요청)
+            const ovR = ov.getBoundingClientRect();
+            console.log('[SE2-POS] img.BCR={left:'+Math.round(r.left)+',top:'+Math.round(r.top)+',w:'+Math.round(r.width)+',h:'+Math.round(r.height)+'}'
+              +' scroll={sl:'+sl+',st:'+st+'}'
+              +' img.offset={left:'+img.offsetLeft+',top:'+img.offsetTop+',w:'+img.offsetWidth+',h:'+img.offsetHeight+'}'
+              +' ov.style={left:'+Math.round(ovLeft)+',top:'+Math.round(ovTop)+',w:'+Math.round(ow)+',h:'+Math.round(oh)+'}'
+              +' ov.BCR={left:'+Math.round(ovR.left)+',top:'+Math.round(ovR.top)+'}');
+            svrLog('positionOverlay', { rL:Math.round(r.left), rT:Math.round(r.top), rW:Math.round(r.width), rH:Math.round(r.height), sl, st, imgOL:img.offsetLeft, imgOT:img.offsetTop, imgOW:img.offsetWidth, imgOH:img.offsetHeight, ovL:Math.round(ovLeft), ovT:Math.round(ovTop), ow:Math.round(ow), oh:Math.round(oh), ovBcrL:Math.round(ovR.left), ovBcrT:Math.round(ovR.top) });
           }
 
           function hideOverlay() {
