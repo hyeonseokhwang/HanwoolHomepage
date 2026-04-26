@@ -805,6 +805,11 @@ try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', heade
           let resizeTarget = null;
 
           function getOverlay() {
+            // isConnected 체크: SmartEditor2가 doc.body를 갱신하면 overlay 분리됨 → 재생성
+            if (overlay && !overlay.isConnected) {
+              svrLog('overlay.detached', {}); // 분리 감지
+              overlay = null;
+            }
             if (overlay) return overlay;
             overlay = doc.createElement('div');
             overlay.className = 'se2-resize-overlay';
