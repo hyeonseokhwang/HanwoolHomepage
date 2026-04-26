@@ -59,26 +59,34 @@
           },
           fOnAppLoad : function(){
             document.querySelector('.toolbar').textContent = 'SmartEditor2 준비 완료';
-            if (window.parent && window.parent.seInitAttachToEditor) {
+            // wysiwygDoc 탐색 함수
+            function getWysiwygDoc() {
+              const allFrames = document.querySelectorAll('iframe');
+              for (const f of allFrames) {
+                try {
+                  const fd = f.contentDocument || f.contentWindow?.document;
+                  if (fd) {
+                    const inner = fd.querySelector('iframe.se2_input_wysiwyg');
+                    if (inner) return inner.contentDocument || inner.contentWindow?.document;
+                  }
+                } catch(e) {}
+              }
+              return null;
+            }
+            // seInitAttachToEditor가 아직 없으면 폴링 (race condition 대응)
+            let tries = 0;
+            function tryCall() {
               try {
-                // SE2 완전 로드 시점: se2_input_wysiwyg 직접 탐색하여 doc 부모에 전달
-                let wysiwygDoc = null;
-                const allFrames = document.querySelectorAll('iframe');
-                for (const f of allFrames) {
-                  try {
-                    const fd = f.contentDocument || f.contentWindow?.document;
-                    if (fd) {
-                      const inner = fd.querySelector('iframe.se2_input_wysiwyg');
-                      if (inner) {
-                        wysiwygDoc = inner.contentDocument || inner.contentWindow?.document;
-                        break;
-                      }
-                    }
-                  } catch(e) {}
+                if (window.parent && window.parent.seInitAttachToEditor) {
+                  window.parent.seInitAttachToEditor(window.oEditors.getById['ir1'], 0, getWysiwygDoc());
+                } else if (tries++ < 30) {
+                  setTimeout(tryCall, 200);
+                } else {
+                  console.warn('[se-wrapper] seInitAttachToEditor 미발견 (30회 폴링 실패)');
                 }
-                window.parent.seInitAttachToEditor(window.oEditors.getById['ir1'], 0, wysiwygDoc);
               } catch(e) { console.error('[se-wrapper fOnAppLoad]', e); }
             }
+            tryCall();
           },
           fCreator: 'createSEditor2'
         });
