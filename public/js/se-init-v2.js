@@ -1,9 +1,9 @@
 // SmartEditor2 integration shim
 // Waits for SmartEditor to load and attaches paste/drop handlers to upload images
-console.log('[SE2-LOAD] se-init-v2.js 파일 로드 시작');
-try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ event:'fileLoad', data:{}, ts: new Date().toISOString() }) }).catch(function(){}); } catch(e) {}
+// console.log('[SE2-LOAD] se-init-v2.js 파일 로드 시작');
+// try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ event:'fileLoad', data:{}, ts: new Date().toISOString() }) }).catch(function(){}); } catch(e) {}
 (function () {
-  console.log('[SE2-IIFE] IIFE 시작');
+  // console.log('[SE2-IIFE] IIFE 시작');
   // Debug logger
   const DBG = {
     log: (...a) => console.log('[SE2][DBG]', new Date().toISOString(), ...a),
@@ -382,14 +382,14 @@ try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', heade
   window.seInitAttachToEditor = function (editor, _retryCount, _injectedDoc) {
     const retryCount = _retryCount || 0;
     // ── EARLY LOG (doc 탐색 전, 항상 찍힘) ──
-    console.log('[SE2-EARLY] seInitAttachToEditor called retry=' + retryCount + ' injectedDoc=' + !!_injectedDoc);
-    try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ event:'earlyInit', data:{ retry: retryCount, hasDoc: !!_injectedDoc }, ts: new Date().toISOString() }) }).catch(function(){}); } catch(e) {}
+    // console.log('[SE2-EARLY] seInitAttachToEditor called retry=' + retryCount + ' injectedDoc=' + !!_injectedDoc);
+    // try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ event:'earlyInit', data:{ retry: retryCount, hasDoc: !!_injectedDoc }, ts: new Date().toISOString() }) }).catch(function(){}); } catch(e) {}
     try {
       // _injectedDoc: se-wrapper.html fOnAppLoad에서 직접 전달 (최우선)
       let doc = _injectedDoc || null;
       if (doc) {
         DBG.log('[seInit] injectedDoc 직접 사용 ✓');
-        console.log('[SE2-EARLY] injectedDoc OK');
+        // console.log('[SE2-EARLY] injectedDoc OK');
       } else {
         // fallback: se-iframe → skinFrame → se2_input_wysiwyg 탐색
         const seWrapperEl = document.getElementById('se-iframe');
@@ -409,7 +409,7 @@ try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', heade
           }
         }
         doc = iframe && (iframe.contentDocument || iframe.contentWindow?.document);
-        console.log('[SE2-EARLY] fallback doc=' + !!doc + ' iframe=' + !!iframe + ' wrapperDoc=' + !!wrapperDoc);
+        // console.log('[SE2-EARLY] fallback doc=' + !!doc + ' iframe=' + !!iframe + ' wrapperDoc=' + !!wrapperDoc);
       }
       if (!doc) {
         if (retryCount < 30) {
@@ -751,18 +751,21 @@ try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', heade
       doc.addEventListener('drop', onDrop);
       doc.addEventListener('dragover', (ev) => ev.preventDefault());
 
-      // 서버 디버그 로그 전송 (PM2 logs에서 Inspector/dev-3 실시간 확인)
-      function svrLog(event, data) {
-        const ts = new Date().toISOString();
-        console.log('[SE2-DBG]', ts, event, JSON.stringify(data));
-        try {
-          fetch('http://localhost:9082/api/editor-debug-log', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ event: event, data: data, ts: ts })
-          }).catch(function(err){ console.warn('[SE2-DBG] fetch err:', err); });
-        } catch(e) { console.warn('[SE2-DBG] svrLog ex:', e); }
-      }
+      // 서버 디버그 로그 전송 (주석처리 2026-04-27 — 나중에 필요 시 활성화)
+      function svrLog(event, data) { /* disabled */ }
+      /* svrLog 원본:
+      // function svrLog(event, data) {
+      //   const ts = new Date().toISOString();
+      //   console.log('[SE2-DBG]', ts, event, JSON.stringify(data));
+      //   try {
+      //     fetch('http://localhost:9082/api/editor-debug-log', {
+      //       method: 'POST',
+      //       headers: { 'Content-Type': 'application/json' },
+      //       body: JSON.stringify({ event: event, data: data, ts: ts })
+      //     }).catch(function(err){ console.warn('[SE2-DBG] fetch err:', err); });
+      //   } catch(e) { console.warn('[SE2-DBG] svrLog ex:', e); }
+      // }
+      */
 
       // Force focus/edit mode on click/mousedown
       const forceEdit = (e) => {
@@ -888,14 +891,14 @@ try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', heade
             ov.style.height  = oh + 'px';
             ov.style.display = 'block';
             resizeTarget = img;
-            // 상세 위치 비교 로그 (Lucas님 요청)
-            const ovR = ov.getBoundingClientRect();
-            console.log('[SE2-POS] img.BCR={left:'+Math.round(r.left)+',top:'+Math.round(r.top)+',w:'+Math.round(r.width)+',h:'+Math.round(r.height)+'}'
-              +' scroll={sl:'+sl+',st:'+st+'}'
-              +' img.offset={left:'+img.offsetLeft+',top:'+img.offsetTop+',w:'+img.offsetWidth+',h:'+img.offsetHeight+'}'
-              +' ov.style={left:'+Math.round(ovLeft)+',top:'+Math.round(ovTop)+',w:'+Math.round(ow)+',h:'+Math.round(oh)+'}'
-              +' ov.BCR={left:'+Math.round(ovR.left)+',top:'+Math.round(ovR.top)+'}');
-            svrLog('positionOverlay', { rL:Math.round(r.left), rT:Math.round(r.top), rW:Math.round(r.width), rH:Math.round(r.height), sl, st, imgOL:img.offsetLeft, imgOT:img.offsetTop, imgOW:img.offsetWidth, imgOH:img.offsetHeight, ovL:Math.round(ovLeft), ovT:Math.round(ovTop), ow:Math.round(ow), oh:Math.round(oh), ovBcrL:Math.round(ovR.left), ovBcrT:Math.round(ovR.top) });
+            // 상세 위치 비교 로그 (주석처리 2026-04-27)
+            // const ovR = ov.getBoundingClientRect();
+            // console.log('[SE2-POS] img.BCR={left:'+Math.round(r.left)+',top:'+Math.round(r.top)+',w:'+Math.round(r.width)+',h:'+Math.round(r.height)+'}'
+            //   +' scroll={sl:'+sl+',st:'+st+'}'
+            //   +' img.offset={left:'+img.offsetLeft+',top:'+img.offsetTop+',w:'+img.offsetWidth+',h:'+img.offsetHeight+'}'
+            //   +' ov.style={left:'+Math.round(ovLeft)+',top:'+Math.round(ovTop)+',w:'+Math.round(ow)+',h:'+Math.round(oh)+'}'
+            //   +' ov.BCR={left:'+Math.round(ovR.left)+',top:'+Math.round(ovR.top)+'}');
+            // svrLog('positionOverlay', { rL:Math.round(r.left), rT:Math.round(r.top), rW:Math.round(r.width), rH:Math.round(r.height), sl, st, imgOL:img.offsetLeft, imgOT:img.offsetTop, imgOW:img.offsetWidth, imgOH:img.offsetHeight, ovL:Math.round(ovLeft), ovT:Math.round(ovTop), ow:Math.round(ow), oh:Math.round(oh), ovBcrL:Math.round(ovR.left), ovBcrT:Math.round(ovR.top) });
           }
 
           function hideOverlay() {

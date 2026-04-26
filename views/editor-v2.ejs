@@ -102,13 +102,13 @@
 </nav>
 
 <div class="page">
-  <!-- 게시글 선택 + 저장 -->
-  <div class="toolbar-row">
+  <!-- 게시글 선택 + 저장 (당분간 제거 — 혼동 방지 2026-04-27) -->
+  <!-- <div class="toolbar-row">
     <input type="text" id="post-id-input" placeholder="게시글 ID 입력 후 불러오기…">
     <button class="btn btn-secondary" onclick="loadPost()">불러오기</button>
     <button class="btn btn-primary" id="save-btn" onclick="savePost()">저장</button>
     <span class="status-msg" id="status"></span>
-  </div>
+  </div> -->
   <!-- 이미지 업로드 진행 상태바 -->
   <div id="save-progress-wrap">
     <div id="save-progress-label">이미지 업로드 준비 중…</div>
@@ -372,6 +372,7 @@ async function savePost() {
 
 function setStatus(msg, isErr = false, isOk = false) {
   const el = document.getElementById('status');
+  if (!el) return;
   el.textContent = msg;
   el.className = 'status-msg' + (isErr ? ' err' : isOk ? ' ok' : '');
 }
