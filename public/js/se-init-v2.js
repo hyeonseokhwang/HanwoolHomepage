@@ -378,11 +378,15 @@
   // Attach to SmartEditor instance (with retry for iframe not yet loaded)
   window.seInitAttachToEditor = function (editor, _retryCount, _injectedDoc) {
     const retryCount = _retryCount || 0;
+    // ── EARLY LOG (doc 탐색 전, 항상 찍힘) ──
+    console.log('[SE2-EARLY] seInitAttachToEditor called retry=' + retryCount + ' injectedDoc=' + !!_injectedDoc);
+    try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ event:'earlyInit', data:{ retry: retryCount, hasDoc: !!_injectedDoc }, ts: new Date().toISOString() }) }).catch(function(){}); } catch(e) {}
     try {
       // _injectedDoc: se-wrapper.html fOnAppLoad에서 직접 전달 (최우선)
       let doc = _injectedDoc || null;
       if (doc) {
         DBG.log('[seInit] injectedDoc 직접 사용 ✓');
+        console.log('[SE2-EARLY] injectedDoc OK');
       } else {
         // fallback: se-iframe → skinFrame → se2_input_wysiwyg 탐색
         const seWrapperEl = document.getElementById('se-iframe');
@@ -402,6 +406,7 @@
           }
         }
         doc = iframe && (iframe.contentDocument || iframe.contentWindow?.document);
+        console.log('[SE2-EARLY] fallback doc=' + !!doc + ' iframe=' + !!iframe + ' wrapperDoc=' + !!wrapperDoc);
       }
       if (!doc) {
         if (retryCount < 30) {
