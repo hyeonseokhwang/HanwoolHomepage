@@ -887,14 +887,7 @@
             }
           });
 
-          // 주기적 재스캔: SET_IR_VALUE 후 MutationObserver 누락 대비 (2s 간격)
-          setInterval(function() {
-            try {
-              if (doc.body) doc.body.querySelectorAll('img').forEach(attachImg);
-            } catch(e) {}
-          }, 2000);
-
-          DBG.log('[imgResize] 이미지 리사이즈 초기화 완료 (2s 주기 재스캔 포함)');
+          DBG.log('[imgResize] 이미지 리사이즈 초기화 완료');
         } catch(err) {
           DBG.err('[imgResize] 초기화 실패', err);
         }
