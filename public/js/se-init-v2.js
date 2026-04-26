@@ -745,13 +745,15 @@
 
       // 서버 디버그 로그 전송 (PM2 logs에서 Inspector/dev-3 실시간 확인)
       function svrLog(event, data) {
+        const ts = new Date().toISOString();
+        console.log('[SE2-DBG]', ts, event, JSON.stringify(data));
         try {
-          fetch('/api/editor-debug-log', {
+          fetch('http://localhost:9082/api/editor-debug-log', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ event: event, data: data, ts: new Date().toISOString() })
-          }).catch(function(){});
-        } catch(e) {}
+            body: JSON.stringify({ event: event, data: data, ts: ts })
+          }).catch(function(err){ console.warn('[SE2-DBG] fetch err:', err); });
+        } catch(e) { console.warn('[SE2-DBG] svrLog ex:', e); }
       }
 
       // Force focus/edit mode on click/mousedown
