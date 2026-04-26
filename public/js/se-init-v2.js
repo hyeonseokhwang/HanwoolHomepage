@@ -1,6 +1,9 @@
 // SmartEditor2 integration shim
 // Waits for SmartEditor to load and attaches paste/drop handlers to upload images
+console.log('[SE2-LOAD] se-init-v2.js 파일 로드 시작');
+try { fetch('http://localhost:9082/api/editor-debug-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ event:'fileLoad', data:{}, ts: new Date().toISOString() }) }).catch(function(){}); } catch(e) {}
 (function () {
+  console.log('[SE2-IIFE] IIFE 시작');
   // Debug logger
   const DBG = {
     log: (...a) => console.log('[SE2][DBG]', new Date().toISOString(), ...a),
