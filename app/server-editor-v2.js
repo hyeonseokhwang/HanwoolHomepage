@@ -58,6 +58,55 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public'), {
 }));
 app.use('/uploads', express.static(UPLOADS_DIR));  // Phase 1: /uploads/{uuid}.ext 직접 접근
 
+// ── q72891 L1 LCC 핫라인 프록시 — hanul-editor 9082 → cc-webserver 9000 /api/lcc/* ──
+// SRE q72891 위임. /api/lcc/* 6경로만 통과. 헤더(X-LCC-Token, X-Branch-Id, X-Agent-Id, X-Actor-Id) 보존. timeout 30s.
+const LCC_UPSTREAM = process.env.LCC_UPSTREAM ?? 'http://localhost:9000';
+async function lccProxy(req, res) {
+  const upstreamPath = req.originalUrl; // /api/lcc/...
+  const url = LCC_UPSTREAM + upstreamPath;
+  try {
+    const forwardHeaders = {};
+    ['x-lcc-token', 'x-branch-id', 'x-agent-id', 'x-actor-id', 'content-type'].forEach(h => {
+      const v = req.headers[h];
+      if (v) forwardHeaders[h] = v;
+    });
+    const init = {
+      method: req.method,
+      headers: forwardHeaders,
+      signal: AbortSignal.timeout(30000),
+    };
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      init.body = JSON.stringify(req.body ?? {});
+    }
+    const upstream = await fetch(url, init);
+    const buf = Buffer.from(await upstream.arrayBuffer());
+    res.status(upstream.status);
+    upstream.headers.forEach((v, k) => {
+      if (!['transfer-encoding', 'content-encoding'].includes(k.toLowerCase())) res.setHeader(k, v);
+    });
+    res.end(buf);
+  } catch (e) {
+    console.error('[lcc-proxy] err:', e?.message ?? e);
+    res.status(502).json({ ok: false, error: 'LCC_PROXY_UPSTREAM_FAIL', message: String(e?.message ?? e) });
+  }
+}
+// L1 health (proxy /api/health)
+app.get('/api/lcc/health', async (_req, res) => {
+  try {
+    const upstream = await fetch(LCC_UPSTREAM + '/api/health', { signal: AbortSignal.timeout(5000) });
+    const j = await upstream.json().catch(() => ({}));
+    res.status(upstream.status).json({ ok: upstream.ok, l1: 'hanul-editor:9082', upstream: j });
+  } catch (e) {
+    res.status(502).json({ ok: false, error: 'LCC_HEALTH_FAIL', message: String(e?.message ?? e) });
+  }
+});
+// L1 -> L2 proxy for 5 LCC endpoints
+app.use('/api/lcc/intake', express.json({ limit: '5mb' }), lccProxy);
+app.use('/api/lcc/orders', express.json({ limit: '5mb' }), lccProxy);
+app.use('/api/lcc/speak', express.json({ limit: '5mb' }), lccProxy);
+app.use('/api/lcc/inbox', express.json({ limit: '5mb' }), lccProxy);
+app.use('/api/lcc/ack-message', express.json({ limit: '5mb' }), lccProxy);
+
 // ── 접속 로그 미들웨어 (클린 아키텍처: logger 모듈에 위임) ──
 app.use(accessLogMiddleware);
 
