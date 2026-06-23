@@ -358,18 +358,20 @@ async function buildMobileOpsPayload() {
   const snap9704 = readJsonSafe(SNAPSHOT_9704_PATH, {});
   const snapItems = Array.isArray(snap9704.items) ? snap9704.items : [];
   const items = snapItems.length > 0 ? snapItems.map((i) => ({
-    key: i.key || i.id,
-    title: i.title || i.key || '-',
-    status: i.status || 'NEW',
-    owner: i.owner || null,
-    priority: i.priority || null,
-    note: i.note || '',
+    ...i,
+    key: i?.key || i?.id || null,
   })) : (() => {
     const sourceData = readJsonSafe(MOBILE_DATA_PATH, {});
     return Array.isArray(sourceData.todoRows) ? sourceData.todoRows.map((row) => ({
-      title: row['할일'] ?? '-', status: row['상태'] ?? '-',
-      owner: row['담당자'] ?? '-', priority: /P0/i.test(String(row['실 산출'] ?? '')) ? 'P0' : null,
+      key: row['할일'] ?? '-',
+      title: row['할일'] ?? '-',
+      status: row['상태'] ?? '-',
+      owner: row['담당자'] ?? '-',
+      priority: /P0/i.test(String(row['실 산출'] ?? '')) ? 'P0' : null,
       note: row['실 산출'] ?? '',
+      lastEventId: null,
+      updatedAt: null,
+      evidenceLinks: [],
     })) : [];
   })();
   const ledgerEvents = readJsonlSafe(LEDGER_EVENTS_PATH)

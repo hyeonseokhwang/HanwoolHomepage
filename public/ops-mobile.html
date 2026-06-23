@@ -16,13 +16,18 @@ header .time { font-size: 11px; color: #64748b; }
 .content { padding: 10px; width: min(100%, 1400px); margin: 0 auto; }
 .section { margin-bottom: 12px; }
 .section-title { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 4px; }
-.card { background: #1e2235; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; border-left: 3px solid #4b5563; box-shadow: 0 16px 36px rgba(2, 6, 23, 0.2); }
-.card.in-progress { border-left-color: #3b82f6; }
-.card.review { border-left-color: #a78bfa; }
-.card.hold { border-left-color: #f59e0b; }
-.card.new { border-left-color: #10b981; }
-.card.done { border-left-color: #6b7280; }
-.card-title { font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px; line-height: 1.4; }
+.ledger-list { display: grid; gap: 10px; }
+.ledger-card { background: #151b28; border: 1px solid #273244; border-radius: 12px; padding: 12px; box-shadow: 0 16px 36px rgba(2, 6, 23, 0.2); }
+.ledger-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+.ledger-key { font-size: 11px; font-weight: 700; color: #93c5fd; word-break: break-all; }
+.ledger-title { font-size: 13px; font-weight: 700; color: #f8fafc; margin-top: 4px; line-height: 1.45; }
+.ledger-meta { display: grid; gap: 6px; margin-top: 8px; }
+.ledger-row { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 8px; align-items: start; }
+.ledger-label { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #64748b; }
+.ledger-value { font-size: 11px; color: #cbd5e1; min-width: 0; word-break: break-word; }
+.ledger-links { display: grid; gap: 4px; padding-left: 14px; }
+.ledger-links li { color: #cbd5e1; font-size: 11px; line-height: 1.4; word-break: break-word; }
+.ledger-empty { font-size: 11px; color: #64748b; }
 .card-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .badge { font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600; }
 .badge-in-progress { background: #1d4ed8; color: #93c5fd; }
@@ -74,7 +79,6 @@ header .time { font-size: 11px; color: #64748b; }
 .agent-row.row-team-audit { background: rgba(248,113,113,0.10); }
 .agent-row.row-team-design { background: rgba(244,114,182,0.10); }
 .agent-row.row-team-research { background: rgba(168,85,247,0.10); }
-.tasks-grid,
 .activity-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .activity-card { background: #1e2235; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; border: 1px solid #334155; }
 .activity-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; margin-bottom: 6px; }
@@ -109,15 +113,15 @@ header .time { font-size: 11px; color: #64748b; }
 }
 @media (min-width: 1024px) {
   .content { padding: 22px 28px; }
-  .tasks-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
   .bucket-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .activity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .card-title { font-size: 14px; }
 }
 @media (max-width: 767px) {
   .agent-head { display: none; }
   .agent-row { grid-template-columns: minmax(0, 1fr) auto; }
   .agent-current, .agent-prev { grid-column: 1 / -1; }
+  .ledger-top { display: block; }
+  .ledger-row { grid-template-columns: 1fr; gap: 3px; }
 }
 </style>
 </head>
@@ -141,20 +145,7 @@ const SNAPSHOT_TIME = '2026-06-23 10:22 KST';
 let LIVE_STAMP = SNAPSHOT_TIME;
 let OPS_STREAM = null;
 
-const ITEMS_DATA = [
-  {key:'LEDGER-OP-7D-LUCAS-DIRECTIVE-LEDGERIZATION-20260623',title:'7일 Lucas 지시 원장화: raw 2111 / directive-like 939',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
-  {key:'LEDGER-OP-MEMORY-SYSTEM-HOLE-REPAIR-20260623',title:'기억체계 홀 보강: MEMORY 200줄/RAG/인덱스/9704 단절',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
-  {key:'LEDGER-OP-9704-LEDGER-SYSTEM-SCREEN-20260623',title:'9704 원장체계 화면: 목업/원장/지시누락/증거체계',status:'REVIEW',owner:'design-3',priority:'P0',note:''},
-  {key:'LEDGER-OP-YOUTUBE-TREND-HQ-20260623',title:'YouTube 트렌드 분석본부: 6축 장표/상시 분석',status:'IN_PROGRESS',owner:'trend-analyst',priority:'P0',note:''},
-  {key:'LEDGER-OP-WORKING-9000-9710-FREEZE-20260623',title:'working/9000/9710 FREEZE: Lucas 실화면 runtime SoT 유지',status:'HOLD',owner:'coo',priority:'P0',note:''},
-  {key:'LEDGER-OP-COMMAND-CHAIN-SOP-20260623',title:'지휘계통 SOP: CTO 병목/Dev-1 바이패스/미팅 thread 정합',status:'IN_PROGRESS',owner:'coo',priority:'P1',note:''},
-  {key:'LEDGER-OP-EVIDENCE-QA-STANDARDIZATION-20260623',title:'증거/QA 표준화: 200 OK 금지, 4칸 게이트, 실증 기반 PASS',status:'IN_PROGRESS',owner:'inspector',priority:'P1',note:''},
-  {key:'LEDGER-OP-TERMINAL-TEAM-STATE-20260623',title:'터미널/팀 상태: #terminals 5버킷, strip/세로보기, PTY 가시성',status:'NEW',owner:'cto',priority:'P1',note:''},
-  {key:'LEDGER-OP-CURRENT-PREVIOUS-TASK-CONSISTENCY-20260623',title:'currentTask/previousTask 정합: watchdog overwrite hole 보강',status:'IN_PROGRESS',owner:'dev-1',priority:'P1',note:''},
-  {key:'LEDGER-OP-BUSINESS-TREND-AND-REVENUE-20260623',title:'비즈니스/트렌드/수익화: YouTube 기반 시장/주식/코인/AI',status:'NEW',owner:'trend-analyst',priority:'P2',note:''},
-  {key:'LEDGER-OP-LUCAS-DIRECTIVE-MOBILE-REPORT-20260623',title:'Lucas 지시 전수 리스팅 + 9704 모바일 보고 데이터',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
-  {key:'DESIGN-CLAUDE-LEARN-OPERATE-1781078045293',title:'DESIGN-CLAUDE-LEARN-OPERATE',status:'HOLD',owner:null,priority:null,note:''}
-];
+const ITEMS_DATA = [];
 
 const WORKERS_DATA = [];
 const AGENT_ACTIVITY_DATA = [];
@@ -172,36 +163,48 @@ function showTab(name) {
 }
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function renderEvidenceLinks(links) {
+  if (!Array.isArray(links) || !links.length) return `<div class="ledger-empty">-</div>`;
+  return `<ul class="ledger-links">${links.map((link) => {
+    if (link && typeof link === 'object') {
+      const label = link.label || link.url || JSON.stringify(link);
+      const value = link.url ? `${label} -> ${link.url}` : label;
+      return `<li>${esc(value)}</li>`;
+    }
+    return `<li>${esc(link)}</li>`;
+  }).join('')}</ul>`;
+}
 
 function renderTasks(items) {
-  const order = ['IN_PROGRESS','REVIEW','NEW','HOLD','DONE'];
-  const groups = {};
-  order.forEach(s => groups[s] = []);
+  let html = `<div class="stale-notice">📸 갱신: ${LIVE_STAMP} · 9704 /api/items 1:1 렌더</div>`;
+  html += `<div class="section"><div class="section-title">9704 Items (${items.length})</div><div class="ledger-list">`;
   items.forEach(item => {
-    const s = item.status || 'NEW';
-    if (!groups[s]) groups[s] = [];
-    groups[s].push(item);
+    const status = item.status || 'NEW';
+    const statusClass = STATUS_CLASS[status] || 'done';
+    html += `<div class="ledger-card">
+      <div class="ledger-top">
+        <div>
+          <div class="ledger-key">${esc(item.key || item.id || '-')}</div>
+          <div class="ledger-title">${esc(item.title || item.key || '-')}</div>
+        </div>
+        <div class="card-meta">
+          <span class="badge badge-${statusClass}">${esc(status)}</span>
+          ${item.priority ? `<span class="badge badge-${String(item.priority).toLowerCase()}">${esc(item.priority)}</span>` : ''}
+        </div>
+      </div>
+      <div class="ledger-meta">
+        <div class="ledger-row"><div class="ledger-label">owner</div><div class="ledger-value">${item.owner == null ? '-' : esc(item.owner)}</div></div>
+        <div class="ledger-row"><div class="ledger-label">lastEventId</div><div class="ledger-value">${item.lastEventId == null ? '-' : esc(item.lastEventId)}</div></div>
+        <div class="ledger-row"><div class="ledger-label">updatedAtKst</div><div class="ledger-value">${item.updatedAtKst == null ? esc(item.updatedAt || '-') : esc(item.updatedAtKst)}</div></div>
+        <div class="ledger-row"><div class="ledger-label">note</div><div class="ledger-value">${item.note == null || item.note === '' ? '-' : esc(item.note)}</div></div>
+        <div class="ledger-row"><div class="ledger-label">evidenceLinks</div><div class="ledger-value">${renderEvidenceLinks(item.evidenceLinks)}</div></div>
+      </div>
+    </div>`;
   });
-  let html = `<div class="stale-notice">📸 갱신: ${LIVE_STAMP} · 5초 자동새로고침</div>`;
-  html += `<div class="tasks-grid">`;
-  for (const status of order) {
-    const list = groups[status];
-    if (!list.length) continue;
-    html += `<div class="section"><div class="section-title">${STATUS_LABEL[status]||status} (${list.length})</div>`;
-    list.forEach(item => {
-      const cls = STATUS_CLASS[item.status] || '';
-      const prioBadge = item.priority ? `<span class="badge badge-${item.priority.toLowerCase()}">${esc(item.priority)}</span>` : '';
-      const ownerTxt = item.owner ? `<span class="owner">👤 ${esc(item.owner)}</span>` : '';
-      const note = item.note ? `<div style="font-size:11px;color:#64748b;margin-top:4px">${esc(item.note)}</div>` : '';
-      html += `<div class="card ${cls}">
-        <div class="card-title">${esc(item.title||item.key)}</div>
-        <div class="card-meta"><span class="badge badge-${cls}">${STATUS_LABEL[item.status]||item.status}</span>${prioBadge}${ownerTxt}</div>
-        ${note}
-      </div>`;
-    });
-    html += '</div>';
+  if (!items.length) {
+    html += `<div class="ledger-card"><div class="ledger-empty">9704 snapshot 대기 중</div></div>`;
   }
-  html += `</div>`;
+  html += `</div></div>`;
   html += `<button class="refresh-btn" onclick="reconnectOpsStream()">🔄 새로고침</button>`;
   document.getElementById('tab-tasks').innerHTML = html;
 }
