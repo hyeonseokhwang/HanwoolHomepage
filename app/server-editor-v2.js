@@ -338,7 +338,6 @@ function ensureAgentUpstreamWs() {
 }
 async function fetchAgentStatuses() {
   let agents9710 = [];
-  let workers9000 = [];
   try {
     const response = await fetch('http://127.0.0.1:9710/api/agents', { signal: AbortSignal.timeout(3000) });
     if (response.ok) {
@@ -346,70 +345,13 @@ async function fetchAgentStatuses() {
       agents9710 = Array.isArray(json.items) ? json.items : [];
     }
   } catch {}
-  try {
-    const response = await fetch('http://127.0.0.1:9000/api/workers', { signal: AbortSignal.timeout(3000) });
-    if (response.ok) {
-      const json = await response.json();
-      workers9000 = Array.isArray(json) ? json : [];
-    }
-  } catch {}
-  const byId = new Map();
-  for (const item of workers9000) {
-    if (item?.id) byId.set(item.id, item);
-  }
-  const primary = agents9710.length ? agents9710 : workers9000;
-  return primary.map((item) => {
-    const workerMeta = byId.get(item.id) || {};
-    const persona = item.persona || workerMeta.persona || workerMeta.name || PERSONA_MAP[item.id] || '에이전트';
-    const state = String(item.state || workerMeta.state || item.taskState || workerMeta.taskState || 'idle').toLowerCase() === 'working' ? 'working' : 'idle';
-    const currentTaskRaw =
-      item.currentTask
-      || workerMeta.currentTask
-      || workerMeta.currentTaskTitle
-      || workerMeta.statusNote
-      || workerMeta.pursuingGoal?.title
-      || workerMeta.ledgerCurrentTaskTitle
-      || '-';
-    const currentTask = shortTask(
-      currentTaskRaw
-    );
-    const previousTaskRaw =
-      item.previousTask
-      || workerMeta.previousTask
-      || workerMeta.ledgerCurrentTaskTitle
-      || '-';
-    const previousTask = shortTask(
-      previousTaskRaw,
-      '-'
-    );
-    const lastSelfUpdateRaw =
-      item.last_self_update
-      || workerMeta.last_self_update
-      || item.updatedAt
-      || workerMeta.updatedAt
-      || null;
-    const lastActiveAt = kstString(
-      lastSelfUpdateRaw
-      || workerMeta.terminalActivity?.lastMeaningfulChangeAt
-      || workerMeta.terminalActivity?.lastLogAt
-      || workerMeta.previousTaskAt
-      || null
-    );
-    const rawTeam = workerMeta.team || item.team || workerMeta.type || item.type || 'executive';
-    return {
-      id: item.id,
-      persona,
-      state,
-      currentTask,
-      currentTaskRaw,
-      previousTask,
-      previousTaskRaw,
-      lastActiveAt,
-      last_self_update: lastSelfUpdateRaw,
-      team: teamLabel(rawTeam, item.id),
-      source: agents9710.length ? '9710+9000' : '9000',
-    };
-  });
+  return agents9710.map((item) => ({
+    id: item?.id ?? null,
+    persona: item?.persona ?? PERSONA_MAP[item?.id] ?? '에이전트',
+    state: item?.state ?? null,
+    currentTask: item?.currentTask ?? null,
+    last_self_update: item?.last_self_update ?? null,
+  }));
 }
 async function buildMobileOpsPayload() {
   // 9704 snapshot에서 직접 읽기 (live SoT)
@@ -557,31 +499,7 @@ async function buildMobileOpsPayload() {
       recentActivities: agent.activities,
       completedTasks: agent.completedTasks,
     }));
-  const agentStatuses = (await fetchAgentStatuses()).map((agent) => {
-    const activity = byAgent.get(agent.id);
-    const activityPoints = activityPointsByAgent.get(agent.id) || [];
-    const lastActiveMs = agent.lastActiveAt && agent.lastActiveAt !== '-' ? new Date(agent.lastActiveAt.replace(' KST', '+09:00')).getTime() : NaN;
-    if (Number.isFinite(lastActiveMs) && lastActiveMs >= todayUtcMs) activityPoints.push(lastActiveMs);
-    const ranges = mergeActiveRanges(activityPoints.sort((a, b) => a - b), nowMs);
-    let workingSeconds = ranges.reduce((sum, [start, end]) => sum + Math.max(0, end - start), 0) / 1000;
-    const elapsedTodaySeconds = Math.max(0, (nowMs - todayUtcMs) / 1000);
-    if (agent.state === 'working' && Number.isFinite(lastActiveMs) && lastActiveMs >= todayUtcMs) {
-      const extension = Math.max(0, Math.min(nowMs - lastActiveMs, 15 * 60 * 1000)) / 1000;
-      workingSeconds = Math.max(workingSeconds, extension);
-    }
-    const idleSeconds = Math.max(0, elapsedTodaySeconds - workingSeconds);
-    const outputCount = (activity?.commitCount || 0) + (activity?.completedTasks?.length || 0);
-    const efficiencyScore = workingSeconds > 0 ? Number((outputCount / (workingSeconds / 3600)).toFixed(2)) : 0;
-    return {
-      ...agent,
-      workingSeconds: Math.round(workingSeconds),
-      idleSeconds: Math.round(idleSeconds),
-      workingLabel: formatDurationMinutes(workingSeconds),
-      idleLabel: formatDurationMinutes(idleSeconds),
-      outputCount,
-      efficiencyScore,
-    };
-  });
+  const agentStatuses = await fetchAgentStatuses();
   return {
     snapshotTime: kstString(new Date().toISOString()),
     items,

@@ -227,28 +227,22 @@ function renderWorkers(workers) {
       html += `<div class="agent-row"><div class="agent-main"><div class="agent-taskline">표시 대상 없음</div></div></div>`;
     } else {
       members.forEach(w => {
-        const isWorking = w.state === 'working';
+        const rawState = (w.state === 'working' || w.state === 'idle') ? w.state : '';
+        const isWorking = rawState === 'working';
         html += `<div class="agent-row ${bucket.rowCls}">
           <div class="agent-main agent-topline">
             <div class="agent-name">${esc(w.persona || w.name || w.id || '-')}</div>
-            <div class="agent-persona">${esc(w.role || w.team || '')}</div>
+            <div class="agent-persona">${esc(w.role || '')}</div>
             <div class="agent-id">${esc(w.id || '-')}</div>
           </div>
           <div class="agent-current">
-            <div class="agent-taskline">${esc(w.currentTask || '-')}</div>
-            <div class="agent-stats">
-              <span class="agent-stat">working ${esc(w.workingLabel || '-')}</span>
-              <span class="agent-stat">idle ${esc(w.idleLabel || '-')}</span>
-              <span class="agent-stat">산출 ${esc(w.outputCount ?? 0)}</span>
-              <span class="agent-stat">효율 ${esc(w.efficiencyScore ?? 0)}/h</span>
-            </div>
+            <div class="agent-taskline">${w.currentTask == null ? '' : esc(w.currentTask)}</div>
           </div>
           <div class="agent-prev">
-            <div class="agent-meta">${esc(w.previousTask || '-')}</div>
-            <div class="agent-meta">${esc(w.lastActiveAt || '-')}</div>
+            <div class="agent-meta">${w.last_self_update == null ? '' : esc(w.last_self_update)}</div>
           </div>
           <div class="agent-state">
-            <div class="state-cell ${isWorking ? 'state-working' : ''}"><span class="dot"></span><span>${isWorking ? 'working' : 'idle'}</span></div>
+            <div class="state-cell ${isWorking ? 'state-working' : ''}"><span class="dot"></span><span>${esc(rawState)}</span></div>
           </div>
         </div>`;
       });
