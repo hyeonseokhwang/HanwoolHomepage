@@ -6,17 +6,17 @@
 <title>Lucas Initiative — 업무 현황</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif; background: #0f1117; color: #e2e8f0; font-size: 14px; }
-header { background: #1a1d2e; padding: 12px 16px; border-bottom: 2px solid #3b82f6; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif; background: radial-gradient(circle at top left, rgba(59,130,246,0.12), transparent 28%), #0f1117; color: #e2e8f0; font-size: 14px; }
+header { background: rgba(26,29,46,0.9); padding: 12px 16px; border-bottom: 2px solid #3b82f6; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(14px); }
 header h1 { font-size: 16px; font-weight: 700; color: #60a5fa; }
 header .time { font-size: 11px; color: #64748b; }
-.tab-bar { display: flex; background: #1a1d2e; border-bottom: 1px solid #2d3748; }
-.tab { flex: 1; padding: 10px; text-align: center; font-size: 13px; color: #64748b; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab-bar { display: flex; background: rgba(26,29,46,0.88); border-bottom: 1px solid #2d3748; position: sticky; top: 53px; z-index: 9; backdrop-filter: blur(14px); }
+.tab { flex: 1; padding: 12px 10px; text-align: center; font-size: 13px; color: #64748b; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 700; }
 .tab.active { color: #60a5fa; border-bottom-color: #60a5fa; }
-.content { padding: 8px; }
+.content { padding: 10px; width: min(100%, 1400px); margin: 0 auto; }
 .section { margin-bottom: 12px; }
 .section-title { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 4px; }
-.card { background: #1e2235; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; border-left: 3px solid #4b5563; }
+.card { background: #1e2235; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; border-left: 3px solid #4b5563; box-shadow: 0 16px 36px rgba(2, 6, 23, 0.2); }
 .card.in-progress { border-left-color: #3b82f6; }
 .card.review { border-left-color: #a78bfa; }
 .card.hold { border-left-color: #f59e0b; }
@@ -61,9 +61,8 @@ header .time { font-size: 11px; color: #64748b; }
 .state-cell .dot { width: 8px; height: 8px; border-radius: 999px; background: #94a3b8; box-shadow: 0 0 0 3px rgba(148,163,184,0.12); }
 .state-cell.state-working { color: #86efac; opacity: 1; }
 .state-cell.state-working .dot { background: #34d399; box-shadow: 0 0 0 3px rgba(52,211,153,0.22); }
-@media (min-width: 760px) {
-  .bucket-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+.tasks-grid,
+.activity-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .activity-card { background: #1e2235; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; border: 1px solid #334155; }
 .activity-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; margin-bottom: 6px; }
 .activity-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
@@ -85,6 +84,23 @@ header .time { font-size: 11px; color: #64748b; }
 .stale-notice { background: #1c1917; border: 1px solid #44403c; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #78716c; margin-bottom: 8px; }
 .progress-bar { height: 3px; background: #1e2235; border-radius: 2px; margin-top: 6px; overflow: hidden; }
 .progress-fill { height: 100%; background: #3b82f6; border-radius: 2px; }
+@media (min-width: 768px) {
+  header { padding: 16px 24px; }
+  header h1 { font-size: 22px; }
+  header .time { font-size: 13px; }
+  .tab-bar { top: 66px; justify-content: center; gap: 8px; padding: 10px 24px; }
+  .tab { flex: 0 1 240px; border-radius: 12px 12px 0 0; }
+  .content { padding: 18px 24px; }
+  .bucket-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .activity-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .content { padding: 22px 28px; }
+  .tasks-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .bucket-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .activity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card-title { font-size: 14px; }
+}
 </style>
 </head>
 <body>
@@ -149,6 +165,7 @@ function renderTasks(items) {
     groups[s].push(item);
   });
   let html = `<div class="stale-notice">📸 갱신: ${LIVE_STAMP} · 5초 자동새로고침</div>`;
+  html += `<div class="tasks-grid">`;
   for (const status of order) {
     const list = groups[status];
     if (!list.length) continue;
@@ -166,6 +183,7 @@ function renderTasks(items) {
     });
     html += '</div>';
   }
+  html += `</div>`;
   html += `<button class="refresh-btn" onclick="reconnectOpsStream()">🔄 새로고침</button>`;
   document.getElementById('tab-tasks').innerHTML = html;
 }
@@ -218,7 +236,7 @@ function renderWorkers(workers) {
 }
 function renderAgents(agents) {
   let html = `<div class="stale-notice">📡 5초 자동 새로고침 · 마지막 갱신: ${LIVE_STAMP}</div>`;
-  html += `<div class="section"><div class="section-title">에이전트별 활동사항 (${agents.length})</div>`;
+  html += `<div class="section"><div class="section-title">에이전트별 활동사항 (${agents.length})</div><div class="activity-grid">`;
   agents.forEach(agent => {
     const acts = Array.isArray(agent.recentActivities) ? agent.recentActivities : [];
     html += `<div class="activity-card">
@@ -239,7 +257,7 @@ function renderAgents(agents) {
       <ul class="activity-list">${acts.map(a => `<li>${esc(a)}</li>`).join('') || '<li>최근 활동 없음</li>'}</ul>
     </div>`;
   });
-  html += '</div><button class="refresh-btn" onclick="reconnectOpsStream()">🔄 활동 새로고침</button>';
+  html += '</div></div><button class="refresh-btn" onclick="reconnectOpsStream()">🔄 활동 새로고침</button>';
   document.getElementById('tab-agents').innerHTML = html;
 }
 
