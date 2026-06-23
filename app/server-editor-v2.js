@@ -593,6 +593,24 @@ async function buildMobileOpsPayload() {
   };
 }
 
+async function buildTrendMobilePayload() {
+  const response = await fetch('http://127.0.0.1:9580/api/mobile/envelope', {
+    headers: { Accept: 'application/json' },
+  });
+  if (!response.ok) {
+    throw new Error(`trend-envelope-upstream-${response.status}`);
+  }
+  const upstream = await response.json();
+  const envelope = upstream?.envelope ?? {};
+  return {
+    ok: true,
+    source: 'http://127.0.0.1:9580/api/mobile/envelope',
+    snapshotTime: envelope?.meta?.updatedAtKst ?? kstString(new Date().toISOString()),
+    generatedAt: new Date().toISOString(),
+    ...envelope,
+  };
+}
+
 // GET / → 스마트에디터 2.0으로 redirect (Lucas님 지시: 9082는 에디터 전용)
 app.get('/', (req, res) => res.redirect('/editor'));
 // 외부 공개 모바일 업무 현황 페이지
@@ -640,6 +658,17 @@ app.get('/api/mobile-ops-stream', async (req, res) => {
       agentUpstreamWs = null;
     }
   });
+});
+app.get('/api/trend-mobile-data', async (_req, res) => {
+  try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    const payload = await buildTrendMobilePayload();
+    res.json(payload);
+  } catch (e) {
+    console.error('[trend-mobile-data]', e?.message ?? e);
+    res.status(500).json({ ok: false, error: 'trend-mobile-data-failed' });
+  }
 });
 
 // 게시글 조회 (에디터용)

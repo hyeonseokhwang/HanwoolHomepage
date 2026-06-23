@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>트렌드 6축</title>
+  <style>
+    :root {
+      --tm-bg: #07111d;
+      --tm-panel: rgba(10, 24, 40, 0.92);
+      --tm-panel-2: rgba(14, 32, 54, 0.96);
+      --tm-border: rgba(148, 163, 184, 0.18);
+      --tm-text: #eef4ff;
+      --tm-muted: #93a8c3;
+      --tm-accent: #7dd3fc;
+      --tm-shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
+      --tm-safe-bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+      color-scheme: dark;
+      font-family: "Segoe UI", "Apple SD Gothic Neo", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 32%),
+        radial-gradient(circle at top right, rgba(108, 61, 255, 0.16), transparent 28%),
+        linear-gradient(180deg, #07111d 0%, #081422 42%, #040811 100%);
+      color: var(--tm-text);
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+    }
+
+    .tm-app {
+      width: 100%;
+      max-width: 390px;
+      min-height: 100vh;
+      padding: 0 14px var(--tm-safe-bottom);
+    }
+
+    .tm-appbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 56px;
+      padding: 14px 4px 10px;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(7, 17, 29, 0.96), rgba(7, 17, 29, 0.72));
+    }
+
+    .tm-appbar h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .tm-appbar button,
+    .tm-tabbar button {
+      border: 0;
+      cursor: pointer;
+      color: inherit;
+      background: none;
+      font: inherit;
+    }
+
+    .tm-refresh {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(125, 211, 252, 0.12);
+      color: #c8f2ff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tm-hero,
+    .tm-panel {
+      border: 1px solid var(--tm-border);
+      border-radius: 22px;
+      background: var(--tm-panel);
+      box-shadow: var(--tm-shadow);
+    }
+
+    .tm-hero {
+      padding: 20px 18px;
+      margin-bottom: 14px;
+    }
+
+    .tm-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(125, 211, 252, 0.1);
+      color: #bae6fd;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .tm-hero h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+    }
+
+    .tm-hero p,
+    .tm-meta,
+    .tm-empty,
+    .tm-error {
+      margin: 0;
+      color: var(--tm-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .tm-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .tm-summary-item {
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(15, 31, 51, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .tm-summary-item strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .tm-summary-item span {
+      display: block;
+      margin-top: 6px;
+      color: var(--tm-muted);
+      font-size: 11px;
+    }
+
+    .tm-tabbar {
+      position: sticky;
+      bottom: 10px;
+      z-index: 15;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+      padding: 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(6, 13, 23, 0.88);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--tm-shadow);
+    }
+
+    .tm-tabbar button {
+      min-height: 44px;
+      border-radius: 14px;
+      color: var(--tm-muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tm-tabbar button.is-active {
+      background: rgba(125, 211, 252, 0.14);
+      color: #ecfeff;
+    }
+
+    .tm-section {
+      display: none;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .tm-section.is-active {
+      display: grid;
+    }
+
+    .tm-card {
+      padding: 18px;
+      border: 1px solid var(--tm-border);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(12, 26, 44, 0.96), rgba(8, 19, 34, 0.98));
+      box-shadow: var(--tm-shadow);
+      overflow: hidden;
+    }
+
+    .tm-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .tm-card-title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .tm-card-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      color: var(--tm-muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .tm-badge {
+      min-width: 54px;
+      padding: 9px 10px;
+      border-radius: 16px;
+      color: #06111f;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .tm-top {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .tm-top strong,
+    .tm-diff-card strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .tm-top span,
+    .tm-diff-card span {
+      display: block;
+      margin-top: 8px;
+      color: var(--tm-muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .tm-diff-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .tm-diff-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tm-diff-chip strong {
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .tm-diff-chip.is-added strong {
+      color: #4ade80;
+    }
+
+    .tm-diff-chip.is-removed strong {
+      color: #fda4af;
+    }
+
+    .tm-diff-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tm-diff-card {
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid var(--tm-border);
+      background: var(--tm-panel-2);
+      box-shadow: var(--tm-shadow);
+    }
+
+    .tm-diff-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .tm-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+    }
+
+    .tm-card-list {
+      display: grid;
+      gap: 12px;
+      padding-bottom: 10px;
+    }
+
+    .tm-hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 340px) {
+      .tm-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .tm-diff-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="tm-app">
+    <header class="tm-appbar">
+      <h1>트렌드 6축</h1>
+      <button type="button" class="tm-refresh" data-refresh-button>새로고침</button>
+    </header>
+
+    <section class="tm-hero">
+      <div class="tm-kicker">9580 read-only</div>
+      <h2>모바일 6축 모니터</h2>
+      <p data-hero-text>9580 envelope에서 최신 스냅샷을 불러오는 중입니다.</p>
+      <div class="tm-summary" data-summary></div>
+    </section>
+
+    <p class="tm-meta" data-meta>데이터 대기 중</p>
+    <p class="tm-error tm-hidden" data-error></p>
+
+    <section class="tm-section tm-card-list is-active" data-section="cards"></section>
+    <section class="tm-section tm-diff-grid" data-section="diff"></section>
+
+    <nav class="tm-tabbar">
+      <button type="button" class="is-active" data-tab="cards">카드</button>
+      <button type="button" data-tab="diff">diff</button>
+      <button type="button" data-refresh-tab>새로고침</button>
+    </nav>
+  </div>
+
+  <script>
+    (() => {
+      const state = {
+        activeTab: 'cards',
+        payload: null,
+      };
+
+      const summaryEl = document.querySelector('[data-summary]');
+      const metaEl = document.querySelector('[data-meta]');
+      const heroTextEl = document.querySelector('[data-hero-text]');
+      const errorEl = document.querySelector('[data-error]');
+      const cardsSection = document.querySelector('[data-section="cards"]');
+      const diffSection = document.querySelector('[data-section="diff"]');
+      const tabButtons = Array.from(document.querySelectorAll('[data-tab]'));
+      const refreshButtons = Array.from(document.querySelectorAll('[data-refresh-button], [data-refresh-tab]'));
+
+      function escHtml(value) {
+        return String(value ?? '')
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;');
+      }
+
+      function setActiveTab(tab) {
+        state.activeTab = tab;
+        for (const button of tabButtons) {
+          button.classList.toggle('is-active', button.dataset.tab === tab);
+        }
+        cardsSection.classList.toggle('is-active', tab === 'cards');
+        diffSection.classList.toggle('is-active', tab === 'diff');
+      }
+
+      function renderSummary(payload) {
+        const meta = payload?.meta ?? {};
+        summaryEl.innerHTML = [
+          { value: meta.axisCount ?? 0, label: '축 수' },
+          { value: meta.totalCount ?? 0, label: '24h 수집량' },
+          { value: meta.activeAxes ?? 0, label: '활성 축' },
+        ].map((item) => `
+          <div class="tm-summary-item">
+            <strong>${escHtml(item.value)}</strong>
+            <span>${escHtml(item.label)}</span>
+          </div>
+        `).join('');
+      }
+
+      function renderCards(payload) {
+        const cards = Array.isArray(payload?.cards) ? payload.cards : [];
+        cardsSection.innerHTML = cards.map((card) => `
+          <article class="tm-card">
+            <div class="tm-card-head">
+              <div>
+                <h3 class="tm-card-title">${escHtml(card.label)}</h3>
+                <div class="tm-card-count">24h 수집 ${escHtml(card.count)}건</div>
+              </div>
+              <div class="tm-badge" style="background:${escHtml(card.color || '#7dd3fc')}">${escHtml(card.label)}</div>
+            </div>
+            <div class="tm-top">
+              <strong>${escHtml(card.top?.title || '대표 항목 없음')}</strong>
+              <span>TOP1 · ${escHtml(card.top?.source || '-')}</span>
+            </div>
+            <div class="tm-diff-row">
+              <div class="tm-diff-chip is-added">
+                <span>신규</span>
+                <strong>+${escHtml(card.diff?.added ?? 0)}</strong>
+              </div>
+              <div class="tm-diff-chip is-removed">
+                <span>제거</span>
+                <strong>-${escHtml(card.diff?.removed ?? 0)}</strong>
+              </div>
+            </div>
+          </article>
+        `).join('');
+      }
+
+      function renderDiff(payload) {
+        const cards = Array.isArray(payload?.cards) ? payload.cards : [];
+        diffSection.innerHTML = cards.map((card) => `
+          <article class="tm-diff-card">
+            <div class="tm-diff-card-head">
+              <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+                <span class="tm-dot" style="background:${escHtml(card.color || '#7dd3fc')}"></span>
+                <strong>${escHtml(card.label)}</strong>
+              </div>
+              <span>${escHtml(card.count)}건</span>
+            </div>
+            <strong>${escHtml(card.top?.title || '대표 항목 없음')}</strong>
+            <span>${escHtml(card.top?.source || '-')} · 동일 시점 snapshot 반영</span>
+            <div class="tm-diff-row">
+              <div class="tm-diff-chip is-added">
+                <span>신규 유입</span>
+                <strong>+${escHtml(card.diff?.added ?? 0)}</strong>
+              </div>
+              <div class="tm-diff-chip is-removed">
+                <span>제거 이탈</span>
+                <strong>-${escHtml(card.diff?.removed ?? 0)}</strong>
+              </div>
+            </div>
+          </article>
+        `).join('');
+      }
+
+      function render(payload) {
+        state.payload = payload;
+        errorEl.classList.add('tm-hidden');
+        errorEl.textContent = '';
+        heroTextEl.textContent = `${payload?.meta?.title || '모바일 트렌드'} 스냅샷을 9580 envelope에서 직접 반영합니다.`;
+        metaEl.textContent = `snapshot ${payload?.snapshotTime || '-'} · source 9580/mobile/envelope`;
+        renderSummary(payload);
+        renderCards(payload);
+        renderDiff(payload);
+      }
+
+      async function loadTrendMobile() {
+        try {
+          metaEl.textContent = '최신 스냅샷을 불러오는 중';
+          const response = await fetch('/api/trend-mobile-data', { cache: 'no-store' });
+          if (!response.ok) {
+            throw new Error(`trend-mobile-data-${response.status}`);
+          }
+          const payload = await response.json();
+          render(payload);
+        } catch (error) {
+          errorEl.textContent = `데이터 로드 실패: ${error.message}`;
+          errorEl.classList.remove('tm-hidden');
+          metaEl.textContent = '데이터 로드 실패';
+        }
+      }
+
+      for (const button of tabButtons) {
+        button.addEventListener('click', () => setActiveTab(button.dataset.tab));
+      }
+      for (const button of refreshButtons) {
+        button.addEventListener('click', () => loadTrendMobile());
+      }
+
+      setActiveTab('cards');
+      loadTrendMobile();
+    })();
+  </script>
+</body>
+</html>
