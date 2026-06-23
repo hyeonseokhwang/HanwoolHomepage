@@ -157,6 +157,7 @@ const MOBILE_DATA_PATH = 'G:/Lucas-Initiative/agents/mentor/reports/lucas-direct
 const SNAPSHOT_9704_PATH = 'G:/Lucas-Initiative/command-center-v2/data/hq-ledger-9704-today/snapshot.json';
 const LEDGER_EVENTS_PATH = 'G:/Lucas-Initiative/command-center-v2/data/hq-ledger-9704-today/events.jsonl';
 const AGENT_ACTIVITY_PATH = 'G:/Lucas-Initiative/.coordination/activity-log/agent-activity.jsonl';
+const AGENT_WS_UPSTREAM = 'ws://127.0.0.1:9710/ws/screen';
 const PERSONA_MAP = {
   coo: '운영 총괄',
   cto: 'CTO 맥스',
@@ -279,6 +280,62 @@ function mergeActiveRanges(points, nowMs) {
   }
   return ranges;
 }
+const mobileOpsSseClients = new Set();
+let agentUpstreamWs = null;
+let agentUpstreamReconnectTimer = null;
+let mobileOpsBroadcastInFlight = false;
+
+async function broadcastMobileOps(reason = 'push', meta = {}) {
+  if (!mobileOpsSseClients.size || mobileOpsBroadcastInFlight) return;
+  mobileOpsBroadcastInFlight = true;
+  try {
+    const payload = await buildMobileOpsPayload();
+    const data = `event: snapshot\ndata: ${JSON.stringify({ reason, ...meta, payload })}\n\n`;
+    for (const client of [...mobileOpsSseClients]) {
+      try {
+        client.write(data);
+      } catch {
+        mobileOpsSseClients.delete(client);
+      }
+    }
+  } finally {
+    mobileOpsBroadcastInFlight = false;
+  }
+}
+function scheduleAgentUpstreamReconnect() {
+  if (agentUpstreamReconnectTimer) return;
+  agentUpstreamReconnectTimer = setTimeout(() => {
+    agentUpstreamReconnectTimer = null;
+    ensureAgentUpstreamWs();
+  }, 2000);
+}
+function ensureAgentUpstreamWs() {
+  if (agentUpstreamWs || !mobileOpsSseClients.size) return;
+  const ws = new WebSocket(AGENT_WS_UPSTREAM);
+  agentUpstreamWs = ws;
+  ws.on('open', () => {
+    try { ws.send(JSON.stringify({ type: 'subscribe', channel: 'agents' })); } catch {}
+  });
+  ws.on('message', async (raw) => {
+    let upstreamMeta = {};
+    try {
+      const parsed = JSON.parse(String(raw));
+      upstreamMeta = {
+        upstreamType: parsed?.type || null,
+        upstreamGeneratedAt: parsed?.generatedAt || null,
+        upstreamReason: parsed?.reason || null,
+      };
+    } catch {}
+    await broadcastMobileOps('ws-push', upstreamMeta);
+  });
+  ws.on('close', () => {
+    if (agentUpstreamWs === ws) agentUpstreamWs = null;
+    scheduleAgentUpstreamReconnect();
+  });
+  ws.on('error', () => {
+    try { ws.close(); } catch {}
+  });
+}
 async function fetchAgentStatuses() {
   let agents9710 = [];
   let workers9000 = [];
@@ -305,29 +362,36 @@ async function fetchAgentStatuses() {
     const workerMeta = byId.get(item.id) || {};
     const persona = item.persona || workerMeta.persona || workerMeta.name || PERSONA_MAP[item.id] || '에이전트';
     const state = String(item.state || workerMeta.state || item.taskState || workerMeta.taskState || 'idle').toLowerCase() === 'working' ? 'working' : 'idle';
-    const currentTask = shortTask(
+    const currentTaskRaw =
       item.currentTask
       || workerMeta.currentTask
       || workerMeta.currentTaskTitle
       || workerMeta.statusNote
       || workerMeta.pursuingGoal?.title
       || workerMeta.ledgerCurrentTaskTitle
-      || '-'
+      || '-';
+    const currentTask = shortTask(
+      currentTaskRaw
     );
-    const previousTask = shortTask(
+    const previousTaskRaw =
       item.previousTask
       || workerMeta.previousTask
       || workerMeta.ledgerCurrentTaskTitle
-      || '-',
+      || '-';
+    const previousTask = shortTask(
+      previousTaskRaw,
       '-'
     );
-    const lastActiveAt = kstString(
+    const lastSelfUpdateRaw =
       item.last_self_update
       || workerMeta.last_self_update
-      || workerMeta.terminalActivity?.lastMeaningfulChangeAt
-      || workerMeta.terminalActivity?.lastLogAt
       || item.updatedAt
       || workerMeta.updatedAt
+      || null;
+    const lastActiveAt = kstString(
+      lastSelfUpdateRaw
+      || workerMeta.terminalActivity?.lastMeaningfulChangeAt
+      || workerMeta.terminalActivity?.lastLogAt
       || workerMeta.previousTaskAt
       || null
     );
@@ -337,8 +401,11 @@ async function fetchAgentStatuses() {
       persona,
       state,
       currentTask,
+      currentTaskRaw,
       previousTask,
+      previousTaskRaw,
       lastActiveAt,
+      last_self_update: lastSelfUpdateRaw,
       team: teamLabel(rawTeam, item.id),
       source: agents9710.length ? '9710+9000' : '9000',
     };
@@ -544,6 +611,35 @@ app.get('/api/mobile-ops-data', async (_req, res) => {
     console.error('[mobile-ops-data]', e?.message ?? e);
     res.status(500).json({ ok: false, error: 'mobile-ops-data-failed' });
   }
+});
+app.get('/api/mobile-ops-stream', async (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders?.();
+  res.write(`event: connected\ndata: ${JSON.stringify({ ok: true, ts: new Date().toISOString() })}\n\n`);
+  mobileOpsSseClients.add(res);
+  ensureAgentUpstreamWs();
+  try {
+    const payload = await buildMobileOpsPayload();
+    res.write(`event: snapshot\ndata: ${JSON.stringify({ reason: 'initial', payload })}\n\n`);
+  } catch {
+    res.write(`event: error\ndata: ${JSON.stringify({ ok: false, error: 'initial-payload-failed' })}\n\n`);
+  }
+  const heartbeat = setInterval(() => {
+    try {
+      res.write(`event: heartbeat\ndata: ${JSON.stringify({ ts: new Date().toISOString() })}\n\n`);
+    } catch {}
+  }, 15000);
+  req.on('close', () => {
+    clearInterval(heartbeat);
+    mobileOpsSseClients.delete(res);
+    if (!mobileOpsSseClients.size && agentUpstreamWs) {
+      try { agentUpstreamWs.close(); } catch {}
+      agentUpstreamWs = null;
+    }
+  });
 });
 
 // 게시글 조회 (에디터용)

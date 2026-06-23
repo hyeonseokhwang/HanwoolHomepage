@@ -105,6 +105,7 @@ header .time { font-size: 11px; color: #64748b; }
 <script>
 const SNAPSHOT_TIME = '2026-06-23 10:22 KST';
 let LIVE_STAMP = SNAPSHOT_TIME;
+let OPS_STREAM = null;
 
 const ITEMS_DATA = [
   {key:'LEDGER-OP-7D-LUCAS-DIRECTIVE-LEDGERIZATION-20260623',title:'7일 Lucas 지시 원장화: raw 2111 / directive-like 939',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
@@ -165,7 +166,7 @@ function renderTasks(items) {
     });
     html += '</div>';
   }
-  html += `<button class="refresh-btn" onclick="tryLiveLoad()">🔄 새로고침</button>`;
+  html += `<button class="refresh-btn" onclick="reconnectOpsStream()">🔄 새로고침</button>`;
   document.getElementById('tab-tasks').innerHTML = html;
 }
 
@@ -212,7 +213,7 @@ function renderWorkers(workers) {
     }
     html += `</div>`;
   });
-  html += `</div></div><button class="refresh-btn" onclick="tryLiveLoad(true)">🔄 상태 새로고침</button>`;
+  html += `</div></div><button class="refresh-btn" onclick="reconnectOpsStream()">🔄 상태 새로고침</button>`;
   document.getElementById('tab-workers').innerHTML = html;
 }
 function renderAgents(agents) {
@@ -238,30 +239,45 @@ function renderAgents(agents) {
       <ul class="activity-list">${acts.map(a => `<li>${esc(a)}</li>`).join('') || '<li>최근 활동 없음</li>'}</ul>
     </div>`;
   });
-  html += '</div><button class="refresh-btn" onclick="tryLiveLoad(true)">🔄 활동 새로고침</button>';
+  html += '</div><button class="refresh-btn" onclick="reconnectOpsStream()">🔄 활동 새로고침</button>';
   document.getElementById('tab-agents').innerHTML = html;
 }
 
-async function tryLiveLoad(manual) {
-  try {
-    const bust = `ts=${Date.now()}`;
-    const r = await fetch(`/api/mobile-ops-data?${bust}`, {cache:'no-store', signal: AbortSignal.timeout(3000)});
-    if (r.ok) {
-      const d = await r.json();
-      if (d.items) { renderTasks(d.items); }
-      if (d.agentStatuses || d.workers) { renderWorkers(d.agentStatuses || d.workers); }
-      renderAgents(d.agentActivities || []);
-      LIVE_STAMP = d.activityUpdatedAt || d.snapshotTime || SNAPSHOT_TIME;
-      document.getElementById('updated-at').textContent = LIVE_STAMP + (manual ? ' (수동)' : ' (라이브)');
-      return;
-    }
-  } catch(e) {}
-  // fallback to static
-  renderTasks(ITEMS_DATA);
-  renderWorkers(WORKERS_DATA);
-  renderAgents(AGENT_ACTIVITY_DATA);
-  LIVE_STAMP = SNAPSHOT_TIME;
-  document.getElementById('updated-at').textContent = SNAPSHOT_TIME + ' (스냅샷)';
+function applyPayload(d, label) {
+  if (d.items) { renderTasks(d.items); }
+  if (d.agentStatuses || d.workers) { renderWorkers(d.agentStatuses || d.workers); }
+  renderAgents(d.agentActivities || []);
+  LIVE_STAMP = d.activityUpdatedAt || d.snapshotTime || SNAPSHOT_TIME;
+  document.getElementById('updated-at').textContent = LIVE_STAMP + label;
+}
+function reconnectOpsStream() {
+  document.getElementById('updated-at').textContent = LIVE_STAMP + ' (reconnecting)';
+  connectOpsStream();
+}
+function connectOpsStream() {
+  if (OPS_STREAM) {
+    try { OPS_STREAM.close(); } catch {}
+    OPS_STREAM = null;
+  }
+  const stream = new EventSource('/api/mobile-ops-stream');
+  OPS_STREAM = stream;
+  stream.addEventListener('snapshot', (event) => {
+    try {
+      const msg = JSON.parse(event.data || '{}');
+      if (msg.payload) applyPayload(msg.payload, ' (push)');
+    } catch {}
+  });
+  stream.addEventListener('connected', () => {
+    document.getElementById('updated-at').textContent = LIVE_STAMP + ' (connected)';
+  });
+  stream.onerror = () => {
+    document.getElementById('updated-at').textContent = LIVE_STAMP + ' (reconnecting)';
+    try { stream.close(); } catch {}
+    if (OPS_STREAM === stream) OPS_STREAM = null;
+    setTimeout(() => {
+      if (!OPS_STREAM) connectOpsStream();
+    }, 2000);
+  };
 }
 
 // Initial render
@@ -269,8 +285,7 @@ renderTasks(ITEMS_DATA);
 renderWorkers(WORKERS_DATA);
 renderAgents(AGENT_ACTIVITY_DATA);
 document.getElementById('updated-at').textContent = SNAPSHOT_TIME;
-tryLiveLoad();
-setInterval(() => tryLiveLoad(false), 5000);
+connectOpsStream();
 </script>
 </body>
 </html>
