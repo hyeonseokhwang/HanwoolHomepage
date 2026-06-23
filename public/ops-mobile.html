@@ -36,17 +36,32 @@ header .time { font-size: 11px; color: #64748b; }
 .worker-card { background: #1e2235; border-radius: 6px; padding: 8px 10px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
 .worker-name { font-size: 13px; font-weight: 600; }
 .worker-task { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-.status-card { background: #1e2235; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; border: 1px solid #334155; }
-.status-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
-.status-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
-.status-persona { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-.status-state { font-size: 10px; padding: 4px 8px; border-radius: 999px; font-weight: 700; }
-.status-state-working { background: #0f3d2e; color: #86efac; }
-.status-state-idle { background: #3f2a14; color: #fcd34d; }
-.status-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-.status-field { background: #151826; border-radius: 6px; padding: 7px 8px; }
-.status-label { font-size: 10px; color: #64748b; margin-bottom: 4px; }
-.status-value { font-size: 11px; color: #e2e8f0; line-height: 1.4; word-break: break-word; }
+.bucket-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.bucket-card { background: #161a29; border: 1px solid #334155; border-radius: 10px; overflow: hidden; }
+.bucket-head { display: flex; justify-content: space-between; align-items: center; padding: 9px 10px; border-bottom: 1px solid #273244; }
+.bucket-title { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: #cbd5e1; text-transform: uppercase; }
+.bucket-count { font-size: 10px; color: #94a3b8; }
+.bucket-card.team-exec .bucket-head { background: rgba(59,130,246,0.14); }
+.bucket-card.team-audit .bucket-head { background: rgba(248,113,113,0.14); }
+.bucket-card.team-dev .bucket-head { background: rgba(52,211,153,0.14); }
+.bucket-card.team-design .bucket-head { background: rgba(244,114,182,0.14); }
+.bucket-card.team-research .bucket-head { background: rgba(168,85,247,0.16); }
+.agent-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding: 9px 10px; border-bottom: 1px solid #1f2937; }
+.agent-row:last-child { border-bottom: 0; }
+.agent-main { min-width: 0; }
+.agent-topline { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.agent-name { font-size: 12px; font-weight: 700; color: #f8fafc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agent-persona { font-size: 11px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agent-taskline { margin-top: 4px; font-size: 11px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agent-taskline strong { color: #64748b; font-weight: 600; margin-right: 4px; }
+.agent-meta { margin-top: 2px; font-size: 10px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.state-cell { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; opacity: 0.45; }
+.state-cell .dot { width: 8px; height: 8px; border-radius: 999px; background: #94a3b8; box-shadow: 0 0 0 3px rgba(148,163,184,0.12); }
+.state-cell.state-working { color: #86efac; opacity: 1; }
+.state-cell.state-working .dot { background: #34d399; box-shadow: 0 0 0 3px rgba(52,211,153,0.22); }
+@media (min-width: 760px) {
+  .bucket-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .activity-card { background: #1e2235; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; border: 1px solid #334155; }
 .activity-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; margin-bottom: 6px; }
 .activity-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
@@ -157,27 +172,39 @@ function renderWorkers(workers) {
     if ((a.state === 'working') !== (b.state === 'working')) return a.state === 'working' ? -1 : 1;
     return String(a.id || '').localeCompare(String(b.id || ''));
   });
+  const buckets = [
+    { key: '임원', cls: 'team-exec' },
+    { key: '감독', cls: 'team-audit' },
+    { key: '개발', cls: 'team-dev' },
+    { key: '디자인', cls: 'team-design' },
+    { key: '연구', cls: 'team-research' },
+  ];
   let html = `<div class="stale-notice">📡 9710/9000 상태 SoT · 30초 자동 새로고침 · 마지막 갱신: ${LIVE_STAMP}</div>`;
-  html += `<div class="section"><div class="section-title">에이전트 상태 (${sorted.length})</div>`;
-  sorted.forEach(w => {
-    const isWorking = w.state === 'working';
-    html += `<div class="status-card">
-      <div class="status-head">
-        <div>
-          <div class="status-name">${esc(w.id || '-')}</div>
-          <div class="status-persona">${esc(w.persona || w.role || '')}</div>
-        </div>
-        <div class="status-state ${isWorking ? 'status-state-working' : 'status-state-idle'}">${isWorking ? 'WORKING' : 'IDLE'}</div>
-      </div>
-      <div class="status-grid">
-        <div class="status-field"><div class="status-label">현재 작업</div><div class="status-value">${esc(w.currentTask || '-')}</div></div>
-        <div class="status-field"><div class="status-label">이전 작업</div><div class="status-value">${esc(w.previousTask || '-')}</div></div>
-        <div class="status-field"><div class="status-label">마지막 활동</div><div class="status-value">${esc(w.lastActiveAt || '-')}</div></div>
-        <div class="status-field"><div class="status-label">팀</div><div class="status-value">${esc(w.team || '-')}</div></div>
-      </div>
-    </div>`;
+  html += `<div class="section"><div class="section-title">에이전트 상태 (${sorted.length})</div><div class="bucket-grid">`;
+  buckets.forEach(bucket => {
+    const members = sorted.filter(w => (w.team || '임원') === bucket.key);
+    html += `<div class="bucket-card ${bucket.cls}"><div class="bucket-head"><div class="bucket-title">${bucket.key}</div><div class="bucket-count">${members.length}명</div></div>`;
+    if (!members.length) {
+      html += `<div class="agent-row"><div class="agent-main"><div class="agent-taskline">표시 대상 없음</div></div></div>`;
+    } else {
+      members.forEach(w => {
+        const isWorking = w.state === 'working';
+        html += `<div class="agent-row">
+          <div class="agent-main">
+            <div class="agent-topline">
+              <div class="agent-name">${esc(w.id || '-')}</div>
+              <div class="agent-persona">${esc(w.persona || w.role || '')}</div>
+            </div>
+            <div class="agent-taskline"><strong>현재</strong>${esc(w.currentTask || '-')}</div>
+            <div class="agent-meta">이전 ${esc(w.previousTask || '-')} · ${esc(w.lastActiveAt || '-')}</div>
+          </div>
+          <div class="state-cell ${isWorking ? 'state-working' : ''}"><span class="dot"></span><span>${isWorking ? 'working' : 'idle'}</span></div>
+        </div>`;
+      });
+    }
+    html += `</div>`;
   });
-  html += '</div><button class="refresh-btn" onclick="tryLiveLoad(true)">🔄 상태 새로고침</button>';
+  html += `</div></div><button class="refresh-btn" onclick="tryLiveLoad(true)">🔄 상태 새로고침</button>`;
   document.getElementById('tab-workers').innerHTML = html;
 }
 function renderAgents(agents) {
