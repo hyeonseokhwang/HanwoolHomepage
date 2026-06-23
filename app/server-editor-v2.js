@@ -256,6 +256,29 @@ function shortTask(text, fallback = '-') {
   const value = String(text || '').replace(/\s+/g, ' ').trim();
   return value ? value.slice(0, 120) : fallback;
 }
+function formatDurationMinutes(totalSeconds) {
+  const secs = Math.max(0, Math.round(Number(totalSeconds) || 0));
+  const hours = Math.floor(secs / 3600);
+  const minutes = Math.floor((secs % 3600) / 60);
+  if (hours > 0) return `${hours}시간 ${minutes}분`;
+  return `${minutes}분`;
+}
+function mergeActiveRanges(points, nowMs) {
+  const windowMs = 15 * 60 * 1000;
+  const ranges = [];
+  for (const point of points) {
+    const start = point;
+    const end = Math.min(point + windowMs, nowMs);
+    if (end <= start) continue;
+    const prev = ranges[ranges.length - 1];
+    if (prev && start <= prev[1]) {
+      prev[1] = Math.max(prev[1], end);
+    } else {
+      ranges.push([start, end]);
+    }
+  }
+  return ranges;
+}
 async function fetchAgentStatuses() {
   let agents9710 = [];
   let workers9000 = [];
@@ -357,6 +380,7 @@ async function buildMobileOpsPayload() {
     }));
   const activityRows = readJsonlSafe(AGENT_ACTIVITY_PATH);
   const todayUtcMs = todayStartUtcMs();
+  const nowMs = Date.now();
   const meetingRows = (await ccPool.query(
     `SELECT author, content, created_at
        FROM meeting_messages
@@ -409,6 +433,7 @@ async function buildMobileOpsPayload() {
     });
   }
   const byAgent = new Map();
+  const activityPointsByAgent = new Map();
   for (const entry of merged.sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime())) {
     if (!byAgent.has(entry.agentId)) {
       byAgent.set(entry.agentId, {
@@ -423,6 +448,11 @@ async function buildMobileOpsPayload() {
         completedTasks: [],
         seenCommits: new Set(),
       });
+    }
+    const tsMs = new Date(entry.ts).getTime();
+    if (Number.isFinite(tsMs) && tsMs >= todayUtcMs) {
+      if (!activityPointsByAgent.has(entry.agentId)) activityPointsByAgent.set(entry.agentId, []);
+      activityPointsByAgent.get(entry.agentId).push(tsMs);
     }
     const bucket = byAgent.get(entry.agentId);
     if (entry.source === 'meeting') {
@@ -460,7 +490,31 @@ async function buildMobileOpsPayload() {
       recentActivities: agent.activities,
       completedTasks: agent.completedTasks,
     }));
-  const agentStatuses = await fetchAgentStatuses();
+  const agentStatuses = (await fetchAgentStatuses()).map((agent) => {
+    const activity = byAgent.get(agent.id);
+    const activityPoints = activityPointsByAgent.get(agent.id) || [];
+    const lastActiveMs = agent.lastActiveAt && agent.lastActiveAt !== '-' ? new Date(agent.lastActiveAt.replace(' KST', '+09:00')).getTime() : NaN;
+    if (Number.isFinite(lastActiveMs) && lastActiveMs >= todayUtcMs) activityPoints.push(lastActiveMs);
+    const ranges = mergeActiveRanges(activityPoints.sort((a, b) => a - b), nowMs);
+    let workingSeconds = ranges.reduce((sum, [start, end]) => sum + Math.max(0, end - start), 0) / 1000;
+    const elapsedTodaySeconds = Math.max(0, (nowMs - todayUtcMs) / 1000);
+    if (agent.state === 'working' && Number.isFinite(lastActiveMs) && lastActiveMs >= todayUtcMs) {
+      const extension = Math.max(0, Math.min(nowMs - lastActiveMs, 15 * 60 * 1000)) / 1000;
+      workingSeconds = Math.max(workingSeconds, extension);
+    }
+    const idleSeconds = Math.max(0, elapsedTodaySeconds - workingSeconds);
+    const outputCount = (activity?.commitCount || 0) + (activity?.completedTasks?.length || 0);
+    const efficiencyScore = workingSeconds > 0 ? Number((outputCount / (workingSeconds / 3600)).toFixed(2)) : 0;
+    return {
+      ...agent,
+      workingSeconds: Math.round(workingSeconds),
+      idleSeconds: Math.round(idleSeconds),
+      workingLabel: formatDurationMinutes(workingSeconds),
+      idleLabel: formatDurationMinutes(idleSeconds),
+      outputCount,
+      efficiencyScore,
+    };
+  });
   return {
     snapshotTime: kstString(new Date().toISOString()),
     items,
