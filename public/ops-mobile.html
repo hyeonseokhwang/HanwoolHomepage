@@ -55,6 +55,8 @@ header .time { font-size: 11px; color: #64748b; }
 .agent-taskline { margin-top: 4px; font-size: 11px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .agent-taskline strong { color: #64748b; font-weight: 600; margin-right: 4px; }
 .agent-meta { margin-top: 2px; font-size: 10px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agent-stats { margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; }
+.agent-stat { font-size: 10px; color: #94a3b8; background: #111827; border: 1px solid #263244; border-radius: 999px; padding: 2px 6px; }
 .state-cell { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; opacity: 0.45; }
 .state-cell .dot { width: 8px; height: 8px; border-radius: 999px; background: #94a3b8; box-shadow: 0 0 0 3px rgba(148,163,184,0.12); }
 .state-cell.state-working { color: #86efac; opacity: 1; }
@@ -145,7 +147,7 @@ function renderTasks(items) {
     if (!groups[s]) groups[s] = [];
     groups[s].push(item);
   });
-  let html = `<div class="stale-notice">📸 갱신: ${LIVE_STAMP} · 30초 자동새로고침</div>`;
+  let html = `<div class="stale-notice">📸 갱신: ${LIVE_STAMP} · 5초 자동새로고침</div>`;
   for (const status of order) {
     const list = groups[status];
     if (!list.length) continue;
@@ -179,7 +181,7 @@ function renderWorkers(workers) {
     { key: '디자인', cls: 'team-design' },
     { key: '연구', cls: 'team-research' },
   ];
-  let html = `<div class="stale-notice">📡 9710/9000 상태 SoT · 30초 자동 새로고침 · 마지막 갱신: ${LIVE_STAMP}</div>`;
+  let html = `<div class="stale-notice">📡 9710/9000 상태 SoT · 5초 자동 새로고침 · 마지막 갱신: ${LIVE_STAMP}</div>`;
   html += `<div class="section"><div class="section-title">에이전트 상태 (${sorted.length})</div><div class="bucket-grid">`;
   buckets.forEach(bucket => {
     const members = sorted.filter(w => (w.team || '임원') === bucket.key);
@@ -196,6 +198,12 @@ function renderWorkers(workers) {
               <div class="agent-persona">${esc(w.persona || w.role || '')}</div>
             </div>
             <div class="agent-taskline"><strong>현재</strong>${esc(w.currentTask || '-')}</div>
+            <div class="agent-stats">
+              <span class="agent-stat">working ${esc(w.workingLabel || '-')}</span>
+              <span class="agent-stat">idle ${esc(w.idleLabel || '-')}</span>
+              <span class="agent-stat">산출 ${esc(w.outputCount ?? 0)}</span>
+              <span class="agent-stat">효율 ${esc(w.efficiencyScore ?? 0)}/h</span>
+            </div>
             <div class="agent-meta">이전 ${esc(w.previousTask || '-')} · ${esc(w.lastActiveAt || '-')}</div>
           </div>
           <div class="state-cell ${isWorking ? 'state-working' : ''}"><span class="dot"></span><span>${isWorking ? 'working' : 'idle'}</span></div>
@@ -208,7 +216,7 @@ function renderWorkers(workers) {
   document.getElementById('tab-workers').innerHTML = html;
 }
 function renderAgents(agents) {
-  let html = `<div class="stale-notice">📡 30초 자동 새로고침 · 마지막 갱신: ${LIVE_STAMP}</div>`;
+  let html = `<div class="stale-notice">📡 5초 자동 새로고침 · 마지막 갱신: ${LIVE_STAMP}</div>`;
   html += `<div class="section"><div class="section-title">에이전트별 활동사항 (${agents.length})</div>`;
   agents.forEach(agent => {
     const acts = Array.isArray(agent.recentActivities) ? agent.recentActivities : [];
@@ -262,7 +270,7 @@ renderWorkers(WORKERS_DATA);
 renderAgents(AGENT_ACTIVITY_DATA);
 document.getElementById('updated-at').textContent = SNAPSHOT_TIME;
 tryLiveLoad();
-setInterval(() => tryLiveLoad(false), 30000);
+setInterval(() => tryLiveLoad(false), 5000);
 </script>
 </body>
 </html>
