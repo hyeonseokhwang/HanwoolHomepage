@@ -109,7 +109,7 @@ header .time { font-size: 11px; color: #64748b; }
   <span class="time" id="updated-at">09:12 KST</span>
 </header>
 <div class="tab-bar">
-  <div class="tab active" onclick="showTab('tasks')">원장 (12)</div>
+  <div class="tab active" onclick="showTab('tasks')">원장</div>
   <div class="tab" onclick="showTab('workers')">에이전트 상태</div>
   <div class="tab" onclick="showTab('agents')">활동사항</div>
 </div>
@@ -119,27 +119,8 @@ header .time { font-size: 11px; color: #64748b; }
 <div id="tab-agents" class="content" style="display:none"></div>
 
 <script>
-const SNAPSHOT_TIME = '2026-06-23 10:22 KST';
-let LIVE_STAMP = SNAPSHOT_TIME;
+let LIVE_STAMP = '로딩 중...';
 let OPS_STREAM = null;
-
-const ITEMS_DATA = [
-  {key:'LEDGER-OP-7D-LUCAS-DIRECTIVE-LEDGERIZATION-20260623',title:'7일 Lucas 지시 원장화: raw 2111 / directive-like 939',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
-  {key:'LEDGER-OP-MEMORY-SYSTEM-HOLE-REPAIR-20260623',title:'기억체계 홀 보강: MEMORY 200줄/RAG/인덱스/9704 단절',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
-  {key:'LEDGER-OP-9704-LEDGER-SYSTEM-SCREEN-20260623',title:'9704 원장체계 화면: 목업/원장/지시누락/증거체계',status:'REVIEW',owner:'design-3',priority:'P0',note:''},
-  {key:'LEDGER-OP-YOUTUBE-TREND-HQ-20260623',title:'YouTube 트렌드 분석본부: 6축 장표/상시 분석',status:'IN_PROGRESS',owner:'trend-analyst',priority:'P0',note:''},
-  {key:'LEDGER-OP-WORKING-9000-9710-FREEZE-20260623',title:'working/9000/9710 FREEZE: Lucas 실화면 runtime SoT 유지',status:'HOLD',owner:'coo',priority:'P0',note:''},
-  {key:'LEDGER-OP-COMMAND-CHAIN-SOP-20260623',title:'지휘계통 SOP: CTO 병목/Dev-1 바이패스/미팅 thread 정합',status:'IN_PROGRESS',owner:'coo',priority:'P1',note:''},
-  {key:'LEDGER-OP-EVIDENCE-QA-STANDARDIZATION-20260623',title:'증거/QA 표준화: 200 OK 금지, 4칸 게이트, 실증 기반 PASS',status:'IN_PROGRESS',owner:'inspector',priority:'P1',note:''},
-  {key:'LEDGER-OP-TERMINAL-TEAM-STATE-20260623',title:'터미널/팀 상태: #terminals 5버킷, strip/세로보기, PTY 가시성',status:'NEW',owner:'cto',priority:'P1',note:''},
-  {key:'LEDGER-OP-CURRENT-PREVIOUS-TASK-CONSISTENCY-20260623',title:'currentTask/previousTask 정합: watchdog overwrite hole 보강',status:'IN_PROGRESS',owner:'dev-1',priority:'P1',note:''},
-  {key:'LEDGER-OP-BUSINESS-TREND-AND-REVENUE-20260623',title:'비즈니스/트렌드/수익화: YouTube 기반 시장/주식/코인/AI',status:'NEW',owner:'trend-analyst',priority:'P2',note:''},
-  {key:'LEDGER-OP-LUCAS-DIRECTIVE-MOBILE-REPORT-20260623',title:'Lucas 지시 전수 리스팅 + 9704 모바일 보고 데이터',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
-  {key:'DESIGN-CLAUDE-LEARN-OPERATE-1781078045293',title:'DESIGN-CLAUDE-LEARN-OPERATE',status:'HOLD',owner:null,priority:null,note:''}
-];
-
-const WORKERS_DATA = [];
-const AGENT_ACTIVITY_DATA = [];
 
 const STATUS_LABEL = {'IN_PROGRESS':'진행중','REVIEW':'검토중','HOLD':'보류','NEW':'신규','DONE':'완료','CLOSED':'종결'};
 const STATUS_CLASS = {'IN_PROGRESS':'in-progress','REVIEW':'review','HOLD':'hold','NEW':'new','DONE':'done','CLOSED':'done'};
@@ -265,7 +246,7 @@ function applyPayload(d, label) {
   if (d.items) { renderTasks(d.items); }
   if (d.agentStatuses || d.workers) { renderWorkers(d.agentStatuses || d.workers); }
   renderAgents(d.agentActivities || []);
-  LIVE_STAMP = d.activityUpdatedAt || d.snapshotTime || SNAPSHOT_TIME;
+  LIVE_STAMP = d.snapshotTime || d.activityUpdatedAt || LIVE_STAMP;
   document.getElementById('updated-at').textContent = LIVE_STAMP + label;
 }
 function reconnectOpsStream() {
@@ -298,11 +279,21 @@ function connectOpsStream() {
   };
 }
 
-// Initial render
-renderTasks(ITEMS_DATA);
-renderWorkers(WORKERS_DATA);
-renderAgents(AGENT_ACTIVITY_DATA);
-document.getElementById('updated-at').textContent = SNAPSHOT_TIME;
+// Initial live fetch then SSE
+async function fetchLiveData() {
+  document.getElementById('updated-at').textContent = '로딩 중...';
+  try {
+    const res = await fetch('/api/mobile-ops-data');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const d = await res.json();
+    applyPayload(d, ' (live)');
+  } catch (e) {
+    document.getElementById('updated-at').textContent = '데이터 로드 실패 — 재시도 중';
+    setTimeout(fetchLiveData, 3000);
+  }
+}
+
+fetchLiveData();
 connectOpsStream();
 </script>
 </body>
