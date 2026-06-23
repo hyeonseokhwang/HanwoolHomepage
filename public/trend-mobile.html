@@ -357,9 +357,9 @@
     </header>
 
     <section class="tm-hero">
-      <div class="tm-kicker">9580 read-only</div>
+      <div class="tm-kicker">LIVE SNAPSHOT</div>
       <h2>모바일 6축 모니터</h2>
-      <p data-hero-text>9580 envelope에서 최신 스냅샷을 불러오는 중입니다.</p>
+      <p data-hero-text>최신 스냅샷을 불러오는 중입니다.</p>
       <div class="tm-summary" data-summary></div>
     </section>
 
@@ -484,8 +484,8 @@
         state.payload = payload;
         errorEl.classList.add('tm-hidden');
         errorEl.textContent = '';
-        heroTextEl.textContent = `${payload?.meta?.title || '모바일 트렌드'} 스냅샷을 9580 envelope에서 직접 반영합니다.`;
-        metaEl.textContent = `snapshot ${payload?.snapshotTime || '-'} · source 9580/mobile/envelope`;
+        heroTextEl.textContent = `${payload?.meta?.title || '모바일 트렌드'} 스냅샷을 최신 기준으로 반영합니다.`;
+        metaEl.textContent = `snapshot ${payload?.snapshotTime || '-'}`;
         renderSummary(payload);
         renderCards(payload);
         renderDiff(payload);
@@ -494,7 +494,8 @@
       async function loadTrendMobile() {
         try {
           metaEl.textContent = '최신 스냅샷을 불러오는 중';
-          const response = await fetch('/api/trend-mobile-data', { cache: 'no-store' });
+          const endpoint = `${window.location.origin}/api/trend-mobile-data`;
+          const response = await fetch(endpoint, { cache: 'no-store' });
           if (!response.ok) {
             throw new Error(`trend-mobile-data-${response.status}`);
           }
