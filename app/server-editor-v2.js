@@ -7,8 +7,10 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { accessLogMiddleware, logPostAction, registerLogRoutes } from './logger.js';
+import { buildMobileEditorHtml } from './mobile-editor-page.js';
 
 dotenv.config({ path: path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '.env') });
+dotenv.config({ path: 'G:\\Lucas-Initiative\\.env', override: false });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -106,6 +108,31 @@ app.use('/api/lcc/orders', express.json({ limit: '5mb' }), lccProxy);
 app.use('/api/lcc/speak', express.json({ limit: '5mb' }), lccProxy);
 app.use('/api/lcc/inbox', express.json({ limit: '5mb' }), lccProxy);
 app.use('/api/lcc/ack-message', express.json({ limit: '5mb' }), lccProxy);
+// L1 -> file sharing (3 routes, q73746/q73749)
+async function lccStreamProxy(req, res) {
+  const url = LCC_UPSTREAM + req.originalUrl;
+  try {
+    const fwdHeaders = {};
+    ['x-lcc-token', 'x-branch-id', 'x-agent-id', 'x-actor-id', 'content-type', 'content-length'].forEach(h => {
+      const v = req.headers[h];
+      if (v) fwdHeaders[h] = v;
+    });
+    const chunks = [];
+    for await (const chunk of req) chunks.push(chunk);
+    const rawBody = Buffer.concat(chunks);
+    const upstream = await fetch(url, { method: req.method, headers: fwdHeaders, body: rawBody, signal: AbortSignal.timeout(30000) });
+    const buf = Buffer.from(await upstream.arrayBuffer());
+    res.status(upstream.status);
+    upstream.headers.forEach((v, k) => { if (!['transfer-encoding', 'content-encoding'].includes(k.toLowerCase())) res.setHeader(k, v); });
+    res.end(buf);
+  } catch (e) {
+    console.error('[lcc-stream-proxy] err:', e?.message ?? e);
+    res.status(502).json({ ok: false, error: 'LCC_PROXY_UPSTREAM_FAIL', message: String(e?.message ?? e) });
+  }
+}
+app.use('/api/lcc/files/upload', lccStreamProxy);
+app.use('/api/lcc/files/download', lccProxy);
+app.use('/api/lcc/files/list', lccProxy);
 
 // ── 접속 로그 미들웨어 (클린 아키텍처: logger 모듈에 위임) ──
 app.use(accessLogMiddleware);
@@ -119,11 +146,351 @@ const pool = new pg.Pool({
   database: 'hanul_thought',
   user: 'postgres', password: 'postgres',
 });
+const ccPool = new pg.Pool({
+  host: process.env.PG_HOST ?? 'localhost',
+  port: Number(process.env.PG_PORT ?? '5432'),
+  database: process.env.PG_DB ?? 'lucas_initiative',
+  user: process.env.PG_USER ?? 'lucas',
+  password: process.env.PG_PASSWORD ?? '',
+});
+const MOBILE_DATA_PATH = 'G:/Lucas-Initiative/agents/mentor/reports/lucas-directives-week-audit-20260623/lucas-directives-mobile-report-data-20260623.json';
+const SNAPSHOT_9704_PATH = 'G:/Lucas-Initiative/command-center-v2/data/hq-ledger-9704-today/snapshot.json';
+const LEDGER_EVENTS_PATH = 'G:/Lucas-Initiative/command-center-v2/data/hq-ledger-9704-today/events.jsonl';
+const AGENT_ACTIVITY_PATH = 'G:/Lucas-Initiative/.coordination/activity-log/agent-activity.jsonl';
+const PERSONA_MAP = {
+  coo: '운영 총괄',
+  cto: 'CTO 맥스',
+  'dev-1': '개발 태오',
+  mentor: '솔로몬 고문',
+  arum: '아름 비서관',
+  inspector: '감독관 럭스',
+  'design-lead': '미르 디자인장',
+  'design-3': '모바일 실무',
+  lucas: 'Lucas',
+};
+
+function escHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+function readJsonSafe(filePath, fallback) {
+  try { return JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch { return fallback; }
+}
+function readJsonlSafe(filePath) {
+  try {
+    return fs.readFileSync(filePath, 'utf8')
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean)
+      .map((line) => { try { return JSON.parse(line); } catch { return null; } })
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+function kstString(ts) {
+  if (!ts) return '-';
+  const d = new Date(ts);
+  if (Number.isNaN(d.getTime())) return String(ts);
+  const parts = new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).formatToParts(d);
+  const byType = Object.fromEntries(parts.filter(p => p.type !== 'literal').map(p => [p.type, p.value]));
+  return `${byType.year}-${byType.month}-${byType.day} ${byType.hour}:${byType.minute}:${byType.second} KST`;
+}
+function todayStartUtcMs() {
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 3600000);
+  const y = kst.getUTCFullYear();
+  const m = kst.getUTCMonth();
+  const d = kst.getUTCDate();
+  return Date.UTC(y, m, d, -9, 0, 0, 0);
+}
+function summaryFromText(text) {
+  return String(text ?? '').replace(/\s+/g, ' ').trim().slice(0, 90);
+}
+function extractCommitHashes(text) {
+  const source = String(text ?? '');
+  const hits = [];
+  const regex = /(commit|커밋|hash)[^0-9a-f]{0,20}([0-9a-f]{7,40})/gi;
+  let match;
+  while ((match = regex.exec(source)) !== null) {
+    hits.push(match[2].toLowerCase());
+  }
+  return [...new Set(hits)];
+}
+function statusClass(status) {
+  const s = String(status || '').toUpperCase();
+  if (s.includes('PROGRESS')) return 'in-progress';
+  if (s.includes('REVIEW')) return 'review';
+  if (s.includes('HOLD')) return 'hold';
+  if (s.includes('DONE') || s.includes('CLOSED')) return 'done';
+  return 'new';
+}
+function teamLabel(team, agentId = '') {
+  const id = String(agentId || '').toLowerCase();
+  if (/^dev-/.test(id) || id === 'cto' || id === 'sre' || id === 'hanul') return '개발';
+  if (/^design-/.test(id)) return '디자인';
+  if (id === 'inspector' || id === 'codex-agent') return '감독';
+  if (id === 'research-lab' || id === 'trend-analyst' || /^codex-research-/.test(id)) return '연구';
+  if (id === 'coo' || id === 'arum' || id === 'solomon' || id === 'mentor' || id === 'lucas') return '임원';
+  const key = String(team || '').toLowerCase();
+  if (key === 'audit') return '감독';
+  if (key === 'design') return '디자인';
+  if (key === 'research' || key === 'strategy') return '연구';
+  if (key === 'dev' || key === 'infra') return '개발';
+  return '임원';
+}
+function shortTask(text, fallback = '-') {
+  const value = String(text || '').replace(/\s+/g, ' ').trim();
+  return value ? value.slice(0, 120) : fallback;
+}
+async function fetchAgentStatuses() {
+  let agents9710 = [];
+  let workers9000 = [];
+  try {
+    const response = await fetch('http://127.0.0.1:9710/api/agents', { signal: AbortSignal.timeout(3000) });
+    if (response.ok) {
+      const json = await response.json();
+      agents9710 = Array.isArray(json.items) ? json.items : [];
+    }
+  } catch {}
+  try {
+    const response = await fetch('http://127.0.0.1:9000/api/workers', { signal: AbortSignal.timeout(3000) });
+    if (response.ok) {
+      const json = await response.json();
+      workers9000 = Array.isArray(json) ? json : [];
+    }
+  } catch {}
+  const byId = new Map();
+  for (const item of workers9000) {
+    if (item?.id) byId.set(item.id, item);
+  }
+  const primary = agents9710.length ? agents9710 : workers9000;
+  return primary.map((item) => {
+    const workerMeta = byId.get(item.id) || {};
+    const persona = item.persona || workerMeta.persona || workerMeta.name || PERSONA_MAP[item.id] || '에이전트';
+    const state = String(item.state || workerMeta.state || item.taskState || workerMeta.taskState || 'idle').toLowerCase() === 'working' ? 'working' : 'idle';
+    const currentTask = shortTask(
+      item.currentTask
+      || workerMeta.currentTask
+      || workerMeta.currentTaskTitle
+      || workerMeta.statusNote
+      || workerMeta.pursuingGoal?.title
+      || workerMeta.ledgerCurrentTaskTitle
+      || '-'
+    );
+    const previousTask = shortTask(
+      item.previousTask
+      || workerMeta.previousTask
+      || workerMeta.ledgerCurrentTaskTitle
+      || '-',
+      '-'
+    );
+    const lastActiveAt = kstString(
+      item.last_self_update
+      || workerMeta.last_self_update
+      || workerMeta.terminalActivity?.lastMeaningfulChangeAt
+      || workerMeta.terminalActivity?.lastLogAt
+      || item.updatedAt
+      || workerMeta.updatedAt
+      || workerMeta.previousTaskAt
+      || null
+    );
+    const rawTeam = workerMeta.team || item.team || workerMeta.type || item.type || 'executive';
+    return {
+      id: item.id,
+      persona,
+      state,
+      currentTask,
+      previousTask,
+      lastActiveAt,
+      team: teamLabel(rawTeam, item.id),
+      source: agents9710.length ? '9710+9000' : '9000',
+    };
+  });
+}
+async function buildMobileOpsPayload() {
+  // 9704 snapshot에서 직접 읽기 (live SoT)
+  const snap9704 = readJsonSafe(SNAPSHOT_9704_PATH, {});
+  const snapItems = Array.isArray(snap9704.items) ? snap9704.items : [];
+  const items = snapItems.length > 0 ? snapItems.map((i) => ({
+    key: i.key || i.id,
+    title: i.title || i.key || '-',
+    status: i.status || 'NEW',
+    owner: i.owner || null,
+    priority: i.priority || null,
+    note: i.note || '',
+  })) : (() => {
+    const sourceData = readJsonSafe(MOBILE_DATA_PATH, {});
+    return Array.isArray(sourceData.todoRows) ? sourceData.todoRows.map((row) => ({
+      title: row['할일'] ?? '-', status: row['상태'] ?? '-',
+      owner: row['담당자'] ?? '-', priority: /P0/i.test(String(row['실 산출'] ?? '')) ? 'P0' : null,
+      note: row['실 산출'] ?? '',
+    })) : [];
+  })();
+  const ledgerEvents = readJsonlSafe(LEDGER_EVENTS_PATH)
+    .filter((event) => {
+      const key = String(event.itemKey ?? '').toUpperCase();
+      const payloadText = JSON.stringify(event.payload ?? {}).toUpperCase();
+      return key.includes('9704') || payloadText.includes('9704') || String(event.actor ?? '').toLowerCase() === 'design-3';
+    })
+    .sort((a, b) => new Date(b.ts ?? 0).getTime() - new Date(a.ts ?? 0).getTime())
+    .slice(0, 12)
+    .map((event) => ({
+      title: event.payload?.title || event.itemKey || '-',
+      status: event.payload?.status || event.eventType || '-',
+      owner: event.actor || '-',
+      priority: null,
+      note: summaryFromText(event.payload?.note || event.payload?.nextAction || event.payload?.approvalReason || event.itemKey || event.eventType),
+    }));
+  const activityRows = readJsonlSafe(AGENT_ACTIVITY_PATH);
+  const todayUtcMs = todayStartUtcMs();
+  const meetingRows = (await ccPool.query(
+    `SELECT author, content, created_at
+       FROM meeting_messages
+      WHERE created_at >= NOW() - INTERVAL '1 day'
+      ORDER BY created_at DESC
+      LIMIT 400`
+  )).rows;
+  const merged = [];
+  for (const row of activityRows) {
+    const ts = row.ts || row.created_at;
+    if (!ts || new Date(ts).getTime() < todayUtcMs) continue;
+    const agentId = String(row.agent_id || '').trim();
+    if (!agentId) continue;
+    const summary = summaryFromText(row.summary_natural || `${row.action} — ${row.result || row.detail || ''}`);
+    merged.push({
+      agentId,
+      ts,
+      source: 'activity',
+      summary,
+      action: String(row.action || ''),
+      commitHashes: extractCommitHashes(`${row.result || ''} ${row.detail || ''} ${summary}`),
+    });
+  }
+  for (const event of readJsonlSafe(LEDGER_EVENTS_PATH)) {
+    const ts = event.ts;
+    if (!ts || new Date(ts).getTime() < todayUtcMs) continue;
+    const agentId = String(event.actor || '').trim();
+    if (!agentId || agentId === 'system' || agentId === 'external-ledger-watcher') continue;
+    const statusText = String(event.payload?.status || event.payload?.decision || event.eventType || '');
+    const isCompleted = event.eventType === 'item.completed' || /done|completed|closed|approve/i.test(statusText);
+    merged.push({
+      agentId,
+      ts,
+      source: 'ledger',
+      summary: summaryFromText(event.payload?.title || event.payload?.note || event.itemKey || event.eventType),
+      action: String(event.eventType || ''),
+      isCompleted,
+      completedTitle: isCompleted ? summaryFromText(event.payload?.title || event.itemKey || '완료 일감') : null,
+    });
+  }
+  for (const row of meetingRows) {
+    const agentId = String(row.author || '').trim();
+    if (!agentId) continue;
+    merged.push({
+      agentId,
+      ts: row.created_at,
+      source: 'meeting',
+      summary: summaryFromText(row.content),
+      action: 'meeting:message',
+    });
+  }
+  const byAgent = new Map();
+  for (const entry of merged.sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime())) {
+    if (!byAgent.has(entry.agentId)) {
+      byAgent.set(entry.agentId, {
+        id: entry.agentId,
+        persona: PERSONA_MAP[entry.agentId] || '에이전트',
+        outputs: 0,
+        meetingCount: 0,
+        ptyCount: 0,
+        commitCount: 0,
+        lastActiveAt: entry.ts,
+        activities: [],
+        completedTasks: [],
+        seenCommits: new Set(),
+      });
+    }
+    const bucket = byAgent.get(entry.agentId);
+    if (entry.source === 'meeting') {
+      bucket.meetingCount += 1;
+    }
+    if (entry.source === 'activity' && !/^meeting:message$/i.test(entry.action) && !/^message:instruct-reply$/i.test(entry.action) && !/^instruct$/i.test(entry.action)) {
+      bucket.ptyCount += 1;
+    }
+    if (entry.source === 'ledger' && entry.isCompleted) {
+      bucket.outputs += 1;
+      if (bucket.completedTasks.length < 3 && entry.completedTitle) bucket.completedTasks.push(entry.completedTitle);
+    }
+    if (entry.source === 'activity' && Array.isArray(entry.commitHashes) && entry.commitHashes.length) {
+      for (const hash of entry.commitHashes) {
+        if (bucket.seenCommits.has(hash)) continue;
+        bucket.seenCommits.add(hash);
+        bucket.commitCount += 1;
+        bucket.outputs += 1;
+      }
+    }
+    if (bucket.activities.length < 3) bucket.activities.push(entry.summary);
+  }
+  const agents = [...byAgent.values()]
+    .sort((a, b) => new Date(b.lastActiveAt).getTime() - new Date(a.lastActiveAt).getTime())
+    .slice(0, 12)
+    .map((agent) => ({
+      id: agent.id,
+      persona: agent.persona,
+      outputsToday: agent.outputs,
+      completedTaskCount: agent.completedTasks.length,
+      commitCount: agent.commitCount,
+      meetingCount: agent.meetingCount,
+      ptyCount: agent.ptyCount,
+      lastActiveAt: kstString(agent.lastActiveAt),
+      recentActivities: agent.activities,
+      completedTasks: agent.completedTasks,
+    }));
+  const agentStatuses = await fetchAgentStatuses();
+  return {
+    snapshotTime: kstString(new Date().toISOString()),
+    items,
+    workers: agentStatuses,
+    agentStatuses,
+    activityUpdatedAt: kstString(new Date().toISOString()),
+    agentActivities: agents,
+    ledgerEvents,
+  };
+}
 
 // GET / → 스마트에디터 2.0으로 redirect (Lucas님 지시: 9082는 에디터 전용)
 app.get('/', (req, res) => res.redirect('/editor'));
-// 에디터 직접 접근
-app.get('/editor', (req, res) => res.render('editor-v2'));
+// 외부 공개 모바일 업무 현황 페이지
+app.get('/editor', (_req, res) => {
+  res.type('html').send(buildMobileEditorHtml());
+});
+// 레거시 편집기 보존
+app.get('/editor/legacy', (req, res) => res.render('editor-v2'));
+app.get('/api/mobile-ops-data', async (_req, res) => {
+  try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    const payload = await buildMobileOpsPayload();
+    res.json(payload);
+  } catch (e) {
+    console.error('[mobile-ops-data]', e?.message ?? e);
+    res.status(500).json({ ok: false, error: 'mobile-ops-data-failed' });
+  }
+});
 
 // 게시글 조회 (에디터용)
 app.get('/api/posts', async (req, res) => {

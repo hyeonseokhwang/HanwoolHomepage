@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lucas Initiative — 업무 현황</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif; background: #0f1117; color: #e2e8f0; font-size: 14px; }
+header { background: #1a1d2e; padding: 12px 16px; border-bottom: 2px solid #3b82f6; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
+header h1 { font-size: 16px; font-weight: 700; color: #60a5fa; }
+header .time { font-size: 11px; color: #64748b; }
+.tab-bar { display: flex; background: #1a1d2e; border-bottom: 1px solid #2d3748; }
+.tab { flex: 1; padding: 10px; text-align: center; font-size: 13px; color: #64748b; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab.active { color: #60a5fa; border-bottom-color: #60a5fa; }
+.content { padding: 8px; }
+.section { margin-bottom: 12px; }
+.section-title { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 4px; }
+.card { background: #1e2235; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; border-left: 3px solid #4b5563; }
+.card.in-progress { border-left-color: #3b82f6; }
+.card.review { border-left-color: #a78bfa; }
+.card.hold { border-left-color: #f59e0b; }
+.card.new { border-left-color: #10b981; }
+.card.done { border-left-color: #6b7280; }
+.card-title { font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px; line-height: 1.4; }
+.card-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.badge { font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600; }
+.badge-in-progress { background: #1d4ed8; color: #93c5fd; }
+.badge-review { background: #4c1d95; color: #c4b5fd; }
+.badge-hold { background: #78350f; color: #fcd34d; }
+.badge-new { background: #064e3b; color: #6ee7b7; }
+.badge-done { background: #1f2937; color: #9ca3af; }
+.badge-p0 { background: #7f1d1d; color: #fca5a5; font-size: 9px; }
+.badge-p1 { background: #1c1917; color: #d6d3d1; font-size: 9px; }
+.owner { font-size: 11px; color: #64748b; }
+.worker-card { background: #1e2235; border-radius: 6px; padding: 8px 10px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+.worker-name { font-size: 13px; font-weight: 600; }
+.worker-task { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+.status-card { background: #1e2235; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; border: 1px solid #334155; }
+.status-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+.status-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+.status-persona { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+.status-state { font-size: 10px; padding: 4px 8px; border-radius: 999px; font-weight: 700; }
+.status-state-working { background: #0f3d2e; color: #86efac; }
+.status-state-idle { background: #3f2a14; color: #fcd34d; }
+.status-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.status-field { background: #151826; border-radius: 6px; padding: 7px 8px; }
+.status-label { font-size: 10px; color: #64748b; margin-bottom: 4px; }
+.status-value { font-size: 11px; color: #e2e8f0; line-height: 1.4; word-break: break-word; }
+.activity-card { background: #1e2235; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; border: 1px solid #334155; }
+.activity-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; margin-bottom: 6px; }
+.activity-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+.activity-persona { font-size: 11px; color: #64748b; margin-top: 2px; }
+.activity-stats { text-align: right; font-size: 10px; color: #94a3b8; }
+.activity-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+.activity-kpi { background: #151826; border-radius: 6px; padding: 6px 8px; font-size: 10px; color: #94a3b8; }
+.activity-kpi strong { display: block; color: #e2e8f0; font-size: 12px; margin-top: 2px; }
+.activity-complete { margin-top: 8px; padding: 8px 10px; border-radius: 6px; background: #0f1d18; border: 1px solid #1f5138; }
+.activity-complete-title { font-size: 10px; font-weight: 700; color: #86efac; margin-bottom: 4px; }
+.activity-complete li { color: #dcfce7; }
+.activity-list { margin-top: 8px; padding-left: 16px; color: #cbd5e1; }
+.activity-list li { margin-bottom: 4px; font-size: 11px; line-height: 1.4; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-working { background: #10b981; box-shadow: 0 0 4px #10b981; }
+.dot-idle { background: #f59e0b; }
+.dot-offline { background: #4b5563; }
+.refresh-btn { display: block; width: 100%; margin: 12px 0; padding: 10px; background: #1d4ed8; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.stale-notice { background: #1c1917; border: 1px solid #44403c; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #78716c; margin-bottom: 8px; }
+.progress-bar { height: 3px; background: #1e2235; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+.progress-fill { height: 100%; background: #3b82f6; border-radius: 2px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📋 LI 업무 현황</h1>
+  <span class="time" id="updated-at">09:12 KST</span>
+</header>
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('tasks')">원장 (12)</div>
+  <div class="tab" onclick="showTab('workers')">에이전트 상태</div>
+  <div class="tab" onclick="showTab('agents')">활동사항</div>
+</div>
+
+<div id="tab-tasks" class="content"></div>
+<div id="tab-workers" class="content" style="display:none"></div>
+<div id="tab-agents" class="content" style="display:none"></div>
+
+<script>
+const SNAPSHOT_TIME = '2026-06-23 10:22 KST';
+let LIVE_STAMP = SNAPSHOT_TIME;
+
+const ITEMS_DATA = [
+  {key:'LEDGER-OP-7D-LUCAS-DIRECTIVE-LEDGERIZATION-20260623',title:'7일 Lucas 지시 원장화: raw 2111 / directive-like 939',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
+  {key:'LEDGER-OP-MEMORY-SYSTEM-HOLE-REPAIR-20260623',title:'기억체계 홀 보강: MEMORY 200줄/RAG/인덱스/9704 단절',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
+  {key:'LEDGER-OP-9704-LEDGER-SYSTEM-SCREEN-20260623',title:'9704 원장체계 화면: 목업/원장/지시누락/증거체계',status:'REVIEW',owner:'design-3',priority:'P0',note:''},
+  {key:'LEDGER-OP-YOUTUBE-TREND-HQ-20260623',title:'YouTube 트렌드 분석본부: 6축 장표/상시 분석',status:'IN_PROGRESS',owner:'trend-analyst',priority:'P0',note:''},
+  {key:'LEDGER-OP-WORKING-9000-9710-FREEZE-20260623',title:'working/9000/9710 FREEZE: Lucas 실화면 runtime SoT 유지',status:'HOLD',owner:'coo',priority:'P0',note:''},
+  {key:'LEDGER-OP-COMMAND-CHAIN-SOP-20260623',title:'지휘계통 SOP: CTO 병목/Dev-1 바이패스/미팅 thread 정합',status:'IN_PROGRESS',owner:'coo',priority:'P1',note:''},
+  {key:'LEDGER-OP-EVIDENCE-QA-STANDARDIZATION-20260623',title:'증거/QA 표준화: 200 OK 금지, 4칸 게이트, 실증 기반 PASS',status:'IN_PROGRESS',owner:'inspector',priority:'P1',note:''},
+  {key:'LEDGER-OP-TERMINAL-TEAM-STATE-20260623',title:'터미널/팀 상태: #terminals 5버킷, strip/세로보기, PTY 가시성',status:'NEW',owner:'cto',priority:'P1',note:''},
+  {key:'LEDGER-OP-CURRENT-PREVIOUS-TASK-CONSISTENCY-20260623',title:'currentTask/previousTask 정합: watchdog overwrite hole 보강',status:'IN_PROGRESS',owner:'dev-1',priority:'P1',note:''},
+  {key:'LEDGER-OP-BUSINESS-TREND-AND-REVENUE-20260623',title:'비즈니스/트렌드/수익화: YouTube 기반 시장/주식/코인/AI',status:'NEW',owner:'trend-analyst',priority:'P2',note:''},
+  {key:'LEDGER-OP-LUCAS-DIRECTIVE-MOBILE-REPORT-20260623',title:'Lucas 지시 전수 리스팅 + 9704 모바일 보고 데이터',status:'IN_PROGRESS',owner:'mentor',priority:'P0',note:''},
+  {key:'DESIGN-CLAUDE-LEARN-OPERATE-1781078045293',title:'DESIGN-CLAUDE-LEARN-OPERATE',status:'HOLD',owner:null,priority:null,note:''}
+];
+
+const WORKERS_DATA = [];
+const AGENT_ACTIVITY_DATA = [];
+
+const STATUS_LABEL = {'IN_PROGRESS':'진행중','REVIEW':'검토중','HOLD':'보류','NEW':'신규','DONE':'완료','CLOSED':'종결'};
+const STATUS_CLASS = {'IN_PROGRESS':'in-progress','REVIEW':'review','HOLD':'hold','NEW':'new','DONE':'done','CLOSED':'done'};
+
+function showTab(name) {
+  document.getElementById('tab-tasks').style.display = name === 'tasks' ? 'block' : 'none';
+  document.getElementById('tab-workers').style.display = name === 'workers' ? 'block' : 'none';
+  document.getElementById('tab-agents').style.display = name === 'agents' ? 'block' : 'none';
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && name === 'tasks') || (i === 1 && name === 'workers') || (i === 2 && name === 'agents'));
+  });
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderTasks(items) {
+  const order = ['IN_PROGRESS','REVIEW','NEW','HOLD','DONE'];
+  const groups = {};
+  order.forEach(s => groups[s] = []);
+  items.forEach(item => {
+    const s = item.status || 'NEW';
+    if (!groups[s]) groups[s] = [];
+    groups[s].push(item);
+  });
+  let html = `<div class="stale-notice">📸 갱신: ${LIVE_STAMP} · 30초 자동새로고침</div>`;
+  for (const status of order) {
+    const list = groups[status];
+    if (!list.length) continue;
+    html += `<div class="section"><div class="section-title">${STATUS_LABEL[status]||status} (${list.length})</div>`;
+    list.forEach(item => {
+      const cls = STATUS_CLASS[item.status] || '';
+      const prioBadge = item.priority ? `<span class="badge badge-${item.priority.toLowerCase()}">${esc(item.priority)}</span>` : '';
+      const ownerTxt = item.owner ? `<span class="owner">👤 ${esc(item.owner)}</span>` : '';
+      const note = item.note ? `<div style="font-size:11px;color:#64748b;margin-top:4px">${esc(item.note)}</div>` : '';
+      html += `<div class="card ${cls}">
+        <div class="card-title">${esc(item.title||item.key)}</div>
+        <div class="card-meta"><span class="badge badge-${cls}">${STATUS_LABEL[item.status]||item.status}</span>${prioBadge}${ownerTxt}</div>
+        ${note}
+      </div>`;
+    });
+    html += '</div>';
+  }
+  html += `<button class="refresh-btn" onclick="tryLiveLoad()">🔄 새로고침</button>`;
+  document.getElementById('tab-tasks').innerHTML = html;
+}
+
+function renderWorkers(workers) {
+  const sorted = [...workers].sort((a, b) => {
+    if ((a.state === 'working') !== (b.state === 'working')) return a.state === 'working' ? -1 : 1;
+    return String(a.id || '').localeCompare(String(b.id || ''));
+  });
+  let html = `<div class="stale-notice">📡 9710/9000 상태 SoT · 30초 자동 새로고침 · 마지막 갱신: ${LIVE_STAMP}</div>`;
+  html += `<div class="section"><div class="section-title">에이전트 상태 (${sorted.length})</div>`;
+  sorted.forEach(w => {
+    const isWorking = w.state === 'working';
+    html += `<div class="status-card">
+      <div class="status-head">
+        <div>
+          <div class="status-name">${esc(w.id || '-')}</div>
+          <div class="status-persona">${esc(w.persona || w.role || '')}</div>
+        </div>
+        <div class="status-state ${isWorking ? 'status-state-working' : 'status-state-idle'}">${isWorking ? 'WORKING' : 'IDLE'}</div>
+      </div>
+      <div class="status-grid">
+        <div class="status-field"><div class="status-label">현재 작업</div><div class="status-value">${esc(w.currentTask || '-')}</div></div>
+        <div class="status-field"><div class="status-label">이전 작업</div><div class="status-value">${esc(w.previousTask || '-')}</div></div>
+        <div class="status-field"><div class="status-label">마지막 활동</div><div class="status-value">${esc(w.lastActiveAt || '-')}</div></div>
+        <div class="status-field"><div class="status-label">팀</div><div class="status-value">${esc(w.team || '-')}</div></div>
+      </div>
+    </div>`;
+  });
+  html += '</div><button class="refresh-btn" onclick="tryLiveLoad(true)">🔄 상태 새로고침</button>';
+  document.getElementById('tab-workers').innerHTML = html;
+}
+function renderAgents(agents) {
+  let html = `<div class="stale-notice">📡 30초 자동 새로고침 · 마지막 갱신: ${LIVE_STAMP}</div>`;
+  html += `<div class="section"><div class="section-title">에이전트별 활동사항 (${agents.length})</div>`;
+  agents.forEach(agent => {
+    const acts = Array.isArray(agent.recentActivities) ? agent.recentActivities : [];
+    html += `<div class="activity-card">
+      <div class="activity-head">
+        <div>
+          <div class="activity-name">${esc(agent.id)}</div>
+          <div class="activity-persona">${esc(agent.persona || '')}</div>
+        </div>
+        <div class="activity-stats">실제 산출물 ${esc(agent.outputsToday || 0)}건<br>마지막 활동 ${esc(agent.lastActiveAt || '-')}</div>
+      </div>
+      <div class="activity-kpis">
+        <div class="activity-kpi">오늘 완료 일감<strong>${esc(agent.completedTaskCount || 0)}건</strong></div>
+        <div class="activity-kpi">commit 수<strong>${esc(agent.commitCount || 0)}건</strong></div>
+        <div class="activity-kpi">미팅 발언<strong>${esc(agent.meetingCount || 0)}건</strong></div>
+        <div class="activity-kpi">PTY 발화<strong>${esc(agent.ptyCount || 0)}건</strong></div>
+      </div>
+      ${(Array.isArray(agent.completedTasks) && agent.completedTasks.length) ? `<div class="activity-complete"><div class="activity-complete-title">오늘 완료 일감</div><ul class="activity-list">${agent.completedTasks.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>` : ''}
+      <ul class="activity-list">${acts.map(a => `<li>${esc(a)}</li>`).join('') || '<li>최근 활동 없음</li>'}</ul>
+    </div>`;
+  });
+  html += '</div><button class="refresh-btn" onclick="tryLiveLoad(true)">🔄 활동 새로고침</button>';
+  document.getElementById('tab-agents').innerHTML = html;
+}
+
+async function tryLiveLoad(manual) {
+  try {
+    const bust = `ts=${Date.now()}`;
+    const r = await fetch(`/api/mobile-ops-data?${bust}`, {cache:'no-store', signal: AbortSignal.timeout(3000)});
+    if (r.ok) {
+      const d = await r.json();
+      if (d.items) { renderTasks(d.items); }
+      if (d.agentStatuses || d.workers) { renderWorkers(d.agentStatuses || d.workers); }
+      renderAgents(d.agentActivities || []);
+      LIVE_STAMP = d.activityUpdatedAt || d.snapshotTime || SNAPSHOT_TIME;
+      document.getElementById('updated-at').textContent = LIVE_STAMP + (manual ? ' (수동)' : ' (라이브)');
+      return;
+    }
+  } catch(e) {}
+  // fallback to static
+  renderTasks(ITEMS_DATA);
+  renderWorkers(WORKERS_DATA);
+  renderAgents(AGENT_ACTIVITY_DATA);
+  LIVE_STAMP = SNAPSHOT_TIME;
+  document.getElementById('updated-at').textContent = SNAPSHOT_TIME + ' (스냅샷)';
+}
+
+// Initial render
+renderTasks(ITEMS_DATA);
+renderWorkers(WORKERS_DATA);
+renderAgents(AGENT_ACTIVITY_DATA);
+document.getElementById('updated-at').textContent = SNAPSHOT_TIME;
+tryLiveLoad();
+setInterval(() => tryLiveLoad(false), 30000);
+</script>
+</body>
+</html>
